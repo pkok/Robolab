@@ -27,13 +27,14 @@ int main(int argc, char** argv)
 	//maxLineGap – Maximum allowed gap between points on the same line to link them.
 
     vector<Vec4i> lines;
-    HoughLinesP( dst, lines, 1, CV_PI/180, 80, 30, 10 );
+    HoughLinesP( dst, lines, 1, CV_PI/180, 10, 20, 20 );
     for( size_t i = 0; i < lines.size(); i++ )
     {
         line( color_dst, Point(lines[i][0], lines[i][1]),
-            Point(lines[i][2], lines[i][3]), Scalar(0,0,255), 3, 8 );
+            Point(lines[i][2], lines[i][3]), Scalar(0,0,255), 2, 8 );
     }
 
+	printf("%d",lines.size());
     namedWindow( "Source", 1 );
     imshow( "Source", src );
 
