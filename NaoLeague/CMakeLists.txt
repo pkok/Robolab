@@ -3,10 +3,13 @@ project(NaoLeague)
 
 find_package(qibuild)
 
-# Create a executable named NaoLeague
-# with the source file: main.cpp
-qi_create_bin(NaoLeague "main.cpp")
+add_subdirectory(${PROJECT_SOURCE_DIR}/Vision)
+add_subdirectory(${PROJECT_SOURCE_DIR}/CommonSource)
 
-# Add a simple test:
-enable_testing()
-qi_create_test(test_NaoLeague "test.cpp")
+# Create a executable named NaoLeague
+# with the source file: soul.cpp
+qi_create_bin(soul "soul.cpp")
+#qi_create_bin(ImageGrabberTest "imageGrabberTest.cpp" imageGrabber.cpp imageGrabber.h)
+
+qi_create_bin(ImageGrabberTest Vision/imageGrabberTest.cpp Vision/imageGrabber.cpp Vision/imageGrabber.h CommonSource/Macros.h)
+qi_use_lib(ImageGrabberTest ALCOMMON ALVISION OPENCV2_CORE OPENCV2_HIGHGUI)
