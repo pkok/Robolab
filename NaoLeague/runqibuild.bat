@@ -1,0 +1,1 @@
+qibuild configure -c local

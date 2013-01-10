@@ -4,9 +4,10 @@
  * found in the COPYING file.
  */
 #include <iostream>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/core/core.hpp>
+#include "Vision/imageGrabber.h"
 
 int main()
 {
-  std::cout << "Hello, world" << std::endl;
-  return 0;
 }
