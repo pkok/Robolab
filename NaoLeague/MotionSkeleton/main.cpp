@@ -16,7 +16,7 @@ using namespace std;
 int main(int argc, char const *argv[])
 {
     // quick and dirty command parsing to get the IP
-    string ip = string( argv[1] );
+    string ip = "10.0.0.50";//string( argv[1] );
 
     // create a proxy, specifying the IP and port (port is always 9559)
     AL::ALMotionProxy motProxy(ip, PORT);

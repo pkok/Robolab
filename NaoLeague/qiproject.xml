@@ -1,2 +1,6 @@
 <project name="NaoLeague">
+  <!-- Add your project dependencies here -->
+  <!--
+  <depends buildtime="true" runtime="true" names="CommonSource" />
+  -->
 </project>
