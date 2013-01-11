@@ -13,3 +13,6 @@ qi_create_bin(soul "soul.cpp")
 
 qi_create_bin(ImageGrabberTest Vision/imageGrabberTest.cpp Vision/imageGrabber.cpp Vision/imageGrabber.h CommonSource/Macros.h)
 qi_use_lib(ImageGrabberTest ALCOMMON ALVISION OPENCV2_CORE OPENCV2_HIGHGUI)
+
+qi_create_bin(SaveImageOnClick Vision/saveImageOnClick.cpp Vision/imageGrabber.cpp Vision/imageGrabber.h CommonSource/Macros.h)
+qi_use_lib(SaveImageOnClick ALCOMMON ALVISION OPENCV2_CORE OPENCV2_HIGHGUI)
