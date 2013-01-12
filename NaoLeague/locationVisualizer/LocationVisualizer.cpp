@@ -1,89 +1,51 @@
-/* This is a standalone program. Pass an image name as the first parameter
-of the program.  Switch between standard and probabilistic Hough transform
-by changing "#if 1" to "#if 0" and back */
 #include <cv.h>
 #include <math.h>
 #include <highgui.h>
 #include <iostream>
 #include <time.h>
 
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <vector>
+
 using namespace cv;
 //function headers
 void drawLine( Mat img, Point start, Point end );
 void drawRectangle(Mat img, Point one,Point two,Point three,Point four);
 void drawParticle(Mat img,Point location, int rotation,int certainty);
+void readFile(int* h,int* w,int outer_line[],int goal_line1[],int goal_line2[], int middle_line[], int penalty1[],int penalty2[],int goalpost11[],int goalpost12[],int goalpost21[],int goalpost22[],int middle_circle[]);
+
 
 int main(int argc, char** argv)
 {
-    Mat src, dst, color_dst;
-    //if( argc != 2 || !(src=imread(argv[1], 0)).data)
-    //    return -1;
 
-    //Canny( src, dst, 150, 200, 3 );
-    //cvtColor( dst, color_dst, CV_GRAY2BGR );
-
-	//image – 8-bit, single-channel binary source image. The image may be modified by the function.
-	//lines – Output vector of lines. Each line is represented by a 4-element vector   , where   and   are the ending points of each detected line segment.
-	//rho – Distance resolution of the accumulator in pixels.
-	//theta – Angle resolution of the accumulator in radians.
-	//threshold – Accumulator threshold parameter. Only those lines are returned that get enough votes (  ).
-	//minLineLength – Minimum line length. Line segments shorter than that are rejected.
-	//maxLineGap – Maximum allowed gap between points on the same line to link them.
-
-    /*vector<Vec4i> lines;
-    HoughLinesP( dst, lines, 1, CV_PI/180, 10, 20, 20 );
-    for( size_t i = 0; i < lines.size(); i++ )
-    {
-        line( color_dst, Point(lines[i][0], lines[i][1]),
-            Point(lines[i][2], lines[i][3]), Scalar(0,0,255), 2, 8 );
-    }
-
-	printf("%d",lines.size());
-    namedWindow( "Source", 1 );*/
-
-
-
-	//1 pxl = 1 cm
-	int h = 540;
-	int w = 740;
-
-
+	//fieldsize
+	int h;
+	int w;
 
 	//rectangles
-	//x1,y1,x2,y2..
-	int outer_line[] = {70,70,
-			670,70,
-			670,470,
-			70,470};
-	
-	int goal_line_1[] = {70,160,
-			130,160,
-			130,380,
-			70,380};
-	
-	int goal_line_2[] = {610,160,
-			670,160,
-			670,380,
-			610,380};	
+	int outer_line[8];
+	int goal_line_1[8];
+	int goal_line_2[8];
 	
 	//lines
-	int middle_line[] = {370,70,
-			370,470};
-
-	//points:
-	//x,y,diameter
-	int penalty1[] = {250,270,10};
-	int penalty2[] = {490,270,10};
+	int middle_line[4];
 	
-	int goalpost11[] = {70,200,10};
-	int goalpost12[] = {70,350,10};
-	int goalpost21[] = {670,200,10};
-	int goalpost22[] = {670,350,10};
-	//circles:
-	//x,y,diameter
-	int middle_circle[] = {370,270,120};
-
-
+	//points
+	int penalty1[3];
+	int penalty2[3];
+	
+	int goalpost11[3];
+	int goalpost12[3];
+	int goalpost21[3];
+	int goalpost22[3];
+	
+	int middle_circle[3];
+	std::cout << "read from paramfile" << std::endl;
+	readFile(&h, &w, outer_line, goal_line_1, goal_line_2, middle_line, penalty1, penalty2, goalpost11, goalpost12, goalpost21, goalpost22, middle_circle);
+	std::cout << "read from file .." << std::endl;	
+	
 	//create empty image container:
 
 	Mat field_img = Mat::zeros( h, w, CV_8UC3 );
@@ -95,7 +57,6 @@ int main(int argc, char** argv)
 		for (int y = 0; y< h; y++)
 		{
 			field_img.at<uchar>(y,x) = 230;
-			//Set2D(field_img, x, y, CvScalar(0,0,255)0);
 		}
 	}
 
@@ -155,30 +116,194 @@ int main(int argc, char** argv)
 			waitKey(0);
 	}
 
-
-	/*for(int x = 100;x<300;x = x+10)
-	{
-		for(int y= 100;y < 300; y = y+10)
-		{
-			rot++;
-			drawParticle(field_img,Point(x,y),rot);
-		}
-	}*/
-
-	//drawLine(field_img,Point(100,100),Point(200,200));
-	//show image
-
-    //field_img = cvCreateMat(Size(320,240),CV_8UC3);
-    //imshow( "Source", src );
-	
-    //namedWindow( "Detected Lines", 1 );
-    //imshow( "Detected Lines", color_dst );
-
-
-
-
     return 0;
 }
+/**
+ * @function readFile
+ * @brief reads parameter.txt 
+**/
+void readFile(int* h, int* w, int outer_line[], int goal_line1[], int goal_line2[],int middle_line[], int penalty1[], int penalty2[], int goalpost11[], int goalpost12[], int goalpost21[], int goalpost22[], int middle_circle[])
+{
+	std::ifstream infile("parameter.txt");
+	std::string line;
+	std::string token;
+	
+	//keep track which parameters are loaded
+	int object_counter = 0;
+
+	while (std::getline(infile, line))
+	{
+	    std::istringstream iss(line);
+		//dont read files with // at beginning
+		if(line.compare(0,1,"/") != 0)
+		{
+
+			//read all parameters
+			switch ( object_counter )
+		      	{
+			 case 0: //h
+				std::cout << "h = " << line << std::endl;
+			    *h = atoi(line.c_str()); 
+			    break;
+			 case 1: //w
+			    *w = atoi(line.c_str());
+				std::cout << "w = " << line << std::endl;
+			    break;
+			case 2: //outer_line[8];
+				{	
+					std::cout << "outer line "<< line;	
+					outer_line[0] = atoi(line.c_str());		
+					for (int i = 1; i<8; i++)
+					{
+						std::getline(infile,line);
+						std::istringstream iss(line);
+						outer_line[i] = atoi(line.c_str());
+						std::cout << " "<< line;
+					}				
+					std::cout<<std::endl;
+				break;
+				}
+			case 3: //goal_line1[8];
+				{		std::cout << "goal_line2 "<< line;
+					goal_line1[0] = atoi(line.c_str());		
+					for (int i = 1; i<8; i++)
+					{
+						std::getline(infile,line);
+						std::istringstream iss(line);
+						goal_line1[i] = atoi(line.c_str());std::cout << " "<< line;
+					}				std::cout<<std::endl;
+				break;
+				}
+			case 4: //goal_line2[8];
+				{		std::cout << "goal_line2 "<< line;
+					goal_line2[0] = atoi(line.c_str());		
+					for (int i = 1; i<8; i++)
+					{
+						std::getline(infile,line);
+						std::istringstream iss(line);
+						goal_line2[i] = atoi(line.c_str());std::cout << " "<< line;
+					}	std::cout<<std::endl;			
+				break;
+				}
+			case 5: //middle_line[4];
+				{	std::cout << "middle line "<< std::endl;
+					std::cout <<  line<<std::endl;	
+					middle_line[0] = atoi(line.c_str());			
+					for (int i = 1; i<4; i++)
+					{
+						std::getline(infile,line);
+						std::istringstream iss(line);
+						middle_line[i] = atoi(line.c_str());
+						std::cout <<  line<<std::endl;		
+					}				
+				break;
+				}		
+			case 6: //penalty1[3];
+				{	std::cout << "penalty1 "<< std::endl;
+					std::cout <<  line<<std::endl;	
+					penalty1[0] = atoi(line.c_str());			
+					for (int i = 1; i<3; i++)
+					{
+						std::getline(infile,line);
+						std::istringstream iss(line);
+						penalty1[i] = atoi(line.c_str());
+
+						std::cout <<  line<<std::endl;			
+					}				
+				break;
+				}		
+			case 7: //penalty2[3];
+				{	
+					std::cout << "penalty2 "<< std::endl;
+					std::cout <<  line<<std::endl;	
+					penalty2[0] = atoi(line.c_str());			
+					for (int i = 1; i<3; i++)
+					{
+						std::getline(infile,line);
+						std::istringstream iss(line);
+						penalty2[i] = atoi(line.c_str());	
+						std::cout <<  line<<std::endl;		
+					}				
+				break;
+				}
+			case 8: //goalpost11[3];
+				{	
+					std::cout << "goalpost11 "<< std::endl;
+					std::cout <<  line<<std::endl;	
+					goalpost11[0] = atoi(line.c_str());			
+					for (int i = 1; i<3; i++)
+					{
+						std::getline(infile,line);
+						std::istringstream iss(line);
+						goalpost11[i] = atoi(line.c_str());
+						std::cout <<  line<<std::endl;		
+					}				
+				break;
+				}			
+			case 9: //goalpost12[3];
+				{	
+					std::cout << "goalpost12 "<< std::endl;
+					std::cout <<  line<<std::endl;
+					goalpost12[0] = atoi(line.c_str());			
+					for (int i = 1; i<3; i++)
+					{
+						std::getline(infile,line);
+						std::istringstream iss(line);
+						goalpost12[i] = atoi(line.c_str());
+						std::cout <<  line<<std::endl;		
+					}				
+				break;
+				}
+			case 10: //goalpost21[3];
+				{	
+					std::cout << "goalpost21 "<< std::endl;
+					std::cout <<  line<<std::endl;
+					goalpost21[0] = atoi(line.c_str());			
+					for (int i = 1; i<3; i++)
+					{
+						std::getline(infile,line);
+						std::istringstream iss(line);
+						goalpost21[i] = atoi(line.c_str());	
+						std::cout <<  line<<std::endl;	
+					}				
+				break;
+				}			
+			case 11://goalpost22[3];
+				{	
+					std::cout << "goalpost22 "<< std::endl;
+					std::cout <<  line<<std::endl;
+					goalpost22[0] = atoi(line.c_str());			
+					for (int i = 1; i<3; i++)
+					{
+						std::getline(infile,line);
+						std::istringstream iss(line);
+						goalpost22[i] = atoi(line.c_str());
+					std::cout <<  line<<std::endl;		
+					}				
+				break;
+				}		
+			case 12://middle_circle[3];
+				{	
+					std::cout << "middle_circle "<< std::endl;
+					std::cout <<  line<<std::endl;
+					middle_circle[0] = atoi(line.c_str());			
+					for (int i = 1; i<3; i++)
+					{
+						std::getline(infile,line);
+						std::istringstream iss(line);
+						middle_circle[i] = atoi(line.c_str());	
+						std::cout <<  line<<std::endl;	
+					}				
+				break;
+				}
+			 default:
+				break;
+			}
+			object_counter++;	
+		}
+	}
+}
+
 /**
  * @function drawParticle
  * @brief draws a particle of a robot
@@ -200,6 +325,7 @@ void drawParticle(Mat img,Point location, int angle, int certainty)
 	//draw direction
 	line(img,location,Point(location.x+px,location.y+py),Scalar(0,0,255),1,8);
 }
+
 /**
  * @function drawRectangle
  * @brief Draws simple rectangle
