@@ -1,4 +1,0 @@
-project(LineExtraction)
-find_package(OpenCV REQUIRED)
-add_executable(LineExtraction LineExtraction)
-target_link_libraries(LineExtraction ${OpenCV_LIBS})

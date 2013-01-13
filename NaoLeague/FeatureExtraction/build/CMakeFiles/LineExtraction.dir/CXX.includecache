@@ -13,6 +13,8 @@ highgui.h
 -
 math.h
 -
+time.h
+-
 
 /usr/local/include/opencv/cv.h
 opencv2/core/core_c.h
