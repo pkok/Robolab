@@ -1,0 +1,26 @@
+/*
+ * Particle.h
+ *
+ *  Created on: Jan 13, 2013
+ *      Author: owner
+ */
+
+#ifndef PARTICLE_H_
+#define PARTICLE_H_
+
+class Particle {
+
+public:
+	////vars
+	//x: field width, y field height, rot ranges from 0..2*pie*100, weight 0..100;
+	int x,y,rot,weight;
+	//for linked list of particles
+	Particle* next;
+
+	//functions
+	Particle();
+	Particle(int x,int y, int rot,int weight);
+	virtual ~Particle();
+};
+
+#endif /* PARTICLE_H_ */
