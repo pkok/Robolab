@@ -15,7 +15,7 @@ Particle::Particle() {
 	this->next = 0; //null pointer
 
 }
-Particle::Particle(int x,int y, int rot,int weight)
+Particle::Particle(int x,int y, double rot,double weight)
 {
 	this->weight = weight;
 	this->x = x;
