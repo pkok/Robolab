@@ -15,7 +15,7 @@ Particle::Particle() {
 	this->next = 0; //null pointer
 
 }
-Particle::Particle(int x,int y, double rot,double weight)
+Particle::Particle(double x,double y, double rot,double weight)
 {
 	assert(weight <= 1);
 	this->weight = weight;

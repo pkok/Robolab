@@ -8,13 +8,13 @@
 #include "FeatureMap.h"
 
 struct VisualFeature {
-	  double x;
-	  double y;
+	  double range; //according to camera position
+	  double bearing; //according to global coordinate system
 	  int type; //0 : L-crossing, 1 : T-crossing 2 : X-crossing
 	};
 	struct OdometryInformation {
-		int x;
-		int y;
+		double x;
+		double y;
 		double rot;
 	};
 
@@ -60,16 +60,17 @@ public:
 	//reassign particle poses according to weight of particles
 	int resample();
 	//particle interaction
+	int create_particles(int number,double x, double y, double rot, double weight);
 	int create_particles(int number);
 	int delete_particle_list(Particle* particle_ptr);
 	int count_particles();
 	int print_particles();
 
-/*
+
 	//gaussian noise
 	double random_uniform ();
 	double random_gaussian ();
-*/
+
 	double sample_normal_distribution(double variance);
 	double compute_prob_normal_dist(double a, double variance);
 };
