@@ -13,14 +13,14 @@ class Particle {
 public:
 	////vars
 	//x: field width, y field height, rot ranges from 0..2*pie*100, weight 0..100;
-	int x,y;
+	double x,y;
 	double rot,weight;
 	//for linked list of particles
 	Particle* next;
 
 	//functions
 	Particle();
-	Particle(int x,int y, double rot,double weight);
+	Particle(double x,double y, double rot,double weight);
 	virtual ~Particle();
 };
 
