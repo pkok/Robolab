@@ -18,6 +18,19 @@ using namespace std;
 //function headers
 
 
+/*
+ * constructor
+ *
+ */
+LocationVisualizer::LocationVisualizer(){
+	//read parameter
+	read_file(&h, &w, outer_line, goal_line_1, goal_line_2, middle_line, penalty1, penalty2, goalpost11, goalpost12, goalpost21, goalpost22, middle_circle);
+	//draw parameters on field
+	draw_field();
+	draw_field_lines();
+}
+LocationVisualizer::~LocationVisualizer(){
+}
 
 /*
  * draws lines on the field
@@ -82,11 +95,6 @@ void LocationVisualizer::create_window(){
 	waitKey(0);
 }
 
-//constructor
-LocationVisualizer::LocationVisualizer(){
-	read_file(&h, &w, outer_line, goal_line_1, goal_line_2, middle_line, penalty1, penalty2, goalpost11, goalpost12, goalpost21, goalpost22, middle_circle);
-}
-LocationVisualizer::~LocationVisualizer(){}
 /*
  * converts from soccer field coordinat system to image coordinate system
  */
@@ -339,20 +347,39 @@ void LocationVisualizer::clear_buffer(){
 	field_img.copyTo(current_frame);
 }
 /**
- * @function drawParticle
+ * @function draw_particle
+ * @brief draws all particles in list given
+ */
+void LocationVisualizer::draw_particle(Particle* p_ptr){
+
+	while(p_ptr != 0)
+	{
+		int x = p_ptr->x;
+		int y = p_ptr->y;
+		//convert coordinates:
+		convert_to_image_coordinates(&x,&y);
+		double rot = p_ptr->rot;
+		double prob = p_ptr->weight;
+		this->draw_particle(Point(x,y),rot,prob);
+		p_ptr = p_ptr->next;
+	}
+
+}
+/**
+ * @function draw_particle
  * @brief draws a particle of a robot
 **/
 void LocationVisualizer::draw_particle(Point location, double angle, double certainty)
 {
-	cout<<"drawing particle"<<endl;
+	//cout<<"drawing particle"<<endl;
 	//orientation line:
 	int x = 10;
 	int y = 0;
 	//rotate point around 0,0
 	double sn = sin(angle);
 	double cs = cos(angle);
-	double inv_certainty =1.0-certainty;
-	cout<<"certainty "<<inv_certainty<<endl;
+	double inv_certainty =1.0 - certainty;
+	//cout<<"inv_certainty "<<inv_certainty<<endl;
 	int px = cs*x - sn*y;
 	int py = sn*x + cs*y;
 	
