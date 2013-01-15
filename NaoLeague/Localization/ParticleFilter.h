@@ -27,6 +27,7 @@ public:
 
 	//vars
 	int width, height;
+	int particle_count;
 	Particle* particle_head;
 	Particle* particle_current;
 
@@ -60,6 +61,7 @@ public:
 	int resample();
 	//particle interaction
 	int create_particles(int number);
+	int delete_particle_list(Particle* particle_ptr);
 	int count_particles();
 	int print_particles();
 

@@ -4,7 +4,7 @@
  *  Created on: Jan 13, 2013
  *      Author: owner
  */
-
+#include <assert.h>
 #include "Particle.h"
 
 Particle::Particle() {
@@ -17,6 +17,7 @@ Particle::Particle() {
 }
 Particle::Particle(int x,int y, double rot,double weight)
 {
+	assert(weight <= 1);
 	this->weight = weight;
 	this->x = x;
 	this->y = y;
