@@ -1,0 +1,73 @@
+//1 pxl = 1 cm
+//height
+540
+//1000
+//width
+740
+//1000
+//rectangles
+//x1,y1,x2,y2..
+//outer line
+300
+-200
+300
+200
+-300
+200
+-300
+-200
+//goal line 1
+300
+110
+300
+-110
+240
+-110
+240
+110
+//goal line 2
+-240
+110
+-240
+-110
+-300
+-110
+-300
+110
+//middle line
+0
+200
+0
+-200
+//points:
+//x,y,diameter
+//penalty spot 1
+120
+0
+10
+//penalty spot 2
+-120
+0
+10
+//goalpost11
+300
+70
+10
+//goalpost12
+300
+-70
+10
+//goalpost21
+-300
+70
+10
+//goalpost22
+-300
+-70
+10
+//circles:
+//x,y,diameter
+//middle circle (non opaque)
+0
+0
+120
