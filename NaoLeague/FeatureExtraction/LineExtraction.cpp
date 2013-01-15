@@ -2,16 +2,21 @@
 #include <highgui.h>
 #include <math.h>
 #include <time.h>
+
 using namespace cv;
 
-int GREEN_THRESHOLD = 35;
+int GREEN_THRESHOLD = 34;
 int BINARY_TYPE = 0;
 int MAX_BINARY_VALUE = 255;
 double LINE_CONN_THERSHOLD = 3.0;
 double LINE_ANGLE_THERSHOLD = 15.0;
-double YEL_THR_R = 0.4;
-double YEL_THR_B = 0.2;
-double YEL_THR_G = 0.4;
+double YEL_N_THR_R = 0.38;
+double YEL_N_THR_B = 0.2;
+double YEL_N_THR_G = 0.38;
+double YEL_THR_R = 230;
+double YEL_THR_B = 160;
+double YEL_THR_G = 230;
+double WHITE_THR = 200;
 const double PI  =3.141592653589793238462;
 
 double distance_point_line(int, int, int, int, int, int);
@@ -42,87 +47,91 @@ int main(int argc, char** argv)
 
     vector<Vec4i> lines;
     HoughLinesP( dst, lines, 1, CV_PI/300, 10, 20, 20 );
-	
-	
+
     for( size_t i = 0; i < lines.size(); i++ )
     {
-		line( color_dst, Point(lines[i][0], lines[i][1]),
-		Point(lines[i][2], lines[i][3]), Scalar(0,0,255), 2, 8 );
+        line( color_dst, Point(lines[i][0], lines[i][1]),
+        Point(lines[i][2], lines[i][3]), Scalar(0,0,255), 2, 8 );
     }
     
-    
     vector<Vec3i> points;
-	points = find_connections(lines);
-	
+    points = find_connections(lines);
     
     for( int i = 0; i < points.size(); i++ )
     {
-		if(points[i][2] == 0){
-			circle(e, Point(points[i][0], points[i][1]), 5, Scalar(0,255,0), 2, 8, 0);
-		}else if(points[i][2] == 1){
-			circle(e, Point(points[i][0], points[i][1]), 5, Scalar(255,0,0), 2, 8, 0);
-		}
+        if(points[i][2] == 0)
+        {
+            circle(e, Point(points[i][0], points[i][1]), 5, Scalar(0,255,0), 2, 8, 0);
+        }
+        else if(points[i][2] == 1)
+        {
+            circle(e, Point(points[i][0], points[i][1]), 5, Scalar(255,0,0), 2, 8, 0);
+        }
     }
-    
     std::cout << double( clock() - startTime )*1000 / (double)CLOCKS_PER_SEC<< " ms." << std::endl;
     std::cout << "number of lines: " << lines.size() << std::endl;
     std::cout << "number of points: " << points.size() << std::endl;
-
-    namedWindow( "Detected Lines", 1 );
-    imshow( "Detected Lines", e );
+    namedWindow( "Detected Lines", 1);
+    imshow( "Detected Lines", e);
     waitKey(0);
     return 0;
 }
 
 Mat remove_background(Mat image){
     Mat green = cvCreateMat(image.rows, image.cols, CV_8U);
+    Mat yellow = Mat::zeros(image.rows, image.cols, CV_8U);
     int count;
-    for(int j = 0; j < image.cols; j ++){
+    bool background;
+    double r, g, b, jg, jr, jb, justGreen;
+    for(int j = 0; j < image.cols; j ++)
+    {
         count = 0;
-        bool background = true;
-        for(int i = 0; i < image.rows; i ++){
-            if (background){
-                double jr = (double)image.at<cv::Vec3b>(i,j)[2];
-                double jg = (double)image.at<cv::Vec3b>(i,j)[1];
-                double jb = (double)image.at<cv::Vec3b>(i,j)[0];
-                double justGreen = jg - jr/2 - jb/2;
-                if(justGreen < 0)
-                    justGreen = 0;
-                
+        background = true;
+        for(int i = 0; i < image.rows; i ++)
+        {
+            // pixel values
+            jr = (double)image.at<cv::Vec3b>(i,j)[2];
+            jg = (double)image.at<cv::Vec3b>(i,j)[1];
+            jb = (double)image.at<cv::Vec3b>(i,j)[0];
+            // how much green is the specific pixel
+            justGreen = max(jg - jr/2 - jb/2, 0.0);
+            // normalized rgb values
+            r = jr / (jg + jr + jb);
+            g = jg / (jg + jr + jb);
+            b = jb / (jg + jr + jb);
+
+            if (background)
+            {                                
                 (green.data + green.step * i)[j] = 255;
-                if (justGreen > 34){
-                    double r = ((double)image.at<cv::Vec3b>(i,j)[2] / 
-                        ((double)image.at<cv::Vec3b>(i,j)[0] +
-                        (double)image.at<cv::Vec3b>(i,j)[1] +
-                        (double)image.at<cv::Vec3b>(i,j)[2]));
-                    double g = ((double)image.at<cv::Vec3b>(i,j)[1] / 
-                        ((double)image.at<cv::Vec3b>(i,j)[0] +
-                        (double)image.at<cv::Vec3b>(i,j)[1] +
-                        (double)image.at<cv::Vec3b>(i,j)[2]));
-                    double b = ((double)image.at<cv::Vec3b>(i,j)[0] / 
-                        ((double)image.at<cv::Vec3b>(i,j)[0] +
-                        (double)image.at<cv::Vec3b>(i,j)[1] +
-                        (double)image.at<cv::Vec3b>(i,j)[2]));
-                    if(r>0.38 && g>0.38 && b<0.2){
+                if (justGreen > 34)
+                {                    
+                    if(r > YEL_N_THR_R && g > YEL_N_THR_G && b < YEL_N_THR_B)
+                    {
                         (green.data + green.step * i)[j] = 0;
-                    }else if(image.at<cv::Vec3b>(i,j)[2]>230 && 
-                    image.at<cv::Vec3b>(i,j)[1]>230 && 
-                    image.at<cv::Vec3b>(i,j)[0]<160){
+                    }
+                    else if(jr > YEL_THR_R && jg > YEL_THR_G && jb < YEL_THR_B)
+                    {
                         (green.data + green.step * i)[j] = 0;
-                    }else{
+                    }
+                    else
+                    {
                         (green.data + green.step * i)[j] = 255;
                     }
-                }else{
+                }
+                else
+                {
                     (green.data + green.step * i)[j] = 0;
                 }
-                if((green.data + green.step * i)[j] > 0){
+                if((green.data + green.step * i)[j] > 0)
+                {
                     count ++;
                     image.at<cv::Vec3b>(i,j)[0] = 0;
                     image.at<cv::Vec3b>(i,j)[1] = 0;
                     image.at<cv::Vec3b>(i,j)[2] = 0;
-                    if(count > 5)
-                        background = false;
-                }else{
+                    background = (count <= 5);
+                }
+                else
+                {
                     image.at<cv::Vec3b>(i,j)[0] = 0;
                     image.at<cv::Vec3b>(i,j)[1] = 0;
                     image.at<cv::Vec3b>(i,j)[2] = 0;
@@ -131,14 +140,14 @@ Mat remove_background(Mat image){
             else
             {
                 //if almost white make it white...
-                if(image.at<cv::Vec3b>(i,j)[0] > 200 &&
-                image.at<cv::Vec3b>(i,j)[1] > 200 &&
-                image.at<cv::Vec3b>(i,j)[2] > 200){
+                if(jr > WHITE_THR && jb > WHITE_THR && jg > WHITE_THR)
+                {
                     image.at<cv::Vec3b>(i,j)[0] = 255;
                     image.at<cv::Vec3b>(i,j)[1] = 255;
                     image.at<cv::Vec3b>(i,j)[2] = 255;
                 // else make it black...
-                }else{
+                }else
+                {
                     image.at<cv::Vec3b>(i,j)[0] = 0;
                     image.at<cv::Vec3b>(i,j)[1] = 0;
                     image.at<cv::Vec3b>(i,j)[2] = 0;
@@ -146,152 +155,174 @@ Mat remove_background(Mat image){
             }
         }
     }
+    // function to find goal-posts orientation and size.
+    for(int i = 0; i < yellow.rows; i ++)
+    {
+        for(int j = 0; j < yellow.cols; j ++)
+        {
+            if((yellow.data + yellow.step * i)[j] > 0)
+            {
+                i ++;
+                i --;
+            }
+        }
+    }
+    // imshow("posts",yellow);
     return image;
 }
 
-double distance_point_point(int ax, int ay, int bx, int by){
-	double dx = (ax-bx);
-	double dy = (ay-by);
+double distance_point_point(int ax, int ay, int bx, int by)
+{
+    double dx = (ax-bx);
+    double dy = (ay-by);
     return sqrt(dx*dx + dy*dy);
 }
 
-double distance_point_line(int x, int y, int x1, int y1, int x2, int y2){
-
+double distance_point_line(int x, int y, int x1, int y1, int x2, int y2)
+{
     double A = x - x1;
-	double B = y - y1;
-	double C = x2 - x1;
-	double D = y2 - y1;
-	double dot = A * C + B * D;
-	double len_sq = C * C + D * D;
-	double param = dot / len_sq;
-	 
-	double xx,yy;
-	 
-	if(param < 0)
-	{
-	    xx = x1;
-	    yy = y1;
-	}
-	else if(param > 1)
-	{
-	    xx = x2;
-	    yy = y2;
-	}
-	else
-	{
-	    xx = x1 + param * C;
-	    yy = y1 + param * D;
-	}
-	 
-	double dist = distance_point_point(x,y,xx,yy);
-    return dist;
+    double B = y - y1;
+    double C = x2 - x1;
+    double D = y2 - y1;
+    double dot = A * C + B * D;
+    double len_sq = C * C + D * D;
+    double param = dot / len_sq;
+    double xx,yy;
+
+    if(param < 0)
+    {
+        xx = x1;
+        yy = y1;
+    }
+    else if(param > 1)
+    {
+        xx = x2;
+        yy = y2;
+    }
+    else
+    {
+        xx = x1 + param * C;
+        yy = y1 + param * D;
+    }
+    return distance_point_point(x,y,xx,yy);
 }
 
-double int_dis_point_line(int x, int y, int x1, int y1, int x2, int y2){
-
+double int_dis_point_line(int x, int y, int x1, int y1, int x2, int y2)
+{
     double A = x - x1;
-	double B = y - y1;
-	double C = x2 - x1;
-	double D = y2 - y1;
-	double dot = A * C + B * D;
-	double len_sq = C * C + D * D;
-	double param = dot / len_sq;
-	 
-	double xx,yy;
-	 
-	if(param < 0)
-	{
-	    xx = x1;
-	    yy = y1;
-	}
-	else if(param > 1)
-	{
-	    xx = x2;
-	    yy = y2;
-	}
-	else
-	{
-	    xx = x1 + param * C;
-	    yy = y1 + param * D;
-	}
-	 
-	double dist = distance_point_point(x,y,(x1+x2)/2,(y1+y2)/2);
-    return dist;
+    double B = y - y1;
+    double C = x2 - x1;
+    double D = y2 - y1;
+    double dot = A * C + B * D;
+    double len_sq = C * C + D * D;
+    double param = dot / len_sq;
+    double xx,yy;
+
+    if(param < 0)
+    {
+        xx = x1;
+        yy = y1;
+    }
+    else if(param > 1)
+    {
+        xx = x2;
+        yy = y2;
+    }
+    else
+    {
+        xx = x1 + param * C;
+        yy = y1 + param * D;
+    }
+    return distance_point_point(x,y,(x1+x2)/2,(y1+y2)/2);
 }
 
 
-double angle_bet_lines(int a1x, int a1y, int b1x, int b1y, int a2x, int a2y, int b2x, int b2y){
-
+double angle_bet_lines(int a1x, int a1y, int b1x, int b1y, int a2x, int a2y, int b2x, int b2y)
+{
     double angle1 = atan2(a1y - b1y, a1x - b1x);
     double angle2 = atan2(a2y - b2y, a2x - b2x);
     double res = (angle1-angle2) * 180 / PI;
     return abs(res); 
 }
 
-vector<Vec3i> find_connections(vector<Vec4i> lines){
-	vector<Vec3i> points;
-    for( int i = 0; i < lines.size(); i++ ){
-        for( int j = 0; j < lines.size(); j++ ){
-            if(i != j){
-                for( int p = 0; p < 2; p++ ){
-					// point's distance from intersection point is below the thershold
-					if(distance_point_line(lines[i][2*p], lines[i][2*p+1], lines[j][0], lines[j][1], lines[j][2], lines[j][3]) < LINE_CONN_THERSHOLD){
-						// intersection point is near line's start or end
-						if(abs(int_dis_point_line(lines[i][2*p], lines[i][2*p+1], lines[j][0], lines[j][1], lines[j][2], lines[j][3]) -
-							distance_point_point(lines[j][0], lines[j][1], lines[j][2], lines[j][3])/2) < LINE_CONN_THERSHOLD){
-							// angle between the two lines has to be larger than a thershold to not to be considered,
-							// a straight line.
-							if(angle_bet_lines(lines[j][0], lines[j][1], lines[j][2], lines[j][3],lines[i][0], lines[i][1], lines[i][2], lines[i][3]) > LINE_ANGLE_THERSHOLD){
-								points.push_back(Vec3i(lines[i][2*p], lines[i][2*p+1], 0));
-							}
-						}
-						else if(int_dis_point_line(lines[i][2*p], lines[i][2*p+1], lines[j][0], lines[j][1], lines[j][2], lines[j][3]) -
-							distance_point_point(lines[j][0], lines[j][1], lines[j][2], lines[j][3])/2 < -10.0){
-								if(angle_bet_lines(lines[j][0], lines[j][1], lines[j][2], lines[j][3],lines[i][0], lines[i][1], lines[i][2], lines[i][3]) > LINE_ANGLE_THERSHOLD){
-									points.push_back(Vec3i(lines[i][2*p], lines[i][2*p+1], 1));
-								}		
-						}
-					}
-				}  
+vector<Vec3i> find_connections(vector<Vec4i> lines)
+{
+    vector<Vec3i> points;
+    for( int i = 0; i < lines.size(); i++ )
+    {
+        for( int j = 0; j < lines.size(); j++ )
+        {
+            if(i != j)
+            {
+                for( int p = 0; p < 2; p++ )
+                {
+                    // point's distance from intersection point is below the thershold
+                    if(distance_point_line(lines[i][2*p], lines[i][2*p+1], lines[j][0], lines[j][1], lines[j][2], lines[j][3]) < LINE_CONN_THERSHOLD){
+                        // intersection point is near line's start or end
+                        if(abs(int_dis_point_line(lines[i][2*p], lines[i][2*p+1], lines[j][0], lines[j][1], lines[j][2], lines[j][3]) -
+                            distance_point_point(lines[j][0], lines[j][1], lines[j][2], lines[j][3])/2) < LINE_CONN_THERSHOLD)
+                        {
+                            // angle between the two lines has to be larger than a thershold to not to be considered,
+                            // a straight line.
+                            if(angle_bet_lines(lines[j][0], lines[j][1], lines[j][2], lines[j][3],lines[i][0], lines[i][1], lines[i][2], lines[i][3]) > LINE_ANGLE_THERSHOLD)
+                            {
+                                points.push_back(Vec3i(lines[i][2*p], lines[i][2*p+1], 0));
+                            }
+                        }
+                        else if(int_dis_point_line(lines[i][2*p], lines[i][2*p+1], lines[j][0], lines[j][1], lines[j][2], lines[j][3]) -
+                            distance_point_point(lines[j][0], lines[j][1], lines[j][2], lines[j][3])/2 < -10.0)
+                        {
+                                if(angle_bet_lines(lines[j][0], lines[j][1], lines[j][2], lines[j][3],lines[i][0], lines[i][1], lines[i][2], lines[i][3]) > LINE_ANGLE_THERSHOLD)
+                                {
+                                    points.push_back(Vec3i(lines[i][2*p], lines[i][2*p+1], 1));
+                                }       
+                        }
+                    }
+                }  
             }
         }
     }
     return points;
 }
-vector<Vec4i> reduce_lines(vector<Vec4i> lines){
-	vector<Vec4i> reduced_lines;
-	for( int i = 0; i < lines.size(); i++ )
-	{
-		if(reduced_lines.size() == 0)
-		{
-			reduced_lines.push_back(lines[i]);
-		}
-		else
-		{
-			bool found_same = false;
-			for( int j = 0; j < lines.size(); j++ )
-			{
-				// lines with approximately equal end points and start
-				// points will be removed
-				for( int p = 0; p < 2; p++ ){
-					for( int l = 0; l < 2; l++ ){
-						// if points are too close
-						if(distance_point_point(lines[i][2*p], lines[i][2*p+1], reduced_lines[j][2*l], reduced_lines[j][2*l+1]) < LINE_CONN_THERSHOLD){
-							if(distance_point_point(lines[i][2*l], lines[i][2*l+1], reduced_lines[j][2*p], reduced_lines[j][2*p+1]) < LINE_CONN_THERSHOLD){
-							// if already stored line is longer than the current, keep it and discard the current
-							double stored_line_l = distance_point_point(lines[j][0], lines[j][1], reduced_lines[j][2], reduced_lines[j][3]);
-							double current_line_l = distance_point_point(lines[i][0], lines[i][1], reduced_lines[i][2], reduced_lines[i][3]);
-							found_same = true;
-							}
-						}
-					}
-				}
-			}
-			if (found_same == false){
-				reduced_lines.push_back(lines[i]);
-			}
-		}
-	}
-	
-	return reduced_lines;
+vector<Vec4i> reduce_lines(vector<Vec4i> lines)
+{
+    vector<Vec4i> reduced_lines;
+    for( int i = 0; i < lines.size(); i++)
+    {
+        if(reduced_lines.size() == 0)
+        {
+            reduced_lines.push_back(lines[i]);
+        }
+        else
+        {
+            bool found_same = false;
+            for( int j = 0; j < lines.size(); j++)
+            {
+                // lines with approximately equal end points and start
+                // points will be removed
+                for( int p = 0; p < 2; p++ )
+                {
+                    for( int l = 0; l < 2; l++ )
+                    {
+                        // if points are too close
+                        if(distance_point_point(lines[i][2*p], lines[i][2*p+1], reduced_lines[j][2*l], reduced_lines[j][2*l+1]) < LINE_CONN_THERSHOLD)
+                        {
+                            if(distance_point_point(lines[i][2*l], lines[i][2*l+1], reduced_lines[j][2*p], reduced_lines[j][2*p+1]) < LINE_CONN_THERSHOLD)
+                            {
+                            // if already stored line is longer than the current, keep it and discard the current
+                            double stored_line_l = distance_point_point(lines[j][0], lines[j][1], reduced_lines[j][2], reduced_lines[j][3]);
+                            double current_line_l = distance_point_point(lines[i][0], lines[i][1], reduced_lines[i][2], reduced_lines[i][3]);
+                            found_same = true;
+                            }
+                        }
+                    }
+                }
+            }
+            if (found_same == false)
+            {
+                reduced_lines.push_back(lines[i]);
+            }
+        }
+    }
+    return reduced_lines;
 }
