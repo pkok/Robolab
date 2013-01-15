@@ -9,7 +9,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <cmath>
-
+#include <assert.h>
 #define PI 3.14159
 
 using namespace std;
@@ -33,6 +33,7 @@ ParticleFilter::ParticleFilter(){
 	this->height = 540;
 	this->particle_head = 0;
 	this->particle_current = 0;
+	this->particle_count = 0;
 	this->alpha1 = 0.1;
 	this->alpha2 = 0.01;
 	this->alpha3 = 0.01;
@@ -44,6 +45,7 @@ ParticleFilter::ParticleFilter(int width, int height,int number_of_particles){
 	this->height = height;
 	this->particle_head = 0;
 	this->particle_current = 0;
+	this->particle_count = 0;
 	this->alpha1 = 0.1;
 	this->alpha2 = 0.01;
 	this->alpha3 = 0.01;
@@ -59,6 +61,38 @@ ParticleFilter::~ParticleFilter(){
 void ParticleFilter::test() {
 	std::cout << "hello from particleFilter!" << std::endl;
 }
+/*
+ * deletes the linked list of particles and all its descendants
+ */
+int ParticleFilter::delete_particle_list(Particle* particle_ptr){
+	//cout<<"deleting particles"<<endl;
+	Particle* particle_del = particle_ptr;
+	this->particle_head = 0;
+	int no = 0;
+	while(particle_ptr != 0)
+	{
+		//delete praticle
+		particle_ptr = particle_ptr->next;
+
+		//cout<<"particle_ptr = particle_ptr->next"<<endl;
+
+		particle_del = particle_ptr;
+		//cout<<"particle_del = particle_ptr "<<no<<endl;
+
+		if(particle_del !=0)
+		{
+			particle_del->~Particle();
+			this->particle_count--;
+			//cout<<"particle_del->~Particle()"<<endl;
+		}
+
+		no++;
+	}
+	//cout<<"deleted particles"<<endl;
+}
+/*
+ * resamples all particles with low variance resampling algorithm. (creates new particle list)
+ */
 int ParticleFilter::resample() {
 
 	////low variance resampling:
@@ -66,9 +100,12 @@ int ParticleFilter::resample() {
 	//draw random number
 	//get add fixed amount, to each bin we step into, sample from that particle
 	//need to create new list?
-
-
-
+	/*
+	assert(this->particle_count>0);
+	double m_inv =  1/this->particle_count;
+	double r = rand() % ( m_inv * 1000000 ) / 1000000;
+	double c = this->particle_head;
+	*/
 	// read particle 0..M
 	// draw with probability alpha w[i]t
 	// add x[i]_t to Xt
@@ -250,6 +287,7 @@ int ParticleFilter::create_particles(int number) {
 	Particle* head_node = new Particle(x,y,rot,weight);
 	this->particle_head = head_node;
 	this->particle_current = head_node;
+	this->particle_count++;
 	Particle* current = this->particle_head;
 
 
@@ -262,6 +300,7 @@ int ParticleFilter::create_particles(int number) {
 		Particle* new_node = new Particle(x,y,rot,weight);
 		current->next = new_node;
 		current = current->next;
+		this->particle_count++;
 	}
 }
 
