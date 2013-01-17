@@ -81,18 +81,27 @@ int ParticleFilter::resample() {
 	// draw with probability alpha w[i]t
 	// add x[i]_t to Xt
 
+	vector<Particle> resampled_particles;
 
-	double bin_border = 0;
-	double weight_sum = this->particles[0];
+	double bin_border = this->particles[0].weight;
+	double weight_sum = 0;
 
-	double step_size = sum_particles()/(double) this->particles.size();
+	double step_size = sum_weights()/(double) this->particles.size();
 
 	double offset = rand() % (int)(step_size*1000)/(double)1000;
-	/*
-	j = 0;
+
+	int j = 1;
 	for(int i = 0; i < this->particles.size(); i++){
-		weight_sum =  offset + (i-1) *
-	}*/
+		weight_sum =  offset + (i-1) * step_size;
+		while(weight_sum >= bin_border){
+			//cout<<j<<endl;
+			j++;
+			bin_border += this->particles[j].weight;
+		}
+		Particle p(this->particles[j].x,this->particles[j].y,this->particles[j].rot,1);
+		resampled_particles.push_back(p);
+	}
+	this->particles = resampled_particles;
 }
 int ParticleFilter::dynamic(OdometryInformation odo_inf){
 
@@ -277,7 +286,7 @@ int ParticleFilter::add_particles(int number) {
 double ParticleFilter::sum_weights(){
 	double sum = 0;
 	for(int i = 0; i < this->particles.size(); i++ ){
-		sum += this->particles[i];
+		sum += this->particles[i].weight;
 	}
 	return(sum);
 }
