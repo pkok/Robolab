@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 2.8)
 project(feature_extraction)
 find_package(OpenCV REQUIRED)
 add_executable(feature_extraction feature_extraction.cpp)
