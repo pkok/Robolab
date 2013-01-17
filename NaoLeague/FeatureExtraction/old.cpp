@@ -49,35 +49,13 @@ int main(int argc, char** argv)
 
 	Canny( src_line_binary, dst, 50, 200, 3 );
 	cvtColor( dst, color_dst, CV_GRAY2BGR );
-
 	vector<Vec4i> lines;
 	vector<Vec4i> red_lines;
 	HoughLinesP( dst, lines, 1, CV_PI/300, 10, 8,9 );
+	color_dst.copyTo(red);
+	red_lines = reduce_lines(lines);
 
-	//color_dst.copyTo(red);
-	//red_lines = reduce_lines(lines);
-
-	// for( size_t i = 0; i < lines.size(); i++ )
-	// {
-	// 	line( color_dst, Point(lines[i][0], lines[i][1]),
-	// 	      Point(lines[i][2], lines[i][3]), Scalar(0,0,255), 1, 8 );
-	// 	circle(color_dst, Point(lines[i][0], lines[i][1]), 5, Scalar(0,255,0), 1, 8, 0);
-	// 	circle(color_dst, Point(lines[i][2], lines[i][3]), 5, Scalar(0,255,0), 1, 8, 0);
-	// }
-	// imshow("lines",color_dst);
-
-	// for( size_t i = 0; i < red_lines.size(); i++ )
-	// {
-	// 	line( red, Point(red_lines[i][0], red_lines[i][1]),
-	// 	     Point(red_lines[i][2], red_lines[i][3]), Scalar(0,0,255), 1, 8 );
-	// 	    // circle(red, Point(red_lines[i][0], red_lines[i][1]), 5, Scalar(0,255,0), 1, 8, 0);
-	// 		//circle(red, Point(red_lines[i][2], red_lines[i][3]), 5, Scalar(0,255,0), 1, 8, 0);
-	// }
-	// imshow("lines_reduced",red);
-
-
-
-
+	imshow("lines_reduced",red);
 	vector<Vec3i> points;
 	points = find_connections(lines);
 	for( int i = 0; i < points.size(); i++ )
@@ -190,7 +168,7 @@ Mat remove_background(Mat image)
 		}
 	}
 	//imshow("binary",image);
-	//goalPostDetection(yellow);
+	goalPostDetection(yellow);
 	return image;
 }
 
