@@ -10,6 +10,7 @@
 
 #include <cv.h>
 #include "Particle.h"
+#include <vector>
 using namespace cv;
 
 class LocationVisualizer{
@@ -59,7 +60,7 @@ public:
 
 	void clear_buffer();
 	void draw_particle(Point location, double rotation,double certainty);
-	void draw_particle(Particle* p_ptr);
+	void draw_particle(vector<Particle> p_vec);
 	
 	LocationVisualizer();
 	~LocationVisualizer();

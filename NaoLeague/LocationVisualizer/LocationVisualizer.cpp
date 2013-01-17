@@ -350,8 +350,27 @@ void LocationVisualizer::clear_buffer(){
  * @function draw_particle
  * @brief draws all particles in list given
  */
-void LocationVisualizer::draw_particle(Particle* p_ptr){
+void LocationVisualizer::draw_particle(vector<Particle> p_vec){
 
+	//find max
+	double max = -100000;
+	for (int i = 0; i< p_vec.size(); i++){
+		if(p_vec[i].weight > max){
+			max = p_vec[i].weight;
+		}
+	}
+
+
+	for(int i = 0; i < p_vec.size(); i++){
+		int x = p_vec[i].x;
+		int y = p_vec[i].y;
+		//convert coordinates:
+		convert_to_image_coordinates(&x,&y);
+		double rot = p_vec[i].rot;
+		double prob = (double)p_vec[i].weight/max;
+		this->draw_particle(Point(x,y),rot,prob);
+	}
+	/*
 	while(p_ptr != 0)
 	{
 		int x = p_ptr->x;
@@ -363,7 +382,7 @@ void LocationVisualizer::draw_particle(Particle* p_ptr){
 		this->draw_particle(Point(x,y),rot,prob);
 		p_ptr = p_ptr->next;
 	}
-
+*/
 }
 /**
  * @function draw_particle
