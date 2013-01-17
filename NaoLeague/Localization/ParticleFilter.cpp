@@ -273,7 +273,7 @@ int ParticleFilter::add_particles(int number) {
 	double accuracy = 10;
 
 	//create random samples
-	for (int i = 1; i<number; i++){
+	for (int i = 0; i<number; i++){
 		double x  = (rand()%(int)(this->x_dim*accuracy))/accuracy - this->x_dim/2;
 		double y = (rand()%(int)(this->y_dim*accuracy))/accuracy - this->y_dim/2;
 		double rot = (rand()%(int)(2*PI*accuracy))/accuracy-PI;//rand() % 630;
@@ -294,7 +294,7 @@ double ParticleFilter::sum_weights(){
  * prints out values for every particle in particle vector
  */
 int ParticleFilter::print_particles() {
-	cout<<"contents of particle list: x y rot weight"<<endl;
+	cout<<"contents of particle list: x y rot weight no of particles: "<<this->particles.size()<<endl;
 	for(int i = 0; i < this->particles.size(); i++){
 		cout<<this->particles[i].x<<" "<<this->particles[i].y<<" "<<this->particles[i].rot<<" "<<this->particles[i].weight<<endl;
 	}
