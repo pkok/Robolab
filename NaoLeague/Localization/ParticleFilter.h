@@ -48,6 +48,8 @@ public:
 	int sample_motion_model_simple(OdometryInformation odometry_information,Particle* last_pose);
 	//weight particles accroding to new sensory information (vision)
 	double measurement_model(VisualFeature* feature,int no_observations ,Particle* current_pose,int map);
+	//finds most likeli landmark for given feature observation
+	int find_landmark(VisualFeature* feature,Particle* current_pose,double* dist);
 
 	//wander through all particles and update odometry and weight according to visual measurement
 	int dynamic(OdometryInformation odo_inf);

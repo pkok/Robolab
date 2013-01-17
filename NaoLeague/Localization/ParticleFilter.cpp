@@ -168,7 +168,67 @@ int ParticleFilter::sample_motion_model_simple(OdometryInformation odometry_info
 
 	//TODO: reject particles outside the field
 }
+int ParticleFilter::find_landmark(VisualFeature* feature, Particle* current_pose,double* dist){
+	//iterate through all features of that type, calculate distance to feature observed in map
 
+	//calculate position on map(assuming we are in the current pose):
+	int x_feat = current_pose->x + sin(feature->bearing)*feature->range;
+	int y_feat = current_pose->y + cos(feature->bearing)*feature->range;
+		//choose feature with smallest distance and then proceed
+		double min_dist = 1000; //10 meter
+		double feature_index = 0;
+
+		switch (feature->type){
+		case 0: //L crossing observed 8
+		{
+			for(int i = 0;i < 8; i++){
+				//calculate distance
+				double delta_x = x_feat - this->feature_map.l_cross[i].x ;
+				double delta_y = y_feat - this->feature_map.l_cross[i].y ;
+				double dist =  sqrt(delta_x * delta_x + delta_y * delta_y);
+				if(dist < min_dist){
+					min_dist = dist;
+					feature_index = i;
+				}
+			}
+			break;
+		}
+		case 1: //T crossing observed 7
+		{
+
+			for(int i = 0; i<7; i++){
+				//calculate distance
+				double delta_x = x_feat - this->feature_map.t_cross[i].x ;
+				double delta_y = y_feat - this->feature_map.t_cross[i].y ;
+				double dist =  sqrt(delta_x * delta_x + delta_y * delta_y);
+				if(dist < min_dist){
+					min_dist = dist;
+					feature_index = i;
+				}
+			}
+			break;
+		}
+		case 2: //X crossing observed 5
+		{
+			for(int i = 0;i<5;i++){
+				//dist calculation
+				double delta_x = x_feat - this->feature_map.t_cross[i].x ;
+				double delta_y = y_feat - this->feature_map.t_cross[i].y ;
+				double dist =  sqrt(delta_x * delta_x + delta_y * delta_y);
+				if(dist < min_dist){
+					min_dist = dist;
+					feature_index = i;
+				}
+			}
+			break;
+		}
+		default:
+			cout<<"something went terribly wrong in measurement model!" <<endl;
+			break;
+		}
+		*dist = min_dist;
+		return(feature_index);
+}
 /*
  * receives all visual features seen on the map and computes likelihood of a landmark measurment (with known correspondence)
  */
@@ -180,71 +240,10 @@ double ParticleFilter::measurement_model(VisualFeature* feature,int no_observati
 
 	//find the the most likeli landmark that can be assigned to the feature and assume its the rigth one:
 
-	//calculate position on map(assuming we are in the current pose):
-	int x_feat = current_pose->x + sin(feature->bearing)*feature->range;
-	int y_feat = current_pose->y + cos(feature->bearing)*feature->range;
 
-
-
-
-
-
-
-	//iterate through all features of that type, calculate distance to feature observed in map
-	//choose feature with smallest distance and then proceed
-	double min_dist = 1000; //10 meter
-	double feature_index = 0;
-
-	switch (feature->type){
-	case 0: //L crossing observed 8
-	{
-		for(int i = 0;i < 8; i++){
-			//calculate distance
-			double delta_x = x_feat - this->feature_map.l_cross[i].x ;
-			double delta_y = y_feat - this->feature_map.l_cross[i].y ;
-			double dist =  sqrt(delta_x * delta_x + delta_y * delta_y);
-			if(dist < min_dist){
-				min_dist = dist;
-				feature_index = i;
-			}
-		}
-		break;
-	}
-	case 1: //T crossing observed 7
-	{
-
-		for(int i = 0; i<7; i++){
-			//calculate distance
-			double delta_x = x_feat - this->feature_map.t_cross[i].x ;
-			double delta_y = y_feat - this->feature_map.t_cross[i].y ;
-			double dist =  sqrt(delta_x * delta_x + delta_y * delta_y);
-			if(dist < min_dist){
-				min_dist = dist;
-				feature_index = i;
-			}
-		}
-		break;
-	}
-	case 2: //X crossing observed 5
-	{
-		for(int i = 0;i<5;i++){
-			//dist calculation
-			double delta_x = x_feat - this->feature_map.t_cross[i].x ;
-			double delta_y = y_feat - this->feature_map.t_cross[i].y ;
-			double dist =  sqrt(delta_x * delta_x + delta_y * delta_y);
-			if(dist < min_dist){
-				min_dist = dist;
-				feature_index = i;
-			}
-		}
-		break;
-	}
-	default:
-		cout<<"something went terribly wrong in measurement model!" <<endl;
-		break;
-	}
-
-	cout<<"measurement model reporting min distance found: "<<min_dist<<" for feature "<<feature_index<<endl;
+	double dist = 0;
+	int landmark_index = find_landmark(feature,current_pose, &dist);
+	cout<<"measurement model reporting min distance found feature no"<<landmark_index<<" in distance "<<dist<<endl;
 
 	//prob of right bearing * prob of right range * prob of being that landmark
 	return(0);
