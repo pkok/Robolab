@@ -87,24 +87,26 @@ int ParticleFilter::resample() {
 
 	vector<Particle> resampled_particles;
 
-	double bin_border = this->particles[0].weight;
-	double weight_sum = 0;
+	double c = this->particles[0].weight;
+	double u = 0;
 
-	assert(this->particles.size() >0);
+	assert(this->particles.size() >= 0);
 
 	double step_size = sum_weights()/(double) this->particles.size();
 
-	assert(step_size > 0);
-	double offset = rand() / RAND_MAX * step_size;
-	int j = 1;
+	assert(step_size >= 0);
+	double offset = ((double)rand() / (double)RAND_MAX) * step_size;
+	assert(offset > 0);
+
+	int j = 0;
 
 	//cout<< " while loop"<<endl;
-	for(int i = 0; i < this->particles.size(); i++){
-		weight_sum =  offset + (i-1) * step_size;
-		while(weight_sum >= bin_border){
+	for(int i = 1; i <= this->particles.size(); i++){
+		u =  offset + (i-1) * step_size;
+		while(u >= c){
 			//cout<<j<<endl;
 			j++;
-			bin_border += this->particles[j].weight;
+			c += this->particles[j].weight;
 		}
 		Particle p(this->particles[j].x,this->particles[j].y,this->particles[j].rot,1);
 		resampled_particles.push_back(p);
@@ -124,17 +126,22 @@ int ParticleFilter::dynamic(OdometryInformation odo_inf,vector<VisualFeature> vi
 		sample_motion_model_simple(odo_inf,&this->particles[i]);
 		this->particles[i].weight = this->measurement_model(vis_feats,&this->particles[i]);
 
+
+
 		if(this->particles[i].weight < 0){
 			cout<<" the impossible has happened!!"<<endl;
 		}
+		if(this->particles[i].x == 100 && this->particles[i].y == 0){
+			cout<<"still one particle at 100,0"<<endl;
+		}
 		if(this->particles[i].weight > 0.00001){
 			cout<<" yey!"<<this->particles[i].x<<" "<<this->particles[i].y<<" "<<this->particles[i].rot<<" "<<this->particles[i].weight<<endl;
-		}
+		}/*
 		//TODO: dirty hack, should probably not be there
 		if(this->particles[i].weight < 0.00001) //small value
 		{
 			this->particles[i].weight = 0.00001;
-		}
+		}*/
 		//if(this->particles[i].weight>0){
 		//cout<<"found good estimate at : "<<this->particles[i].x<<" "<<this->particles[i].y<<" "<<this->particles[i].rot<<" weight is:"<<this->particles[i].weight<<endl;
 		//}
