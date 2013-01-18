@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(LineExtraction)
+project(feature_extraction)
 find_package(OpenCV REQUIRED)
-add_executable(LineExtraction LineExtraction)
-target_link_libraries(LineExtraction ${OpenCV_LIBS})
+add_executable(feature_extraction feature_extraction.cpp)
+target_link_libraries(feature_extraction ${OpenCV_LIBS})

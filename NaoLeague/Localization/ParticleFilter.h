@@ -6,6 +6,9 @@
  */
 #include "Particle.h"
 #include "FeatureMap.h"
+#include <vector>
+
+using namespace std;
 
 struct VisualFeature {
 	  double range; //according to camera position
@@ -26,16 +29,10 @@ class ParticleFilter {
 public:
 
 	//vars
-	int width, height;
-	int particle_count;
-	Particle* particle_head;
-	Particle* particle_current;
+	int x_dim;
+	int y_dim;
 
-	//motion model variables
-	//rotation ?uncertainty parameters
-	double alpha1,alpha2;
-	//translation ?
-	double alpha3,alpha4;
+	vector<Particle> particles;
 
 	FeatureMap feature_map;
 
@@ -44,13 +41,10 @@ public:
 	ParticleFilter(int width, int height,int number_of_particles);
 	virtual ~ParticleFilter();
 
-
-
 	void test();
 
 
 	//incorporate new odometry information (move and rotate particle)
-	int sample_motion_model(OdometryInformation odometry_information,Particle* last_pose);
 	int sample_motion_model_simple(OdometryInformation odometry_information,Particle* last_pose);
 	//weight particles accroding to new sensory information (vision)
 	double measurement_model(VisualFeature* feature,int no_observations ,Particle* current_pose,int map);
@@ -60,11 +54,12 @@ public:
 	//reassign particle poses according to weight of particles
 	int resample();
 	//particle interaction
-	int create_particles(int number,double x, double y, double rot, double weight);
-	int create_particles(int number);
-	int delete_particle_list(Particle* particle_ptr);
-	int count_particles();
+
+	int add_particles(int number,double x, double y, double rot, double weight);
+	int add_particles(int number);
+	int delete_particles();
 	int print_particles();
+	double sum_weights();
 
 
 	//gaussian noise
