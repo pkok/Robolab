@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
 project(feature_extraction)
 find_package(OpenCV REQUIRED)
-add_executable(feature_extraction hough.h hough.cpp background.h background.cpp feature_extraction.cpp)
+add_executable(feature_extraction lines.h lines.cpp hough.h hough.cpp background.h background.cpp feature_extraction.cpp)
 target_link_libraries(feature_extraction ${OpenCV_LIBS})

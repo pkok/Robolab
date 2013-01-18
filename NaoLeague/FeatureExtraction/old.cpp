@@ -348,7 +348,7 @@ vector<Vec4i> reduce_lines(vector<Vec4i> lines)
 	vector<Vec4i> red;
 	for( int i = 0; i < lines.size(); i++)
 	{
-		// if it's empty 
+		// if it's empty
 		if(red.size() == 0)
 		{
 			red.push_back(lines[i]);
@@ -360,12 +360,14 @@ vector<Vec4i> reduce_lines(vector<Vec4i> lines)
 			{
 				// all combinations of start and end points will be checked...
 				if((distance_point_point(red[j][0],red[j][1],lines[i][0],lines[i][1]) < LINE_REDUCE_CONN_THRESHOLD &&
-				distance_point_point(red[j][2],red[j][3],lines[i][2],lines[i][3]) < LINE_REDUCE_CONN_THRESHOLD) ||
-				(distance_point_point(red[j][0],red[j][1],lines[i][2],lines[i][3]) < LINE_REDUCE_CONN_THRESHOLD &&
-				distance_point_point(red[j][2],red[j][3],lines[i][0],lines[i][1]) < LINE_REDUCE_CONN_THRESHOLD)){
+				        distance_point_point(red[j][2],red[j][3],lines[i][2],lines[i][3]) < LINE_REDUCE_CONN_THRESHOLD) ||
+				        (distance_point_point(red[j][0],red[j][1],lines[i][2],lines[i][3]) < LINE_REDUCE_CONN_THRESHOLD &&
+				         distance_point_point(red[j][2],red[j][3],lines[i][0],lines[i][1]) < LINE_REDUCE_CONN_THRESHOLD))
+				{
 					double current_line_length = distance_point_point(red[j][0], red[j][1], red[j][2], red[j][3]);
 					double stored_line_length = distance_point_point(lines[i][0], lines[i][1], lines[i][2], lines[i][3]);
-					if(stored_line_length < current_line_length){
+					if(stored_line_length < current_line_length)
+					{
 						red.erase(red.begin() + j);
 					}
 					same_found = true;
@@ -379,7 +381,8 @@ vector<Vec4i> reduce_lines(vector<Vec4i> lines)
 				// }
 
 			}
-			if(!same_found){
+			if(!same_found)
+			{
 				red.push_back(lines[i]);
 			}
 		}
