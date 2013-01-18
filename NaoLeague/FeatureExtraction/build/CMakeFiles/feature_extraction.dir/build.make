@@ -49,9 +49,32 @@ include CMakeFiles/feature_extraction.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/feature_extraction.dir/flags.make
 
+CMakeFiles/feature_extraction.dir/background.cpp.o: CMakeFiles/feature_extraction.dir/flags.make
+CMakeFiles/feature_extraction.dir/background.cpp.o: ../background.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/build/CMakeFiles $(CMAKE_PROGRESS_1)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/feature_extraction.dir/background.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/feature_extraction.dir/background.cpp.o -c /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/background.cpp
+
+CMakeFiles/feature_extraction.dir/background.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/feature_extraction.dir/background.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/background.cpp > CMakeFiles/feature_extraction.dir/background.cpp.i
+
+CMakeFiles/feature_extraction.dir/background.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/feature_extraction.dir/background.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/background.cpp -o CMakeFiles/feature_extraction.dir/background.cpp.s
+
+CMakeFiles/feature_extraction.dir/background.cpp.o.requires:
+.PHONY : CMakeFiles/feature_extraction.dir/background.cpp.o.requires
+
+CMakeFiles/feature_extraction.dir/background.cpp.o.provides: CMakeFiles/feature_extraction.dir/background.cpp.o.requires
+	$(MAKE) -f CMakeFiles/feature_extraction.dir/build.make CMakeFiles/feature_extraction.dir/background.cpp.o.provides.build
+.PHONY : CMakeFiles/feature_extraction.dir/background.cpp.o.provides
+
+CMakeFiles/feature_extraction.dir/background.cpp.o.provides.build: CMakeFiles/feature_extraction.dir/background.cpp.o
+
 CMakeFiles/feature_extraction.dir/feature_extraction.cpp.o: CMakeFiles/feature_extraction.dir/flags.make
 CMakeFiles/feature_extraction.dir/feature_extraction.cpp.o: ../feature_extraction.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/build/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/build/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/feature_extraction.dir/feature_extraction.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/feature_extraction.dir/feature_extraction.cpp.o -c /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/feature_extraction.cpp
 
@@ -74,11 +97,13 @@ CMakeFiles/feature_extraction.dir/feature_extraction.cpp.o.provides.build: CMake
 
 # Object files for target feature_extraction
 feature_extraction_OBJECTS = \
+"CMakeFiles/feature_extraction.dir/background.cpp.o" \
 "CMakeFiles/feature_extraction.dir/feature_extraction.cpp.o"
 
 # External object files for target feature_extraction
 feature_extraction_EXTERNAL_OBJECTS =
 
+feature_extraction: CMakeFiles/feature_extraction.dir/background.cpp.o
 feature_extraction: CMakeFiles/feature_extraction.dir/feature_extraction.cpp.o
 feature_extraction: CMakeFiles/feature_extraction.dir/build.make
 feature_extraction: /usr/local/lib/libopencv_calib3d.so
@@ -106,6 +131,7 @@ feature_extraction: CMakeFiles/feature_extraction.dir/link.txt
 CMakeFiles/feature_extraction.dir/build: feature_extraction
 .PHONY : CMakeFiles/feature_extraction.dir/build
 
+CMakeFiles/feature_extraction.dir/requires: CMakeFiles/feature_extraction.dir/background.cpp.o.requires
 CMakeFiles/feature_extraction.dir/requires: CMakeFiles/feature_extraction.dir/feature_extraction.cpp.o.requires
 .PHONY : CMakeFiles/feature_extraction.dir/requires
 

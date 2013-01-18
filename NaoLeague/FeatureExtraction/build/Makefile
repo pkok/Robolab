@@ -111,6 +111,30 @@ feature_extraction/fast:
 	$(MAKE) -f CMakeFiles/feature_extraction.dir/build.make CMakeFiles/feature_extraction.dir/build
 .PHONY : feature_extraction/fast
 
+background.o: background.cpp.o
+.PHONY : background.o
+
+# target to build an object file
+background.cpp.o:
+	$(MAKE) -f CMakeFiles/feature_extraction.dir/build.make CMakeFiles/feature_extraction.dir/background.cpp.o
+.PHONY : background.cpp.o
+
+background.i: background.cpp.i
+.PHONY : background.i
+
+# target to preprocess a source file
+background.cpp.i:
+	$(MAKE) -f CMakeFiles/feature_extraction.dir/build.make CMakeFiles/feature_extraction.dir/background.cpp.i
+.PHONY : background.cpp.i
+
+background.s: background.cpp.s
+.PHONY : background.s
+
+# target to generate assembly for a file
+background.cpp.s:
+	$(MAKE) -f CMakeFiles/feature_extraction.dir/build.make CMakeFiles/feature_extraction.dir/background.cpp.s
+.PHONY : background.cpp.s
+
 feature_extraction.o: feature_extraction.cpp.o
 .PHONY : feature_extraction.o
 
@@ -144,6 +168,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... feature_extraction"
 	@echo "... rebuild_cache"
+	@echo "... background.o"
+	@echo "... background.i"
+	@echo "... background.s"
 	@echo "... feature_extraction.o"
 	@echo "... feature_extraction.i"
 	@echo "... feature_extraction.s"

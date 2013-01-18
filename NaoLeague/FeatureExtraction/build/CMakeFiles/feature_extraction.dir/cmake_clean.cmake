@@ -1,4 +1,5 @@
 FILE(REMOVE_RECURSE
+  "CMakeFiles/feature_extraction.dir/background.cpp.o"
   "CMakeFiles/feature_extraction.dir/feature_extraction.cpp.o"
   "feature_extraction.pdb"
   "feature_extraction"

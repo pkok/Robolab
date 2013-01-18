@@ -6,6 +6,32 @@
 
 #IncludeRegexTransform: 
 
+/home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/background.cpp
+iostream
+-
+math.h
+-
+time.h
+-
+cv.h
+-
+highgui.h
+-
+background.h
+/home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/background.h
+
+/home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/background.h
+iostream
+-
+math.h
+-
+time.h
+-
+cv.h
+-
+highgui.h
+-
+
 /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/feature_extraction.cpp
 iostream
 -
@@ -17,6 +43,8 @@ cv.h
 -
 highgui.h
 -
+background.h
+/home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/background.h
 
 /usr/local/include/opencv/cv.h
 opencv2/core/core_c.h
