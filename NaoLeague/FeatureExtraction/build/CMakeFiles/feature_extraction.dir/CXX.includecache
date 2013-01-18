@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/methe/WorkSpaceCpp/Robolab/NaoLeague/FeatureExtraction/feature_extraction.cpp
+/home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/feature_extraction.cpp
 iostream
 -
 math.h

@@ -37,11 +37,12 @@ void ass_val_pixel2pixel(Vec3b &src, Vec3b &dst){
 	src[2] = dst[2];
 }
 
-Mat remove_background(Mat image, Mat &field, Mat &posts, Mat &ball){
+void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball){
 
-	field = Mat::zeros(image.rows, image.cols, CV_8UC3);
+	lines = Mat::zeros(image.rows, image.cols, CV_8UC3);
 	posts = Mat::zeros(image.rows, image.cols, CV_8UC3);
 	ball = Mat::zeros(image.rows, image.cols, CV_8UC3);
+	Mat field = Mat::zeros(image.rows, image.cols, CV_8UC3);
 	// boolean variable which declares if the current row pixel is above field
 	// height...
 	bool background, continuous;
@@ -87,14 +88,31 @@ Mat remove_background(Mat image, Mat &field, Mat &posts, Mat &ball){
 		counter = 0;
 		for(int i = 0; i < image.rows; i++){
 			if(hsv_range(field.at<Vec3b>(i,j), 0, 255, 0, 60, 220, 255)){
-				ass_val_pixel(field.at<Vec3b>(i,j), 255, 255, 255);
+				ass_val_pixel(lines.at<Vec3b>(i,j), 255, 255, 255);
 			}else{
-				ass_val_pixel(field.at<Vec3b>(i,j), 0, 0, 0);
+				ass_val_pixel(lines.at<Vec3b>(i,j), 0, 0, 0);
 			}
 		}
 	}
-	cvtColor(field,field,CV_HSV2BGR);
-	imshow("lines", field);
+	imshow("lines", lines);
+}
+
+vector<Vec4i> probabilistic_hough_trans(Mat src){
+
+	Mat dst, color_dst;
+	Canny( src, dst, 50, 200, 3 );
+   	cvtColor( dst, color_dst, CV_GRAY2BGR );
+	imshow("grey", color_dst);
+
+   	vector<Vec4i> lines;
+    	HoughLinesP( dst, lines, 1, CV_PI/300, 20, 10, 10 );
+    	for( size_t i = 0; i < lines.size(); i++ )
+    	{
+        	line( color_dst, Point(lines[i][0], lines[i][1]),
+            	Point(lines[i][2], lines[i][3]), Scalar(0,0,255), 3, 8 );
+    	}
+	imshow("lines", color_dst);
+	return lines;
 }
 
 int main(int argc, char** argv)
@@ -110,7 +128,9 @@ int main(int argc, char** argv)
 	cvtColor(img_rgb,img_hsv,CV_BGR2HSV);
 
 	remove_background(img_hsv, img_lines, img_posts, img_ball);
-	
+
+	probabilistic_hough_trans(img_lines);
+
 	std::cout << double( clock() - startTime )*1000 / (double)CLOCKS_PER_SEC<< " ms." << std::endl;
 	waitKey(0);
 	return 0;
