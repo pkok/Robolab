@@ -69,7 +69,7 @@ int ParticleFilter::delete_particles(){
  * resamples all particles with low variance resampling algorithm. (creates new particle list)
  */
 int ParticleFilter::resample() {
-
+	//cout<<"start resampling"<<endl;
 	////low variance resampling:
 
 	//draw random number
@@ -90,11 +90,15 @@ int ParticleFilter::resample() {
 	double bin_border = this->particles[0].weight;
 	double weight_sum = 0;
 
+	assert(this->particles.size() >0);
+
 	double step_size = sum_weights()/(double) this->particles.size();
 
-	double offset = rand() % (int)(step_size*1000)/(double)1000;
-
+	assert(step_size > 0);
+	double offset = rand() / RAND_MAX * step_size;
 	int j = 1;
+
+	//cout<< " while loop"<<endl;
 	for(int i = 0; i < this->particles.size(); i++){
 		weight_sum =  offset + (i-1) * step_size;
 		while(weight_sum >= bin_border){
@@ -104,17 +108,39 @@ int ParticleFilter::resample() {
 		}
 		Particle p(this->particles[j].x,this->particles[j].y,this->particles[j].rot,1);
 		resampled_particles.push_back(p);
+
+		//cout<< "inside while loop"<<endl;
 	}
 	this->particles = resampled_particles;
+
+	//cout<<"end resampling"<<endl;
 }
-int ParticleFilter::dynamic(OdometryInformation odo_inf){
+int ParticleFilter::dynamic(OdometryInformation odo_inf,vector<VisualFeature> vis_feats){
 
 	//get odometry information //TODO: check if correct
 
 	for(int i = 0; i < this->particles.size(); i++)
 	{
 		sample_motion_model_simple(odo_inf,&this->particles[i]);
+		this->particles[i].weight = this->measurement_model(vis_feats,&this->particles[i]);
 
+		if(this->particles[i].weight < 0){
+			cout<<" the impossible has happened!!"<<endl;
+		}
+		if(this->particles[i].weight > 0.00001){
+			cout<<" yey!"<<this->particles[i].x<<" "<<this->particles[i].y<<" "<<this->particles[i].rot<<" "<<this->particles[i].weight<<endl;
+		}
+		//TODO: dirty hack, should probably not be there
+		if(this->particles[i].weight < 0.00001) //small value
+		{
+			this->particles[i].weight = 0.00001;
+		}
+		//if(this->particles[i].weight>0){
+		//cout<<"found good estimate at : "<<this->particles[i].x<<" "<<this->particles[i].y<<" "<<this->particles[i].rot<<" weight is:"<<this->particles[i].weight<<endl;
+		//}
+		//if(this->particles[i].weight> 0){
+		//	cout<<"!!!!!!!!!!!!!!!!!!!!!!!!!!!!look at me !!!!!!!!!!!!!!!!!!! "<<this->particles[i].weight<<endl;
+		//}
 	}
 	//for 0..M
 		// pose = sample_sample_motion_model
@@ -214,7 +240,11 @@ double ParticleFilter::measurement_model(vector<VisualFeature> features,Particle
 
 	//TODO: think about interpreting several landmarks aggregated to 1, (e.g. if there is one goal post, calculate the expected position of the other)
 	// lfet right corners, can be described as aggregation of L and T crossings
-
+	//cout<<"start measurement"<<endl;
+	//changeable parameters:
+	double range_param = 3;
+	double bearing_param = 2;
+	double meas_param = 1;
 
 	vector<double> dists;
 	vector<vector<int> > landmarks; //TODO:maybe find some better representation
@@ -227,7 +257,7 @@ double ParticleFilter::measurement_model(vector<VisualFeature> features,Particle
 		feat.push_back(dist);
 		landmarks.push_back(feat);
 		dists.push_back(dist);
-		cout<<"measurement model reporting min distance found feature no"<<landmark_index<<" in distance "<<dist<<endl;
+		//cout<<"measurement model reporting min distance found feature no"<<landmark_index<<" in distance "<<dist<<endl;
 	}
 
 
@@ -236,28 +266,38 @@ double ParticleFilter::measurement_model(vector<VisualFeature> features,Particle
 	vector<double> q;
 
 	for(int i = 0; i < dists.size(); i++){
-		double ra = 0;
-		double phi = 0;
-		double res = 0;
+		double ra = -1;
+		double phi = -1;
+		double res = -1;
 
 		switch(landmarks[i][0]){
 		case 0: //L crossing
 		{
-			ra = landmarks[i][2];
+			double delta_x = (this->feature_map.l_cross[landmarks[i][1]].x - current_pose->x);
+			double delta_y = (this->feature_map.l_cross[landmarks[i][1]].y - current_pose->y);
+			ra = sqrt( delta_x * delta_x + delta_y * delta_y );//landmarks[i][2];
 			phi = atan2(this->feature_map.l_cross[landmarks[i][1]].y - current_pose->y,this->feature_map.l_cross[landmarks[i][1]].x - current_pose->x);
 			res = (prob_gaussian(features[i].range - ra,1)*prob_gaussian(features[i].bearing - phi,1) * prob_gaussian(0,1)); //prob(si-sj,sigma_s) is last probability, how likeli ist that feature that landmark?
 			break;
 		}
 		case 1: //T crossings
 		{
-			ra = landmarks[i][2];
+			double delta_x = (this->feature_map.t_cross[landmarks[i][1]].x - current_pose->x);
+			double delta_y = (this->feature_map.t_cross[landmarks[i][1]].y - current_pose->y);
+			ra = sqrt( delta_x * delta_x + delta_y * delta_y );
+			//ra = landmarks[i][2];
 			phi = atan2(this->feature_map.t_cross[landmarks[i][1]].y - current_pose->y,this->feature_map.t_cross[landmarks[i][1]].x - current_pose->x);
 			res = (prob_gaussian(features[i].range - ra,1)*prob_gaussian(features[i].bearing - phi,1) * prob_gaussian(0,1)); //prob(si-sj,sigma_s) is last probability, how likeli ist that feature that landmark?
 			break;
 		}
 		case 2: //X crossings
 		{
-			ra = landmarks[i][2];
+			double delta_x = (this->feature_map.x_cross[landmarks[i][1]].x
+					- current_pose->x);
+			double delta_y = (this->feature_map.x_cross[landmarks[i][1]].y
+					- current_pose->y);
+			ra = sqrt(delta_x * delta_x + delta_y * delta_y);
+			//ra = landmarks[i][2];
 			phi = atan2(this->feature_map.x_cross[landmarks[i][1]].y - current_pose->y,this->feature_map.x_cross[landmarks[i][1]].x - current_pose->x);
 			res = (prob_gaussian(features[i].range - ra,1)*prob_gaussian(features[i].bearing - phi,1) * prob_gaussian(0,1)); //prob(si-sj,sigma_s) is last probability, how likeli ist that feature that landmark?
 			break;
@@ -266,17 +306,22 @@ double ParticleFilter::measurement_model(vector<VisualFeature> features,Particle
 			cout<<"something went wrong in measurement model!"<<endl;
 			break;
 		}
+		//cout<<ra<<" "<<phi<<" "<<res<<";";
 		q.push_back(res);
 	}
+	//cout<<endl;
 
 	//return product of all probabilities?
 	double prod = 1;
 	for (int i = 0; i < q.size(); i++){
-		prod = prod *  q[i];
-	}
-	cout<<" final weight estimate :"<<prod<<endl;
 
-	return(0);
+		prod = prod *  q[i]* range_param * bearing_param * meas_param;
+		//cout<<" "<<q[i];
+	}
+	//cout<<endl;
+	//cout<<" final weight estimate :"<<prod<<endl;
+	//cout<<"completed measurement"<<endl;
+	return(prod);
 }
 /*
  * creates a number of particles with fixed poses:
