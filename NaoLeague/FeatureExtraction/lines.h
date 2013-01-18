@@ -8,7 +8,9 @@
 
 using namespace cv;
 
-void line_clustering(vector<Vec4i> lines, vector<Vec4i> &clustered_lines);
+void line_clustering(Mat image, vector<Vec4i> lines, vector<Vec4i> &clustered_lines);
+
+double similarity_measure(Vec4i line1, Vec4i line2);
 
 double similarity_measure(Vec4i line1, Vec4i line2);
 
