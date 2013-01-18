@@ -86,7 +86,7 @@ int main(int argc, char** argv)
       sprintf(buffer, "%06d ", click_count);
       std::string filename;
       std::cout << "Filename: ";
-      std::cin >> filename;
+      std::getline(std::cin, bullshit);
       sprintf(head_pitch, " %f", motion.getAngles("HeadPitch", true).front());
       sprintf(head_yaw, " %f ", motion.getAngles("HeadYaw", true).front());
       filename = buffer + filename + head_yaw + head_pitch;
