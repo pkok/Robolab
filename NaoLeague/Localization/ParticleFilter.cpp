@@ -29,8 +29,12 @@ double ParticleFilter::random_gaussian ()
   double u = random_uniform(), v = random_uniform();
   return sqrt(-2*log(u))*cos(2*M_PI*v);
 }
-
-
+/*
+ * computes the probability of a point in a normal distribution
+ */
+double ParticleFilter::prob_gaussian(double val,double var_sq){
+	return(1/sqrt(2*PI*var_sq)*exp(- ( val * val )/ (2 * var_sq) ));
+}
 
 ParticleFilter::ParticleFilter(){
 	//random seed:
@@ -120,37 +124,6 @@ int ParticleFilter::dynamic(OdometryInformation odo_inf){
 }
 
 /*
- * computes the probability for x on a zero mean gaussian with variance variance
- */
-double ParticleFilter::compute_prob_normal_dist(double a, double variance)
-{
-	double prob = 0;
-
-	prob = 1/sqrt( 2*PI ) * exp( -a * a / ( 2 * variance ) );
-
-	return(prob);
-}
-
-
-/*
- * sample from a normal distribution
- */
-
-double ParticleFilter::sample_normal_distribution(double variance){
-	double sqrt_var = sqrt(variance);
-	int sqrt_var_2 = sqrt_var * 2;
-	double sum = 0;
-
-	for(int i = 0; i< 12;i++){
-		//sample from -b/+b
-		double rand_d = rand() % sqrt_var_2 - sqrt_var;
-
-		sum += rand_d;
-	}
-
-	return(((double) sum) / 2);
-}
-/*
  * simple method to incorporate new odometry data
  */
 int ParticleFilter::sample_motion_model_simple(OdometryInformation odometry_information,Particle* last_pose)
@@ -168,17 +141,19 @@ int ParticleFilter::sample_motion_model_simple(OdometryInformation odometry_info
 
 	//TODO: reject particles outside the field
 }
-int ParticleFilter::find_landmark(VisualFeature* feature, Particle* current_pose,double* dist){
+int ParticleFilter::find_landmark(VisualFeature feature, Particle* current_pose,double* dist){
 	//iterate through all features of that type, calculate distance to feature observed in map
 
+	//TODO: Include mahalanobis distance (takes into account that measurement error in different dimensions of the data is different) i.e. range and bearing.
+
 	//calculate position on map(assuming we are in the current pose):
-	int x_feat = current_pose->x + sin(feature->bearing)*feature->range;
-	int y_feat = current_pose->y + cos(feature->bearing)*feature->range;
+	int x_feat = current_pose->x + cos(feature.bearing)*feature.range;
+	int y_feat = current_pose->y + sin(feature.bearing)*feature.range;
 		//choose feature with smallest distance and then proceed
 		double min_dist = 1000; //10 meter
 		double feature_index = 0;
 
-		switch (feature->type){
+		switch (feature.type){
 		case 0: //L crossing observed 8
 		{
 			for(int i = 0;i < 8; i++){
@@ -232,20 +207,75 @@ int ParticleFilter::find_landmark(VisualFeature* feature, Particle* current_pose
 /*
  * receives all visual features seen on the map and computes likelihood of a landmark measurment (with known correspondence)
  */
-double ParticleFilter::measurement_model(VisualFeature* feature,int no_observations ,Particle* current_pose,int map)
+double ParticleFilter::measurement_model(vector<VisualFeature> features,Particle* current_pose)
 {
-	//TODO if this does not work, change !! (assuming, same features will be observed with same probability) 1/n where n number of features of that type in the map
-	//assume the nearest landmark is the one observed
+	//TODO if this does not work, change !!
+	//assume the nearest landmark is the one observed (ML approach)
+
+	//TODO: think about interpreting several landmarks aggregated to 1, (e.g. if there is one goal post, calculate the expected position of the other)
+	// lfet right corners, can be described as aggregation of L and T crossings
 
 
-	//find the the most likeli landmark that can be assigned to the feature and assume its the rigth one:
+	vector<double> dists;
+	vector<vector<int> > landmarks; //TODO:maybe find some better representation
+	for(int i = 0; i < features.size();i++){
+		double dist = 0;
+		int landmark_index = find_landmark(features[i],current_pose, &dist);
+		vector<int> feat;
+		feat.push_back(features[i].type);
+		feat.push_back(landmark_index);
+		feat.push_back(dist);
+		landmarks.push_back(feat);
+		dists.push_back(dist);
+		cout<<"measurement model reporting min distance found feature no"<<landmark_index<<" in distance "<<dist<<endl;
+	}
 
 
-	double dist = 0;
-	int landmark_index = find_landmark(feature,current_pose, &dist);
-	cout<<"measurement model reporting min distance found feature no"<<landmark_index<<" in distance "<<dist<<endl;
+	//thrun et al "Alorithm landmark_mode_known_correspondence(fi,ci,x,m) pp 179:
+	//for every assigned landmark (no unassigned landmarks possible at the moment)
+	vector<double> q;
 
-	//prob of right bearing * prob of right range * prob of being that landmark
+	for(int i = 0; i < dists.size(); i++){
+		double ra = 0;
+		double phi = 0;
+		double res = 0;
+
+		switch(landmarks[i][0]){
+		case 0: //L crossing
+		{
+			ra = landmarks[i][2];
+			phi = atan2(this->feature_map.l_cross[landmarks[i][1]].y - current_pose->y,this->feature_map.l_cross[landmarks[i][1]].x - current_pose->x);
+			res = (prob_gaussian(features[i].range - ra,1)*prob_gaussian(features[i].bearing - phi,1) * prob_gaussian(0,1)); //prob(si-sj,sigma_s) is last probability, how likeli ist that feature that landmark?
+			break;
+		}
+		case 1: //T crossings
+		{
+			ra = landmarks[i][2];
+			phi = atan2(this->feature_map.t_cross[landmarks[i][1]].y - current_pose->y,this->feature_map.t_cross[landmarks[i][1]].x - current_pose->x);
+			res = (prob_gaussian(features[i].range - ra,1)*prob_gaussian(features[i].bearing - phi,1) * prob_gaussian(0,1)); //prob(si-sj,sigma_s) is last probability, how likeli ist that feature that landmark?
+			break;
+		}
+		case 2: //X crossings
+		{
+			ra = landmarks[i][2];
+			phi = atan2(this->feature_map.x_cross[landmarks[i][1]].y - current_pose->y,this->feature_map.x_cross[landmarks[i][1]].x - current_pose->x);
+			res = (prob_gaussian(features[i].range - ra,1)*prob_gaussian(features[i].bearing - phi,1) * prob_gaussian(0,1)); //prob(si-sj,sigma_s) is last probability, how likeli ist that feature that landmark?
+			break;
+		}
+		default:
+			cout<<"something went wrong in measurement model!"<<endl;
+			break;
+		}
+		q.push_back(res);
+	}
+
+	//return product of all probabilities?
+	double prod = 1;
+	for (int i = 0; i < q.size(); i++){
+		prod = prod *  q[i];
+	}
+	cout<<" final weight estimate :"<<prod<<endl;
+
 	return(0);
 }
 /*

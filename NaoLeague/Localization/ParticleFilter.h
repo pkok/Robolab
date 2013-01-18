@@ -47,9 +47,9 @@ public:
 	//incorporate new odometry information (move and rotate particle)
 	int sample_motion_model_simple(OdometryInformation odometry_information,Particle* last_pose);
 	//weight particles accroding to new sensory information (vision)
-	double measurement_model(VisualFeature* feature,int no_observations ,Particle* current_pose,int map);
+	double measurement_model(vector<VisualFeature> features,Particle* current_pose);
 	//finds most likeli landmark for given feature observation
-	int find_landmark(VisualFeature* feature,Particle* current_pose,double* dist);
+	int find_landmark(VisualFeature feature, Particle* current_pose,double* dist);
 
 	//wander through all particles and update odometry and weight according to visual measurement
 	int dynamic(OdometryInformation odo_inf);
@@ -65,10 +65,11 @@ public:
 
 
 	//gaussian noise
+	//sampling
 	double random_uniform ();
 	double random_gaussian ();
+	//probability calculation
+	double prob_gaussian(double val,double var_sq);
 
-	double sample_normal_distribution(double variance);
-	double compute_prob_normal_dist(double a, double variance);
 };
 
