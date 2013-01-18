@@ -10,15 +10,17 @@ using namespace std;
 
 double line_angle(Vec4i line)
 {
-	double angle = atan2(line[1] - line[3], line[0] - line[2]);
-	double res = angle * 180 / CV_PI;
-	return abs(res);
+	double angle = atan2(line[2]-line[0],line[3]-line[1]);
+	angle = angle * (180 / CV_PI);
+	if( angle < 0 )
+		angle += 180;
+	cout << angle << endl;
+	return angle;
 }
 
 
 double similarity_measure(Vec4i line1, Vec4i line2)
 {
-
 }
 
 void initialize_clusters(vector<Vec4i> lines, vector< vector<Vec4i> > &cluster)
@@ -27,6 +29,7 @@ void initialize_clusters(vector<Vec4i> lines, vector< vector<Vec4i> > &cluster)
 	{
 		vector<Vec4i> cluster_elements;
 		cluster_elements.push_back(lines[i]);
+		line_angle(Vec4i(0,0,-10,-10));
 		cluster.push_back(cluster_elements);
 		cluster_elements.clear();
 	}
