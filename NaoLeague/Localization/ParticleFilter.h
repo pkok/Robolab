@@ -52,7 +52,7 @@ public:
 	int find_landmark(VisualFeature feature, Particle* current_pose,double* dist);
 
 	//wander through all particles and update odometry and weight according to visual measurement
-	int dynamic(OdometryInformation odo_inf);
+	int dynamic(OdometryInformation odo_inf,vector<VisualFeature> vis_feats);
 	//reassign particle poses according to weight of particles
 	int resample();
 	//particle interaction
