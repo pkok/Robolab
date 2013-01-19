@@ -8,6 +8,8 @@
 using namespace cv;
 using namespace std;
 
+#define ANGLE_THR 10
+
 double line_angle(Vec4i line)
 {
 	double angle = atan2(line[2]-line[0],line[3]-line[1]);
@@ -17,10 +19,35 @@ double line_angle(Vec4i line)
 	return angle;
 }
 
-
-double similarity_measure(Vec4i line1, Vec4i line2)
+Point line_center(Vec4i line)
 {
-	return abs(line_angle(line1) - line_angle(line2));
+	int x = line[0] + line[2];
+	int y = line[1] + line[3];
+	return Point(x/2,y/2);	
+}
+
+double points_distance(Point point1, Point point2)
+{
+	double dx = point2.x - point1.x;
+	double dy = point2.y - point1.y;
+	double distance = sqrt(dx*dx + dy*dy);
+	return distance;
+}
+
+double similarity_measure(vector<Vec4i> cluster1, vector<Vec4i> cluster2)
+{
+	double similarity = 0;
+	double min_angle_diff = DBL_MAX;
+	for( int i=0; i < cluster1.size(); i++){
+		for( int j=0; j < cluster2.size(); j++){
+			double angle_diff = abs(line_angle(cluster1[i]) - line_angle(cluster2[j]));
+			if(angle_diff <  min_angle_diff){
+				min_angle_diff = angle_diff;
+			} 
+		}
+	}
+	similarity = min_angle_diff;
+	return similarity;
 }
 
 void initialize_clusters(vector<Vec4i> lines, vector< vector<Vec4i> > &cluster)
@@ -29,13 +56,22 @@ void initialize_clusters(vector<Vec4i> lines, vector< vector<Vec4i> > &cluster)
 	{
 		vector<Vec4i> cluster_elements;
 		cluster_elements.push_back(lines[i]);
-		line_angle(Vec4i(0,0,-10,-10));
 		cluster.push_back(cluster_elements);
 		cluster_elements.clear();
 	}
 	return;
 }
 
+void merge_clusters(vector<Vec4i> &cluster_dst, vector<Vec4i> &cluster_src)
+{
+	for(int i=0; i<cluster_src.size(); i++){
+		cluster_dst.push_back(cluster_src[i]);
+	}
+	for(int j=0; j<cluster_src.size(); j++){
+		cluster_src.erase(cluster_src.begin() + j);
+	}
+	return;
+}
 
 void line_clustering(Mat image, vector<Vec4i> lines, vector<Vec4i> &clustered_lines)
 {
@@ -46,34 +82,35 @@ void line_clustering(Mat image, vector<Vec4i> lines, vector<Vec4i> &clustered_li
 		initialize_clusters(lines, cluster);
 		Mat black = Mat::zeros(image.rows, image.cols, CV_8UC3);
 
-		bool end = false;
-
+		double min_similarity;
+		int cluster_src;
+		int cluster_dst;
 		do
 		{
-			end = true;
+			min_similarity = DBL_MAX;
 			for( int i  = 0; i < cluster.size(); i++)
 			{
 				for( int j  = 0; j < cluster.size(); j++)
 				{
 					if( i != j)
 					{
-						for( int ii  = 0; ii < cluster[i].size(); ii++)
+						double similarity = similarity_measure(cluster[i], cluster[j]);
+						if( similarity < min_similarity)
 						{
-							for( int jj  = 0; jj < cluster[j].size(); jj++)
-							{
-								if( similarity_measure(cluster[i][ii], cluster[j][jj]) < 10)
-								{
-									end = false;
-									cluster[i].push_back(cluster[j][jj]);
-									cluster[j].erase(cluster[j].begin() + jj);									
-								}
-							}
+
+							min_similarity = similarity;
+							cluster_dst = i;
+							cluster_src = j;
+
 						}
 					}
 				}
 			}
+			cout << "yeap" << endl;
+			merge_clusters(cluster[cluster_dst], cluster[cluster_src]);
+			cluster.erase(cluster.begin() + cluster_src);
 		}
-		while(!end);
+		while(min_similarity < 5);
 
 		for( int i  = 0; i < cluster.size(); i++)
 		{
