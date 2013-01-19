@@ -12,6 +12,7 @@
 #include <assert.h>
 #include <time.h>
 #include <vector>
+
 #define PI 3.14159
 
 using namespace std;
@@ -223,8 +224,22 @@ int ParticleFilter::find_landmark(VisualFeature feature, Particle* current_pose,
 		{
 			for(int i = 0;i<5;i++){
 				//dist calculation
-				double delta_x = x_feat - this->feature_map.t_cross[i].x ;
-				double delta_y = y_feat - this->feature_map.t_cross[i].y ;
+				double delta_x = x_feat - this->feature_map.x_cross[i].x ;
+				double delta_y = y_feat - this->feature_map.x_cross[i].y ;
+				double dist =  sqrt(delta_x * delta_x + delta_y * delta_y);
+				if(dist < min_dist){
+					min_dist = dist;
+					feature_index = i;
+				}
+			}
+			break;
+		}
+		case 3: //Goal post crossing crossing observed 4
+		{
+			for(int i = 0;i<4;i++){
+				//dist calculation
+				double delta_x = x_feat - this->feature_map.g_cross[i].x ;
+				double delta_y = y_feat - this->feature_map.g_cross[i].y ;
 				double dist =  sqrt(delta_x * delta_x + delta_y * delta_y);
 				if(dist < min_dist){
 					min_dist = dist;
@@ -316,14 +331,7 @@ double ParticleFilter::measurement_model(vector<VisualFeature> features,Particle
 			res = prob_gaussian(abs(features[i].range) - abs(ra),1) * prob_gaussian(abs(features[i].bearing)  - abs(phi),1) * prob_gaussian(0,1); //prob(si-sj,sigma_s) is last probability, how likeli ist that feature that landmark?
 			////cout<<res<<endl;
 			break;
-			/*
-			double delta_x = this->feature_map.t_cross[landmarks[i][1]].x - current_pose->x;
-			double delta_y = this->feature_map.t_cross[landmarks[i][1]].y - current_pose->y;
-			ra = sqrt( delta_x * delta_x + delta_y * delta_y );
-			//ra = landmarks[i][2];
-			phi = atan2(this->feature_map.t_cross[landmarks[i][1]].y - current_pose->y,this->feature_map.t_cross[landmarks[i][1]].x - current_pose->x);
-			res = (prob_gaussian(features[i].range - ra,1)*prob_gaussian(features[i].bearing - phi,1) * prob_gaussian(0,1)); //prob(si-sj,sigma_s) is last probability, how likeli ist that feature that landmark?
-			break;*/
+
 		}
 		case 2: //X crossings
 		{
@@ -344,16 +352,24 @@ double ParticleFilter::measurement_model(vector<VisualFeature> features,Particle
 			////cout<<res<<endl;
 			break;
 
-			/*
-			double delta_x = this->feature_map.x_cross[landmarks[i][1]].x
-					- current_pose->x;
-			double delta_y = this->feature_map.x_cross[landmarks[i][1]].y
-					- current_pose->y;
-			ra = sqrt(delta_x * delta_x + delta_y * delta_y);
-			//ra = landmarks[i][2];
-			phi = atan2(this->feature_map.x_cross[landmarks[i][1]].y - current_pose->y,this->feature_map.x_cross[landmarks[i][1]].x - current_pose->x);
-			res = (prob_gaussian(features[i].range - ra,1)*prob_gaussian(features[i].bearing +current_pose->rot- phi,1) * prob_gaussian(0,1)); //prob(si-sj,sigma_s) is last probability, how likeli ist that feature that landmark?
-			break;*/
+
+		}
+		case 3: //Goal Post crossings
+		{
+			double delta_x = this->feature_map.g_cross[landmarks[i][1]].x - current_pose->x;
+			double delta_y = this->feature_map.g_cross[landmarks[i][1]].y - current_pose->y;
+
+			ra = sqrt( delta_x * delta_x + delta_y * delta_y );//landmarks[i][2];
+			//added abs
+			phi = atan2(abs(this->feature_map.g_cross[landmarks[i][1]].y) - abs(current_pose->y ),abs(this->feature_map.g_cross[landmarks[i][1]].x )  -  abs(current_pose->x ));
+
+
+			////cout<< delta_x << " "<<delta_y<<" "<<ra<<" "<<phi<<" "<<"robot:"<<current_pose->rot<<" feat:"<<features[i].range<<" "<<features[i].bearing;
+			////cout <<" "<<prob_gaussian(abs(features[i].range) - abs(ra),1) <<" "<< prob_gaussian(abs(features[i].bearing)  - abs(phi),1) <<" "<< prob_gaussian(0,1) <<" "<<endl;
+
+			res = prob_gaussian(abs(features[i].range) - abs(ra),1) * prob_gaussian(abs(features[i].bearing)  - abs(phi),1) * prob_gaussian(0,1); //prob(si-sj,sigma_s) is last probability, how likeli ist that feature that landmark?
+			////cout<<res<<endl;
+			break;
 		}
 		default:
 			cout<<"something went wrong in measurement model!"<<endl;
@@ -425,5 +441,25 @@ int ParticleFilter::print_particles() {
 	for(int i = 0; i < this->particles.size(); i++){
 		cout<<this->particles[i].x<<" "<<this->particles[i].y<<" "<<this->particles[i].rot<<" "<<this->particles[i].weight<<endl;
 	}
+}
 
+/*
+ * returns weighted avrg of all particles, final position estimate for current state
+ */
+int ParticleFilter::get_position_estimate(double* x_est,double* y_est,double* rot_est){
+	double x = 0;
+	double y = 0;
+	double rot = 0;
+	double sum = 0;
+	for(int i = 0; i < this->particles.size() ;  i++){
+		double weight = particles[i].weight;
+		sum += weight;
+		x += particles[i].x * weight;
+		y += particles[i].y * weight;
+		rot += particles[i].rot * weight;
+		//cout<<rot<<endl;
+	}
+	*rot_est = rot / sum;
+	*x_est = x / sum;
+	*y_est = y / sum;
 }

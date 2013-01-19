@@ -4,6 +4,8 @@
  *  Created on: Jan 12, 2013
  *      Author: owner
  */
+#ifndef PARTICLEFILTER_H_
+#define PARTICLEFILTER_H_
 #include "Particle.h"
 #include "FeatureMap.h"
 #include <vector>
@@ -57,12 +59,14 @@ public:
 	int resample();
 	//particle interaction
 
+
 	int add_particles(int number,double x, double y, double rot, double weight);
 	int add_particles(int number);
 	int delete_particles();
 	int print_particles();
 	double sum_weights();
-
+	//gets the final weighted avrg of all particles for estimate of psoition
+	int get_position_estimate(double* x_est,double* y_est,double* rot_est);
 
 	//gaussian noise
 	//sampling
@@ -72,4 +76,5 @@ public:
 	double prob_gaussian(double val,double var_sq);
 
 };
+#endif
 
