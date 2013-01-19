@@ -28,7 +28,7 @@ using namespace std;
 #define WH_HUE_MAX  255
 #define WH_SAT_MIN  0
 #define WH_SAT_MAX  60
-#define WH_VAL_MIN  220
+#define WH_VAL_MIN  200
 #define WH_VAL_MAX  255
 
 
@@ -101,9 +101,10 @@ void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball)
 					ass_val_pixel(field.at<Vec3b>(i,j), 0, 0, 0);
 					if(counter > BACK_THRESHOLD)
 					{
-						for( int k = 0; k < BACK_THRESHOLD; k++)
+						for( int k = 0; k < BACK_THRESHOLD + 5; k++)
 						{
-							ass_val_pixel2pixel(field.at<Vec3b>(i-k,j), image.at<Vec3b>(i-k,j));
+							if((i-k) >= 0)
+								ass_val_pixel2pixel(field.at<Vec3b>(i-k,j), image.at<Vec3b>(i-k,j));
 						}
 						background = false;
 					}
