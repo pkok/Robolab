@@ -127,7 +127,7 @@ int ParticleFilter::dynamic(OdometryInformation odo_inf,vector<VisualFeature> vi
 		this->particles[i].weight = this->measurement_model(vis_feats,&this->particles[i]);
 
 
-
+		/*
 		if(this->particles[i].weight < 0){
 			cout<<" the impossible has happened!!"<<endl;
 		}
@@ -136,7 +136,7 @@ int ParticleFilter::dynamic(OdometryInformation odo_inf,vector<VisualFeature> vi
 		}
 		if(this->particles[i].weight > 0.00001){
 			cout<<" yey!"<<this->particles[i].x<<" "<<this->particles[i].y<<" "<<this->particles[i].rot<<" "<<this->particles[i].weight<<endl;
-		}/*
+		}*//*
 		//TODO: dirty hack, should probably not be there
 		if(this->particles[i].weight < 0.00001) //small value
 		{
@@ -164,12 +164,12 @@ int ParticleFilter::sample_motion_model_simple(OdometryInformation odometry_info
 
 	double error_range = 0.01;
 	double error_bearing = 0.2;
-	double error_x = odometry_information.x * this->random_gaussian()* error_range;
-	double error_y = odometry_information.y * this->random_gaussian()* error_range;
-	double error_rot = odometry_information.rot * this->random_gaussian() * error_bearing;
+	double error_x =  this->random_gaussian() * error_range * odometry_information.x;
+	double error_y = this->random_gaussian() * error_range * odometry_information.y  ;
+	double error_rot =  this->random_gaussian() * odometry_information.rot  * error_bearing;
 
-	last_pose->x = last_pose->x+odometry_information.x + error_x;
-	last_pose->y = last_pose->y+odometry_information.y + error_y;
+	last_pose->x = last_pose->x + odometry_information.x + error_x;
+	last_pose->y = last_pose->y + odometry_information.y + error_y;
 	last_pose->rot = last_pose->rot + odometry_information.rot + error_rot;
 
 	//TODO: reject particles outside the field
@@ -180,23 +180,26 @@ int ParticleFilter::find_landmark(VisualFeature feature, Particle* current_pose,
 	//TODO: Include mahalanobis distance (takes into account that measurement error in different dimensions of the data is different) i.e. range and bearing.
 
 	//calculate position on map(assuming we are in the current pose):
-	int x_feat = current_pose->x + cos(feature.bearing)*feature.range;
-	int y_feat = current_pose->y + sin(feature.bearing)*feature.range;
+	int x_feat = current_pose->x + cos(feature.bearing+current_pose->rot)*feature.range;
+	int y_feat = current_pose->y + sin(feature.bearing+current_pose->rot)*feature.range;
 		//choose feature with smallest distance and then proceed
 		double min_dist = 1000; //10 meter
-		double feature_index = 0;
+		int feature_index = 0;
 
 		switch (feature.type){
 		case 0: //L crossing observed 8
 		{
 			for(int i = 0;i < 8; i++){
 				//calculate distance
-				double delta_x = x_feat - this->feature_map.l_cross[i].x ;
+				double delta_x =  x_feat - this->feature_map.l_cross[i].x ;
 				double delta_y = y_feat - this->feature_map.l_cross[i].y ;
 				double dist =  sqrt(delta_x * delta_x + delta_y * delta_y);
+				////cout<<dist<<" "<<i<<" "<<this->feature_map.l_cross[i].x<<" "<<this->feature_map.l_cross[i].y<<" "<<current_pose->x<<endl;
 				if(dist < min_dist){
+
 					min_dist = dist;
 					feature_index = i;
+
 				}
 			}
 			break;
@@ -234,6 +237,7 @@ int ParticleFilter::find_landmark(VisualFeature feature, Particle* current_pose,
 			cout<<"something went terribly wrong in measurement model!" <<endl;
 			break;
 		}
+		////cout<<"found landmark "<<feature_index<<" with dist:"<<*dist<<" specs:"<<this->feature_map.l_cross[feature_index].x<<" "<<this->feature_map.l_cross[feature_index].y <<endl;
 		*dist = min_dist;
 		return(feature_index);
 }
@@ -257,6 +261,7 @@ double ParticleFilter::measurement_model(vector<VisualFeature> features,Particle
 	vector<vector<int> > landmarks; //TODO:maybe find some better representation
 	for(int i = 0; i < features.size();i++){
 		double dist = 0;
+		////cout<<"finding ml landmark for "<<current_pose->x<<" "<<current_pose->y<<endl;
 		int landmark_index = find_landmark(features[i],current_pose, &dist);
 		vector<int> feat;
 		feat.push_back(features[i].type);
@@ -280,34 +285,75 @@ double ParticleFilter::measurement_model(vector<VisualFeature> features,Particle
 		switch(landmarks[i][0]){
 		case 0: //L crossing
 		{
-			double delta_x = (this->feature_map.l_cross[landmarks[i][1]].x - current_pose->x);
-			double delta_y = (this->feature_map.l_cross[landmarks[i][1]].y - current_pose->y);
+			double delta_x = this->feature_map.l_cross[landmarks[i][1]].x - current_pose->x;
+			double delta_y = this->feature_map.l_cross[landmarks[i][1]].y - current_pose->y;
+
 			ra = sqrt( delta_x * delta_x + delta_y * delta_y );//landmarks[i][2];
-			phi = atan2(this->feature_map.l_cross[landmarks[i][1]].y - current_pose->y,this->feature_map.l_cross[landmarks[i][1]].x - current_pose->x);
-			res = (prob_gaussian(features[i].range - ra,1)*prob_gaussian(features[i].bearing - phi,1) * prob_gaussian(0,1)); //prob(si-sj,sigma_s) is last probability, how likeli ist that feature that landmark?
+			//added abs
+			phi = atan2(abs(this->feature_map.l_cross[landmarks[i][1]].y) - abs(current_pose->y ),abs(this->feature_map.l_cross[landmarks[i][1]].x )  -  abs(current_pose->x ));
+
+
+			////cout<< delta_x << " "<<delta_y<<" "<<ra<<" "<<phi<<" "<<"robot:"<<current_pose->rot<<" feat:"<<features[i].range<<" "<<features[i].bearing;
+			////cout <<" "<<prob_gaussian(abs(features[i].range) - abs(ra),1) <<" "<< prob_gaussian(abs(features[i].bearing)  - abs(phi),1) <<" "<< prob_gaussian(0,1) <<" "<<endl;
+
+			res = prob_gaussian(abs(features[i].range) - abs(ra),1) * prob_gaussian(abs(features[i].bearing)  - abs(phi),1) * prob_gaussian(0,1); //prob(si-sj,sigma_s) is last probability, how likeli ist that feature that landmark?
+			////cout<<res<<endl;
 			break;
 		}
 		case 1: //T crossings
 		{
-			double delta_x = (this->feature_map.t_cross[landmarks[i][1]].x - current_pose->x);
-			double delta_y = (this->feature_map.t_cross[landmarks[i][1]].y - current_pose->y);
+			double delta_x = this->feature_map.t_cross[landmarks[i][1]].x - current_pose->x;
+			double delta_y = this->feature_map.t_cross[landmarks[i][1]].y - current_pose->y;
+
+			ra = sqrt( delta_x * delta_x + delta_y * delta_y );//landmarks[i][2];
+			//added abs
+			phi = atan2(abs(this->feature_map.t_cross[landmarks[i][1]].y) - abs(current_pose->y ),abs(this->feature_map.t_cross[landmarks[i][1]].x )  -  abs(current_pose->x ));
+
+
+			////cout<< delta_x << " "<<delta_y<<" "<<ra<<" "<<phi<<" "<<"robot:"<<current_pose->rot<<" feat:"<<features[i].range<<" "<<features[i].bearing;
+			////cout <<" "<<prob_gaussian(abs(features[i].range) - abs(ra),1) <<" "<< prob_gaussian(abs(features[i].bearing)  - abs(phi),1) <<" "<< prob_gaussian(0,1) <<" "<<endl;
+
+			res = prob_gaussian(abs(features[i].range) - abs(ra),1) * prob_gaussian(abs(features[i].bearing)  - abs(phi),1) * prob_gaussian(0,1); //prob(si-sj,sigma_s) is last probability, how likeli ist that feature that landmark?
+			////cout<<res<<endl;
+			break;
+			/*
+			double delta_x = this->feature_map.t_cross[landmarks[i][1]].x - current_pose->x;
+			double delta_y = this->feature_map.t_cross[landmarks[i][1]].y - current_pose->y;
 			ra = sqrt( delta_x * delta_x + delta_y * delta_y );
 			//ra = landmarks[i][2];
 			phi = atan2(this->feature_map.t_cross[landmarks[i][1]].y - current_pose->y,this->feature_map.t_cross[landmarks[i][1]].x - current_pose->x);
 			res = (prob_gaussian(features[i].range - ra,1)*prob_gaussian(features[i].bearing - phi,1) * prob_gaussian(0,1)); //prob(si-sj,sigma_s) is last probability, how likeli ist that feature that landmark?
-			break;
+			break;*/
 		}
 		case 2: //X crossings
 		{
-			double delta_x = (this->feature_map.x_cross[landmarks[i][1]].x
-					- current_pose->x);
-			double delta_y = (this->feature_map.x_cross[landmarks[i][1]].y
-					- current_pose->y);
+
+
+			double delta_x = this->feature_map.x_cross[landmarks[i][1]].x - current_pose->x;
+			double delta_y = this->feature_map.x_cross[landmarks[i][1]].y - current_pose->y;
+
+			ra = sqrt( delta_x * delta_x + delta_y * delta_y );//landmarks[i][2];
+			//added abs
+			phi = atan2(abs(this->feature_map.x_cross[landmarks[i][1]].y) - abs(current_pose->y ),abs(this->feature_map.x_cross[landmarks[i][1]].x )  -  abs(current_pose->x ));
+
+
+			////cout<< delta_x << " "<<delta_y<<" "<<ra<<" "<<phi<<" "<<"robot:"<<current_pose->rot<<" feat:"<<features[i].range<<" "<<features[i].bearing;
+			////cout <<" "<<prob_gaussian(abs(features[i].range) - abs(ra),1) <<" "<< prob_gaussian(abs(features[i].bearing)  - abs(phi),1) <<" "<< prob_gaussian(0,1) <<" "<<endl;
+
+			res = prob_gaussian(abs(features[i].range) - abs(ra),1) * prob_gaussian(abs(features[i].bearing)  - abs(phi),1) * prob_gaussian(0,1); //prob(si-sj,sigma_s) is last probability, how likeli ist that feature that landmark?
+			////cout<<res<<endl;
+			break;
+
+			/*
+			double delta_x = this->feature_map.x_cross[landmarks[i][1]].x
+					- current_pose->x;
+			double delta_y = this->feature_map.x_cross[landmarks[i][1]].y
+					- current_pose->y;
 			ra = sqrt(delta_x * delta_x + delta_y * delta_y);
 			//ra = landmarks[i][2];
 			phi = atan2(this->feature_map.x_cross[landmarks[i][1]].y - current_pose->y,this->feature_map.x_cross[landmarks[i][1]].x - current_pose->x);
-			res = (prob_gaussian(features[i].range - ra,1)*prob_gaussian(features[i].bearing - phi,1) * prob_gaussian(0,1)); //prob(si-sj,sigma_s) is last probability, how likeli ist that feature that landmark?
-			break;
+			res = (prob_gaussian(features[i].range - ra,1)*prob_gaussian(features[i].bearing +current_pose->rot- phi,1) * prob_gaussian(0,1)); //prob(si-sj,sigma_s) is last probability, how likeli ist that feature that landmark?
+			break;*/
 		}
 		default:
 			cout<<"something went wrong in measurement model!"<<endl;
