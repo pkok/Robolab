@@ -31,8 +31,6 @@ using namespace std;
 #define WH_VAL_MIN  200
 #define WH_VAL_MAX  255
 
-
-
 bool hsv_range(Vec3b pixel, int h_min, int h_max, int s_min, int s_max, int v_min, int v_max)
 {
 	bool isAtRange = true;

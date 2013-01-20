@@ -46,9 +46,13 @@ double similarity_measure(vector<Vec4i> cluster1, vector<Vec4i> cluster2)
 {
 	double similarity = 0;
 	double min_angle_diff = DBL_MAX;
+	double points_distance = 0;
 	for( int i=0; i < cluster1.size(); i++){
 		for( int j=0; j < cluster2.size(); j++){
-
+			for(int ii=0; ii < 2; ii ++){
+				points_distance += point_line_distance(Point(cluster2[j][0], cluster2[j][1]), cluster1[i]) + 
+				point_line_distance(Point(cluster2[j][2], cluster2[j][3]), cluster1[i]);
+			}
 			// angle difference between two lines of the two
 			// compared clusters
 			double angle_diff = abs(line_angle(cluster1[i]) - line_angle(cluster2[j]));
@@ -57,32 +61,9 @@ double similarity_measure(vector<Vec4i> cluster1, vector<Vec4i> cluster2)
 			}
 		}
 	}
-
-	// double most_distant_points = 0;
-	// double most_distant_points_angle = 0;
-	// for( int i=0; i < cluster1.size(); i++){
-	// 	for( int j=0; j < cluster2.size(); j++){
-	// 		for(int ii=0; ii < 2; ii ++){
-	// 			for(int jj=0; jj < 2; jj ++){
-	// 				double distance = points_distance(Point(cluster1[i][2*ii], cluster1[i][2*ii+1]),
-	// 					Point(cluster1[j][2*jj], cluster1[j][2*jj+1]));
-	// 				if( distance > most_distant_points){
-	// 					most_distant_points = distance;
-	// 					most_distant_points_angle = abs(line_angle(cluster1[i]) - line_angle(Vec4i(cluster1[i][2*ii],
-	// 						cluster1[i][2*ii+1], cluster2[j][2*jj], cluster2[j][2*jj+1])));
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-	// }
-
-	// if(min_angle_diff < 5){
-	// 	similarity = most_distant_points*most_distant_points_angle;
-	// }else{
-	similarity = min_angle_diff;
-	// }
 	
-	
+	similarity = min_angle_diff + 0.3 * points_distance;
+
 	return similarity;
 }
 
@@ -118,10 +99,6 @@ void line_clustering(Mat image, vector<Vec4i> lines, vector<Vec4i> &clustered_li
 		initialize_clusters(lines, cluster);
 		Mat black = Mat::zeros(image.rows, image.cols, CV_8UC3);
 
-		double d = point_line_distance(Point(1,0),Vec4i(0,0,10,10));
-		cout << d << endl;
-		d = point_line_distance(Point(1,0),Vec4i(2,0,12,10));
-		cout << d << endl;
 		double min_similarity;
 		int cluster_src;
 		int cluster_dst;
@@ -144,31 +121,63 @@ void line_clustering(Mat image, vector<Vec4i> lines, vector<Vec4i> &clustered_li
 					}
 				}
 			}
-
-		merge_clusters(cluster[cluster_dst], cluster[cluster_src]);
-		cluster.erase(cluster.begin() + cluster_src);
+			merge_clusters(cluster[cluster_dst], cluster[cluster_src]);
+			cluster.erase(cluster.begin() + cluster_src);
+			if(cluster.size() == 1)
+				break;
 		}
-		while(min_similarity < 2);
+		while(min_similarity < 20);
 
+		// if(cluster.size() > 0)
+		// {
+		// 	for( int i  = 0; i < cluster.size(); i++)
+		// 	{
+
+		// 		Mat temp;
+		// 		black.copyTo(temp);
+		// 		for( int j  = 0; j < cluster[i].size(); j++)
+		// 		{
+		// 			line( temp, Point(cluster[i][j][0], cluster[i][j][1]),
+		// 		      Point(cluster[i][j][2], cluster[i][j][3]), Scalar(0,0,255), 1, 8 );
+		// 		}
+				
+		// 		stringstream ss;
+		// 		ss << i;
+		// 		imshow("cluster"+ss.str(),temp);
+		// 		cout << "cluster" << i << " " << cluster[i].size() << endl;
+		// 	}	
+		// }
+		Mat temp;
+				black.copyTo(temp);
 		if(cluster.size() > 0)
 		{
 			for( int i  = 0; i < cluster.size(); i++)
-			{
-
-				Mat temp;
-				black.copyTo(temp);
+			{	
+				double max_length = 0;
+				Point point1;
+				Point point2;
 				for( int j  = 0; j < cluster[i].size(); j++)
 				{
-					line( temp, Point(cluster[i][j][0], cluster[i][j][1]),
-				      Point(cluster[i][j][2], cluster[i][j][3]), Scalar(0,0,255), 1, 8 );
+					for( int jj  = 0; jj < cluster[i].size(); jj++)
+					{
+						for( int k  = 0; k < 2; k++)
+						{
+							for( int p  = 0; p < 2; p++)
+							{
+								if(points_distance(Point(cluster[i][j][2*k],cluster[i][j][2*k+1]),Point(cluster[i][jj][2*p],cluster[i][jj][2*p+1])) > max_length){
+									max_length = points_distance(Point(cluster[i][j][2*k],cluster[i][j][2*k+1]),Point(cluster[i][jj][2*p],cluster[i][jj][2*p+1]));
+									point1 = Point(cluster[i][j][2*k],cluster[i][j][2*k+1]);
+									point2 = Point(cluster[i][jj][2*p],cluster[i][jj][2*p+1]);
+								}
+							}
+						}
+					}
 				}
-				
-				stringstream ss;
-				ss << i;
-				imshow("cluster"+ss.str(),temp);
-				cout << "cluster" << i << " " << cluster[i].size() << endl;
-			}	
+				line( temp, point1,
+				      		point2, Scalar(0,0,255), 2, 8 );				
+			}
 		}
+		imshow("lines_awesome", temp);
 
 		Mat field = Mat::zeros(image.rows, image.cols, CV_8UC3);
 
