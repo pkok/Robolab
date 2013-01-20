@@ -34,6 +34,21 @@ public:
 	int x_dim;
 	int y_dim;
 
+	double variance_range;
+	double variance_bearing;
+
+	//noise added in resampling
+	double resample_variance_pos;
+	double resample_variance_rot;
+
+	//factor to increase probability estimate of visual features
+	double measurement_factor;
+
+
+	//motion model update
+	double error_range;
+	double error_bearing;
+
 	vector<Particle> particles;
 
 	FeatureMap feature_map;
@@ -42,6 +57,8 @@ public:
 	ParticleFilter();
 	ParticleFilter(int width, int height,int number_of_particles);
 	virtual ~ParticleFilter();
+	//set parameters
+	void set_params();
 
 	void test();
 
