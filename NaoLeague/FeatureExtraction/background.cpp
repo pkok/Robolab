@@ -127,7 +127,7 @@ void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball)
 			}
 		}
 	}
-	imshow("field", field);
-	imshow("posts", posts);
-	imshow("lines", lines);
+	//imshow("field", field);
+	//imshow("posts", posts);
+	//imshow("lines", lines);
 }
