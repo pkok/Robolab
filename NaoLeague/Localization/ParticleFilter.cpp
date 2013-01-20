@@ -43,16 +43,16 @@ ParticleFilter::ParticleFilter(){
 	this->set_params();
 }
 void ParticleFilter::set_params(){
-	this->error_range = 0.1;
-	this->error_bearing = 0.2;
+	this->error_range = 0.1;//0.1;
+	this->error_bearing = 0.2;//0.2;
 
-	this->resample_variance_pos = 10;
-	this->resample_variance_rot = 1;
+	this->resample_variance_pos = 20; //20
+	this->resample_variance_rot = 2;
 
 	this->measurement_factor = 1;
 
-	this->variance_range = 100000;
-	this->variance_bearing = 10000;
+	this->variance_range = 2000;//200;//2000
+	this->variance_bearing = 10;//200;
 
 	this->x_dim = 740;
 	this->y_dim = 540;
