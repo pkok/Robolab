@@ -13,7 +13,6 @@ void probabilistic_hough_trans(Mat src, vector<Vec4i> &lines)
 	// edge detection with canny edge detector
 	// is applied...
 	Canny( src, dst, 50, 200, 3 );
-	imshow("canny",dst);
 
 	// color image to gray scale...
 	cvtColor( dst, color_dst, CV_GRAY2BGR );
