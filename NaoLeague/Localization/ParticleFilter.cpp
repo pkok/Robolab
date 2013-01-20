@@ -46,13 +46,13 @@ void ParticleFilter::set_params(){
 	this->error_range = 0.1;
 	this->error_bearing = 0.2;
 
-	this->resample_variance_pos = 15;
+	this->resample_variance_pos = 10;
 	this->resample_variance_rot = 1;
 
 	this->measurement_factor = 1;
 
-	this->variance_range = 10000;
-	this->variance_bearing = 100;
+	this->variance_range = 100000;
+	this->variance_bearing = 10000;
 
 	this->x_dim = 740;
 	this->y_dim = 540;
@@ -138,12 +138,7 @@ int ParticleFilter::dynamic(OdometryInformation odo_inf,vector<VisualFeature> vi
 	for (int k= 0; k< this->particles.size(); k++){
 		if(this->particles[k].weight > 0){no_particles_weight ++;}
 	}
-	//cout<<" no particles weight:"<<no_particles_weight<<endl;
-	//for 0..M
-		// pose = sample_sample_motion_model
-		// weight = measurement_model
 
-	//CHECK FOR PARTICLES OUTSIDE THE FIELD
 }
 
 /*
@@ -165,6 +160,17 @@ int ParticleFilter::sample_motion_model_simple(OdometryInformation odometry_info
 	last_pose->y = last_pose->y + y + error_y;
 	//cout<<"LASTROT:"<<last_pose->rot<<" "<<odometry_information.rot<<" "<<error_rot<<endl;
 	last_pose->rot = last_pose->rot + odometry_information.rot + error_rot;
+
+
+	//if set outside field, put it in at random again.
+	if(last_pose->x < -370 || last_pose->y > 370){
+		last_pose->x = random_uniform() * this->x_dim - (double)this->x_dim/(double)2;
+		last_pose->y = random_uniform() * this->y_dim - (double)this->y_dim/(double)2;
+	}
+	if(last_pose->y < -270 || last_pose->y > 270){
+		last_pose->x = random_uniform() * this->x_dim - (double)this->x_dim/(double)2;
+		last_pose->y = random_uniform() * this->y_dim - (double)this->y_dim/(double)2;
+	}
 
 	//TODO: reject particles outside the field !!
 }
@@ -366,7 +372,7 @@ double ParticleFilter::measurement_model(vector<VisualFeature> features,Particle
 	//combining results for measurement via product
 	double prod = 1;
 	for (int i = 0; i < q.size(); i++){
-		if(q[i] == 0){q[i] = 0.0001;}
+		//if(q[i] == 0){q[i] = 0.0001;}
 		prod = prod * q[i];
 	}
 	return(prod);
@@ -382,7 +388,7 @@ int ParticleFilter::add_particles(int number,double x, double y, double rot, dou
 		p.x = x;
 		p.y = y;
 		p.rot = rot;
-		p.weight = 1;
+		p.weight = weight;
 		this->particles.push_back(p);
 	}
 
