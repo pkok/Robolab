@@ -5,11 +5,4 @@
 
 int main()
 {
-	ImageGrabber imageGrabber("169.254.32.200");
-	ImageContainer* imageContainer;
-	while (true){
-		imageContainer = imageGrabber.pollImage();
-		cv::imshow("Polled Image", imageContainer->image);
-		cv::waitKey(1);
-	}
 }

@@ -58,7 +58,7 @@ void ImageGrabber::setRobotIP(std::string robotIP){
 
 void ImageGrabber::setCameraType(int cameraType){
 	DASSERT(cameraType >= AL::kQQVGA && cameraType <= AL::k4VGA, "Illegal cameraType");
-	cameraProxy->resolutionToSizes(cameraType);
+	cameraProxy->setResolution(clientName,cameraType);
 }
 
 void ImageGrabber::setCameraColorSpace(int cameraColorSpace){
