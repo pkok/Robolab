@@ -43,16 +43,31 @@ ParticleFilter::ParticleFilter(){
 	this->set_params();
 }
 void ParticleFilter::set_params(){
+
+	//type of MCL:
+	this->augmented = true;
+
+	//error parameters
 	this->error_range = 0.1;//0.1;
 	this->error_bearing = 0.2;//0.2;
 
-	this->resample_variance_pos = 20; //20
+	this->resample_variance_pos = 10; //20
 	this->resample_variance_rot = 1;
 
 	this->measurement_factor = 1;
 
-	this->variance_range = 2000;//200;//2000
+	this->variance_range = 10000;//200;//2000
 	this->variance_bearing = 200;//200;
+
+
+	//augmented pf parameters
+	////0<=alpha_slow<<alpha_fast;
+	//value taken from python code
+	this->alpha_slow = 0.05;
+	this->alpha_fast = 0.3;
+
+	this->w_slow = 0;
+	this->w_fast = 0;
 
 	this->x_dim = 740;
 	this->y_dim = 540;
@@ -118,8 +133,27 @@ int ParticleFilter::resample() {
 			c += this->particles[j].weight;
 		}
 		//add particle and add uncertainty
-		Particle p(this->particles[j].x + random_gaussian() * this->resample_variance_pos, this->particles[j].y + random_gaussian() * this->resample_variance_pos,this->particles[j].rot + random_gaussian() * this->resample_variance_rot,1);
-		resampled_particles.push_back(p);
+		if(!this->augmented){
+			Particle p(this->particles[j].x + random_gaussian() * this->resample_variance_pos, this->particles[j].y + random_gaussian() * this->resample_variance_pos,this->particles[j].rot + random_gaussian() * this->resample_variance_rot,1);
+			resampled_particles.push_back(p);
+		}
+		if(this->augmented){
+			//with max{0.0,1.0 - w_fasta/w_slow add random sample
+			double rand = random_uniform();
+			if(rand <=  (1.0 - this->w_fast/this->w_slow) ){
+				double x = random_uniform() * this->x_dim - this->x_dim/(double)2;
+				double y = random_uniform() * this->y_dim - this->y_dim/(double)2;
+				double rot = random_uniform() * 2* PI - PI;
+
+
+				Particle p(x,y,rot,1);
+				resampled_particles.push_back(p);
+			}else{
+				Particle p(this->particles[j].x + random_gaussian() * this->resample_variance_pos, this->particles[j].y + random_gaussian() * this->resample_variance_pos,this->particles[j].rot + random_gaussian() * this->resample_variance_rot,1);
+				resampled_particles.push_back(p);
+			}
+
+		}
 	}
 
 	//save new particles
@@ -127,17 +161,27 @@ int ParticleFilter::resample() {
 
 }
 int ParticleFilter::dynamic(OdometryInformation odo_inf,vector<VisualFeature> vis_feats){
+	//variable for augmented MCL
+	double w_avrg = 0;
 
 	//get odometry information
 	for(int i = 0; i < this->particles.size(); i++)
 	{
 		sample_motion_model_simple(odo_inf,&this->particles[i]);
 		this->particles[i].weight = this->measurement_model(vis_feats,&this->particles[i]);
+
+		//augmented MCL
+		w_avrg += 1/this->particles.size() + this->particles[i].weight;
 	}
+
+	//augmented MCL:
+	this->w_slow = this->w_slow + this->alpha_slow * (w_avrg - this->w_slow);
+	this->w_fast = this->w_fast + this->alpha_fast * (w_avrg - this->w_fast );
+	/*
 	int no_particles_weight = 0;
 	for (int k= 0; k< this->particles.size(); k++){
 		if(this->particles[k].weight > 0){no_particles_weight ++;}
-	}
+	}*/
 
 }
 
