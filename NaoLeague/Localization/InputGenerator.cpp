@@ -74,13 +74,18 @@ int InputGenerator::generate_features(double x,double y, double rot,FeatureMap f
 
 	return(0);
 }
+
+
+
+// convert feature from map to robot space
+
 int InputGenerator::calculate_range_bearing(FeatureMap fm,double x, double y, double rot, vector<VisualFeature>* poss_feat){
 
 	//iterate l_cross
 	for(int i = 0; i<8 ; i++){
 
-		double delta_x = x - fm.l_cross[i].x ;
-		double delta_y = y - fm.l_cross[i].y ;
+		double delta_x =  fm.l_cross[i].x -x ;
+		double delta_y = fm.l_cross[i].y - y ;
 
 		//position of unity vector with rotation:
 		double x_unity =cos(rot);
