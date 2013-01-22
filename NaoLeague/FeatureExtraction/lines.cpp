@@ -179,7 +179,8 @@ void find_candidate_points(vector<Point> points, Point start, Point previous, ve
 		if(!equal_points(points[i],previous))
 		{
 			double temp_sim_value = points_distance(previous, points[i]);
-			if(line.size() > 1){
+			if(line.size() > 1)
+			{
 				temp_sim_value = point_line_distance(points[i], Vec4i(start.x, start.y, previous.x, previous.y));
 			}
 
@@ -215,7 +216,7 @@ void find_candidate_points(vector<Point> points, Point start, Point previous, ve
 			}
 		}
 	}
-	
+
 }
 
 
@@ -253,9 +254,12 @@ void line_clustering(Mat image)
 				double distance = points_distance(previous, next);
 				double angle = abs(points_angle(start, next) - points_angle(start, previous));
 				double score;
-				if(line.size() > 1){
+				if(line.size() > 1)
+				{
 					score = (1.01 - white) * angle;
-				}else{
+				}
+				else
+				{
 					score = (1.01 - white) * distance;
 				}
 				if(white < 0.7)
@@ -289,7 +293,7 @@ void line_clustering(Mat image)
 					for(int i = 0; i < line.size(); i++)
 					{
 						sum_error += pow(point_line_distance(line[i],
-							Vec4i(start.x, start.y, best_candidate.x, best_candidate.y)),3);
+						                                     Vec4i(start.x, start.y, best_candidate.x, best_candidate.y)),3);
 					}
 				}
 				if(sum_error < 200)
@@ -335,19 +339,24 @@ void line_clustering(Mat image)
 		lines.push_back(line);
 		line.clear();
 	}
-	
+
 
 	// lines visualization...
 
-	// for(int i = 0; i < lines.size(); i++){
+	// for(int i = 0; i < lines.size(); i++)
+	// {
 	// 	cout << "sdfSBRB" << endl;
 	// 	Point point1,point2;
 	// 	double max_distance = 0;
-	// 	for(int j1 = 0; j1 < lines[i].size(); j1++){
-	// 		for(int j2 = 0; j2 < lines[i].size(); j2++){
-	// 			if(j1 != j2){
+	// 	for(int j1 = 0; j1 < lines[i].size(); j1++)
+	// 	{
+	// 		for(int j2 = 0; j2 < lines[i].size(); j2++)
+	// 		{
+	// 			if(j1 != j2)
+	// 			{
 	// 				double temp = points_distance(lines[i][j1], lines[i][j2]);
-	// 				if(temp > max_distance){
+	// 				if(temp > max_distance)
+	// 				{
 	// 					point1 = lines[i][j1];
 	// 					point2 = lines[i][j2];
 	// 					max_distance = temp;
@@ -358,6 +367,6 @@ void line_clustering(Mat image)
 	// 	line( black, Point(point1.y, point1.x),
 	// 	      Point(point2.y, point2.x), Scalar(0,0,255), 1, 8 );
 	// }
-	
+
 	imshow("s", black);
 }
