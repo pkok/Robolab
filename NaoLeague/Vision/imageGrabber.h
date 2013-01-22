@@ -10,7 +10,6 @@
 #include <alvision/alimage.h>
 #include <alvision/alvisiondefinitions.h>
 #include <alerror/alerror.h>
-
 #include<opencv2/core/core.hpp>
 
 //possibly make a class for this in a separate file

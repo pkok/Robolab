@@ -74,30 +74,34 @@ int InputGenerator::generate_features(double x,double y, double rot,FeatureMap f
 
 	return(0);
 }
+
+
+
+// convert feature from map to robot space
+
 int InputGenerator::calculate_range_bearing(FeatureMap fm,double x, double y, double rot, vector<VisualFeature>* poss_feat){
 
 	//iterate l_cross
 	for(int i = 0; i<8 ; i++){
 
-		double delta_x = x - fm.l_cross[i].x ;
-		double delta_y = y - fm.l_cross[i].y ;
+		double delta_x =  fm.l_cross[i].x -x ;
+		double delta_y = fm.l_cross[i].y - y ;
 
 		//position of unity vector with rotation:
-		double x_unity = sin(rot);
-		double y_unity = cos(rot);
+		double x_unity =cos(rot);
+		double y_unity = sin(rot);
 
 
 		double r = sqrt((x - fm.l_cross[i].x) * (x - fm.l_cross[i].x) + (y - fm.l_cross[i].y) * (y - fm.l_cross[i].y));
 
-		double bear = (x_unity * delta_x + y_unity * delta_y) / (1 * r);//asin((y-fm.l_cross[i].y) / r);
-		if(bear == 0  ){ //check for opposing directions
-			double vec_scale =  1 / sqrt(delta_x*delta_x + delta_y * delta_y);
-			double dir_feat_x = delta_x * vec_scale;
-			double dir_feat_y = delta_y * vec_scale;
-			if(dir_feat_x == -y_unity && dir_feat_y == -x_unity){
-				bear = -PI;
-			}
-		}
+		//check if "behind" robot:
+		//project vector:
+		double proj = (delta_x * x_unity + delta_y * y_unity) / (r * r);
+		double proj_x =  delta_x * proj;
+		double proj_y = delta_y * proj;
+
+		double bear = acos((x_unity * delta_x + y_unity * delta_y) / (1 * r));
+
 		VisualFeature f;
 		f.bearing = bear;
 		f.range =r;
@@ -110,22 +114,21 @@ int InputGenerator::calculate_range_bearing(FeatureMap fm,double x, double y, do
 		double delta_y = fm.t_cross[i].y - y;
 
 		//position of unity vector with rotation:
-		double x_unity = sin(rot);
-		double y_unity = cos(rot);
+		double x_unity = cos(rot);
+		double y_unity = sin(rot);
 
 
 		double r = sqrt((x - fm.t_cross[i].x) * (x - fm.t_cross[i].x) + (y - fm.t_cross[i].y) * (y - fm.t_cross[i].y));
 
-		double bear = (x_unity * delta_x + y_unity * delta_y) / (1 * r);
 
-		if(bear == 0  ){ //check for opposing directions
-			double vec_scale =  1 / sqrt(delta_x*delta_x + delta_y * delta_y);
-			double dir_feat_x = delta_x * vec_scale;
-			double dir_feat_y = delta_y * vec_scale;
-			if(dir_feat_x == -y_unity && dir_feat_y == -x_unity){
-				bear = -PI;
-			}
-		}
+
+		//check if "behind" robot:
+		//project vector:
+		double proj = (delta_x * x_unity + delta_y * y_unity) ;
+		double proj_x =  delta_x * proj;
+		double proj_y = delta_y * proj;
+
+		double bear = acos((x_unity * delta_x + y_unity * delta_y) / (1 * r));
 		VisualFeature f;
 		f.bearing = bear;
 		f.range =r;
@@ -138,31 +141,18 @@ int InputGenerator::calculate_range_bearing(FeatureMap fm,double x, double y, do
 		double delta_y = fm.x_cross[i].y  -y;
 
 		//position of unity vector with rotation:
-		double x_unity = sin(rot);
-		double y_unity = cos(rot);
+		double x_unity = cos(rot);
+		double y_unity = sin(rot);
 		double r = sqrt((x - fm.x_cross[i].x) * (x - fm.x_cross[i].x) + (y - fm.x_cross[i].y) * (y - fm.x_cross[i].y));
-		double bear = (x_unity * delta_x + y_unity * delta_y) / (1 * r);
-		if(bear == 0  ){ //check for opposing directions
-			double vec_scale =  1 / sqrt(delta_x*delta_x + delta_y * delta_y);
-			double dir_feat_x = delta_x * vec_scale;
-			double dir_feat_y = delta_y * vec_scale;
-			if(dir_feat_x == -y_unity && dir_feat_y == -x_unity){
-				bear = -PI;
-			}
-		}
-	/*
-		double bear = 0;
-		if(delta_x < 0){
-			bear = -(x_unity * delta_x + y_unity * delta_y) / (1 * r);
-		}
-		else if(delta_y < 0){
-			bear = -(x_unity * delta_x + y_unity * delta_y) / (1 * r);
-		}else {
 
-			bear = (x_unity * delta_x + y_unity * delta_y) / (1 * r);
-		}
-*/
-		//if(i == 4 || i==0){cout<<"x_cross4 = "<<x_unity<<" "<<y_unity<<" "<<delta_x<<" "<<delta_y<<" "<<r<<" "<<bear<<endl;}
+		//check if "behind" robot:
+		//project vector:
+		double proj = (delta_x * x_unity + delta_y * y_unity) ;
+		double proj_x =  delta_x * proj;
+		double proj_y = delta_y * proj;
+
+		double bear = acos((x_unity * delta_x + y_unity * delta_y) / (1 * r));
+
 		VisualFeature f;
 		f.bearing = bear;
 		f.range =r;
@@ -172,24 +162,30 @@ int InputGenerator::calculate_range_bearing(FeatureMap fm,double x, double y, do
 	//iterate g_cross
 	for(int i = 0; i<4 ; i++){
 		double delta_x =  fm.g_cross[i].x - x ;
-		double delta_y =  fm.g_cross[i].y - y;
+		double delta_y =   fm.g_cross[i].y - y;
 
 		//position of unity vector with rotation:
-		double x_unity = sin(rot);
-		double y_unity = cos(rot);
+		double x_unity = cos(rot);
+		double y_unity = sin(rot);
 
 
 		double r = sqrt((x - fm.g_cross[i].x) * (x - fm.g_cross[i].x) + (y - fm.g_cross[i].y) * (y - fm.g_cross[i].y));
 
-		double bear = (x_unity * delta_x + y_unity * delta_y) / (1 * r);
-		if(bear == 0  ){ //check for opposing directions
-			double vec_scale =  1 / sqrt(delta_x*delta_x + delta_y * delta_y);
-			double dir_feat_x = delta_x * vec_scale;
-			double dir_feat_y = delta_y * vec_scale;
-			if(dir_feat_x == -y_unity && dir_feat_y == -x_unity){
-				bear = -PI;
-			}
-		}
+
+
+		//check if "behind" robot:
+		//project vector:
+		double proj = (delta_x * x_unity + delta_y * y_unity) ;
+		double proj_x =  delta_x * proj;
+		double proj_y = delta_y * proj;
+
+
+
+
+		double bear = acos(proj/(1*r));//(x_unity * delta_x + y_unity * delta_y) / (1 * r);
+		cout<<"goal origin:"<<i<<" "<<delta_x<<"|"<<delta_y<<endl;
+		cout<<"goal:"<<i<<" "<<proj_x<<" "<<x_unity<<"|"<<proj_y<<" "<<y_unity<<endl;
+
 		VisualFeature f;
 		f.bearing = bear;
 		f.range =r;
