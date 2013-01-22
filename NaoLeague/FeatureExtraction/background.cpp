@@ -4,11 +4,12 @@
 #include <cv.h>
 #include <highgui.h>
 #include "background.h"
+#include "lines.h"
 
 using namespace cv;
 using namespace std;
 
-#define BACK_THRESHOLD 6
+#define BACK_THRESHOLD 1
 
 #define YEL_HUE_MIN 20
 #define YEL_HUE_MAX  38
@@ -71,6 +72,8 @@ void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball)
 	posts = Mat::zeros(image.rows, image.cols, CV_8UC3);
 	ball = Mat::zeros(image.rows, image.cols, CV_8UC3);
 	Mat field = Mat::zeros(image.rows, image.cols, CV_8UC3);
+	Mat background_border = Mat::zeros(image.rows, image.cols, CV_8UC1);
+  vector<Vec2i> background_border_points = vector<Vec2i>();
 	
 	// boolean variable which declares if the current row pixel is above field
 	// height...
@@ -99,12 +102,18 @@ void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball)
 					ass_val_pixel(field.at<Vec3b>(i,j), 0, 0, 0);
 					if(counter > BACK_THRESHOLD)
 					{
+            ass_val_pixel(field.at<Vec3b>(i - BACK_THRESHOLD, j), 255, 255, 255);
+            background_border.at<uchar>(i - BACK_THRESHOLD, j) = 255;
+            background_border_points.push_back(Vec2i(i - BACK_THRESHOLD, j));
 						for( int k = 0; k < BACK_THRESHOLD + 5; k++)
 						{
 							if((i-k) >= 0)
+              {
 								ass_val_pixel2pixel(field.at<Vec3b>(i-k,j), image.at<Vec3b>(i-k,j));
+              }
 						}
 						background = false;
+            //ass_val_pixel(background_border.at<Vec3b>(i,j), 255, 255, 255);
 					}
 				}
 				else
@@ -127,7 +136,99 @@ void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball)
 			}
 		}
 	}
-	//imshow("field", field);
+
+  int minimum_datapoints_used = (int) ((double) background_border_points.size() * 0.2 * 0.3);
+  int iterations = 20;
+  double threshold = 0.5;
+  int close_data_values = minimum_datapoints_used * 4;
+  Vec4f fitted_line = Vec4f();
+  Vec4f fitted_line2 = Vec4f();
+  Vec4f fitted_line3 = Vec4f();
+  vector<Vec2i> left_border = vector<Vec2i>();
+  vector<Vec2i> middle_border = vector<Vec2i>();
+  vector<Vec2i> right_border = vector<Vec2i>();
+  vector<Vec2i> used_data = vector<Vec2i>();
+  vector<Vec2i> used_data2 = vector<Vec2i>();
+  vector<Vec2i> used_data3 = vector<Vec2i>();
+  double estimation_error = INFINITY;
+
+  int i = 0;
+  for (; i < background_border_points.size() * 0.33; ++i) {
+    left_border.push_back(background_border_points.at(i));
+  }
+  for (; i < background_border_points.size() * 0.66; ++i) {
+    middle_border.push_back(background_border_points.at(i));
+  }
+  for (; i < background_border_points.size(); ++i) {
+    right_border.push_back(background_border_points.at(i));
+  }
+
+  RANSAC_line(left_border, minimum_datapoints_used, iterations, threshold, close_data_values, fitted_line, used_data, estimation_error);
+  cout << "dataset size: " << left_border.size() << "|" << middle_border.size() << "|" << right_border.size() << endl;
+  cout << "minimum_datapoints_used: " << minimum_datapoints_used << endl;
+  cout << "close_data_values: " << close_data_values << endl;
+  cout << "used_data size: " << used_data.size() << endl;
+  cout << "estimation error (avg. LSE): " << estimation_error << endl;
+
+  RANSAC_line(middle_border, minimum_datapoints_used, iterations, threshold, close_data_values, fitted_line2, used_data2, estimation_error);
+  RANSAC_line(right_border, minimum_datapoints_used, iterations, threshold, close_data_values, fitted_line3, used_data3, estimation_error);
+
+  float slope = fitted_line[1] / fitted_line[0];
+  circle(field, 
+      Point(fitted_line[3], fitted_line[2]), 
+      4, 
+      Scalar(255, 255, 0));
+  line(field,
+      Point(fitted_line[3] - 50*fitted_line[1], (fitted_line[2]) - 50*fitted_line[0]),
+      Point(fitted_line[3] + 50*fitted_line[1], (fitted_line[2]) + 50*fitted_line[0]),
+      Scalar(255, 255, 0));
+  circle(background_border, 
+      Point(fitted_line[3], fitted_line[2]), 
+      4, 
+      255);
+  line(background_border,
+      Point(fitted_line[3] - 50*fitted_line[1], (fitted_line[2]) - 50*fitted_line[0]),
+      Point(fitted_line[3] + 50*fitted_line[1], (fitted_line[2]) + 50*fitted_line[0]),
+      255);
+
+  slope = fitted_line2[1] / fitted_line2[0];
+  circle(field, 
+      Point(fitted_line2[3], fitted_line2[2]), 
+      4, 
+      Scalar(0, 255, 0));
+  line(field,
+      Point(fitted_line2[3] - 50*fitted_line2[1], (fitted_line2[2]) - 50*fitted_line2[0]),
+      Point(fitted_line2[3] + 50*fitted_line2[1], (fitted_line2[2]) + 50*fitted_line2[0]),
+      Scalar(0, 255, 0));
+  circle(background_border, 
+      Point(fitted_line2[3], fitted_line2[2]), 
+      4, 
+      255);
+  line(background_border,
+      Point(fitted_line2[3] - 50*fitted_line2[1], (fitted_line2[2]) - 50*fitted_line2[0]),
+      Point(fitted_line2[3] + 50*fitted_line2[1], (fitted_line2[2]) + 50*fitted_line2[0]),
+      255);
+
+  slope = fitted_line3[1] / fitted_line3[0];
+  circle(field, 
+      Point(fitted_line3[3], fitted_line3[2]), 
+      4, 
+      Scalar(255, 0, 0));
+  line(field,
+      Point(fitted_line3[3] - 50*fitted_line3[1], (fitted_line3[2]) - 50*fitted_line3[0]),
+      Point(fitted_line3[3] + 50*fitted_line3[1], (fitted_line3[2]) + 50*fitted_line3[0]),
+      Scalar(255, 0, 0));
+  circle(background_border, 
+      Point(fitted_line3[3], fitted_line3[2]), 
+      4, 
+      255);
+  line(background_border,
+      Point(fitted_line3[3] - 50*fitted_line3[1], (fitted_line3[2]) - 50*fitted_line3[0]),
+      Point(fitted_line3[3] + 50*fitted_line3[1], (fitted_line3[2]) + 50*fitted_line3[0]),
+      255);
+
+	imshow("field", field);
 	//imshow("posts", posts);
 	//imshow("lines", lines);
+  imshow("background border", background_border);
 }
