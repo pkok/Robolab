@@ -323,8 +323,6 @@ void line_clustering(Mat image)
 					}
 					end = true;
 				}
-				line( temp, point1,
-				      		point2, Scalar(0,0,255), 2, 8 );
 			}
 		}
 		while(!end);
