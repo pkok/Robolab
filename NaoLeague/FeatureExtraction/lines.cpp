@@ -307,9 +307,7 @@ void line_clustering(Mat image)
 							break;
 						}
 					}
-
 					previous = best_candidate;
-
 				}
 				else
 				{
@@ -370,50 +368,4 @@ void line_clustering(Mat image)
 
 	imshow("s", black);
 
-}
-
-void RANSAC_line(vector<Vec2i> points, int minimum_datapoints_used, int iterations, double threshold, int close_data_values, Vec4f &fitted_line, vector<Vec2i> &used_data, double &estimation_error)
-{
-  if (minimum_datapoints_used > close_data_values) {
-    cerr << "No datapoints to improve the search" << endl;
-    return;
-  }
-  else if (close_data_values >= points.size()) {
-    cerr << "More datapoints required for inspection than present." << endl;
-    return;
-  }
-  estimation_error = INFINITY;
-  vector<Vec2i> random_sample, consensus_set;
-  Vec4f current_line;
-  double acumulated_error, current_error;
-  srand(unsigned(time(NULL)));
-
-  for (int i = 0; i < iterations; ++i) {
-    random_shuffle(points.begin(), points.end());
-    for (int j = 0; j < minimum_datapoints_used; ++j) {
-      random_sample.push_back(points.at(j));
-    }
-    fitLine(random_sample, current_line, CV_DIST_L2, 0, 0.01, 0.01);
-    current_line[0] += current_line[2];
-    current_line[1] += current_line[3];
-
-    consensus_set = random_sample;
-    for (vector<Vec2i>::iterator iter = points.begin(); iter != points.end(); ++iter) {
-      if (find(random_sample.begin(), random_sample.end(), *iter) == random_sample.end()) { // point is not in random_sample
-        current_error = point_line_distance(*iter, current_line);
-        if (current_error < threshold) {
-          acumulated_error += current_error;
-          consensus_set.push_back(*iter);
-        }
-      }
-    }
-
-    if (consensus_set.size() > close_data_values) {
-      if (acumulated_error < estimation_error) {
-        estimation_error = acumulated_error / (double) consensus_set.size();
-        used_data = consensus_set;
-      }
-    }
-  }
-  fitLine(used_data, fitted_line, CV_DIST_L2, 0, 0.01, 0.01);
 }
