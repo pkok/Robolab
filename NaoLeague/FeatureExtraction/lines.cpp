@@ -109,7 +109,7 @@ double points_angle(Point point1, Point point2)
 void mark_lines(Mat image, Mat &point_image, vector<Point> &points)
 {
 
-	for(int i = 0; i < image.rows; i += 10)
+	for(int i = 0; i < image.rows; i += 6)
 	{
 
 		bool pass = false;
@@ -140,7 +140,7 @@ void mark_lines(Mat image, Mat &point_image, vector<Point> &points)
 	}
 
 
-	for(int j = 0; j < image.cols; j += 10)
+	for(int j = 0; j < image.cols; j += 6)
 	{
 		bool pass = false;
 		int row = 0;
@@ -293,7 +293,7 @@ void line_clustering(Mat image)
 					for(int i = 0; i < line.size(); i++)
 					{
 						sum_error += pow(point_line_distance(line[i],
-						                                     Vec4i(start.x, start.y, best_candidate.x, best_candidate.y)),3);
+							Vec4i(start.x, start.y, best_candidate.x, best_candidate.y)),3);
 					}
 				}
 				if(sum_error < 200)
@@ -369,6 +369,7 @@ void line_clustering(Mat image)
 	}
 
 	imshow("s", black);
+
 }
 
 void RANSAC_line(vector<Vec2i> points, int minimum_datapoints_used, int iterations, double threshold, int close_data_values, Vec4f &fitted_line, vector<Vec2i> &used_data, double &estimation_error)
