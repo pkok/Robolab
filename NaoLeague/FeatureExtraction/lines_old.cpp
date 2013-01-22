@@ -193,111 +193,100 @@ void merge_clusters(vector<Vec4i> &cluster_dst, vector<Vec4i> &cluster_src)
 
 void line_clustering(Mat image, vector<Vec4i> lines, vector<Vec4i> &clustered_lines)
 {
-	if(lines.size() > 1)
+
+
+	Mat black = Mat::zeros(image.rows, image.cols, CV_8UC3);
+	double min_similarity;
+	int cluster_src;
+	int cluster_dst;
+	do
 	{
-		// create clusters
-		vector< vector<Vec4i> > cluster;
-		initialize_clusters(lines, cluster);
-		Mat black = Mat::zeros(image.rows, image.cols, CV_8UC3);
-
-		//search_ellipses(image, lines);
-
-		double min_similarity;
-		int cluster_src;
-		int cluster_dst;
-		do
+		min_similarity = DBL_MAX;
+		for( int i  = 0; i < cluster.size(); i++)
 		{
-			min_similarity = DBL_MAX;
-			for( int i  = 0; i < cluster.size(); i++)
+			for( int j  = 0; j < cluster.size(); j++)
 			{
-				for( int j  = 0; j < cluster.size(); j++)
+				if( i != j)
 				{
-					if( i != j)
+					double similarity = similarity_measure(cluster[i], cluster[j]);
+					if( similarity < min_similarity)
 					{
-						double similarity = similarity_measure(cluster[i], cluster[j]);
-						if( similarity < min_similarity)
-						{
-							min_similarity = similarity;
-							cluster_dst = i;
-							cluster_src = j;
-						}
+						min_similarity = similarity;
+						cluster_dst = i;
+						cluster_src = j;
 					}
 				}
 			}
-			merge_clusters(cluster[cluster_dst], cluster[cluster_src]);
-			cluster.erase(cluster.begin() + cluster_src);
-			if(cluster.size() == 1)
-				break;
 		}
-		while(min_similarity < 2);
+		merge_clusters(cluster[cluster_dst], cluster[cluster_src]);
+		cluster.erase(cluster.begin() + cluster_src);
+		if(cluster.size() == 1)
+			break;
+	}
+	while(min_similarity < 2);
 
-		if(cluster.size() > 0)
+	if(cluster.size() > 0)
+	{
+		for( int i  = 0; i < cluster.size(); i++)
 		{
-			for( int i  = 0; i < cluster.size(); i++)
+
+			Mat temp;
+			black.copyTo(temp);
+			for( int j  = 0; j < cluster[i].size(); j++)
 			{
+				line( temp, Point(cluster[i][j][0], cluster[i][j][1]),
+			      Point(cluster[i][j][2], cluster[i][j][3]), Scalar(0,0,255), 1, 8 );
+			}
+			
+			stringstream ss;
+			ss << i;
+			imshow("cluster"+ss.str(),temp);
+			cout << "cluster" << i << " " << cluster[i].size() << endl;
+		}	
+	}
 
-				Mat temp;
-				black.copyTo(temp);
-				for( int j  = 0; j < cluster[i].size(); j++)
+	Mat temp;
+	black.copyTo(temp);
+	if(cluster.size() > 0)
+	{
+		for( int i  = 0; i < cluster.size(); i++)
+		{	
+			double max_length = 0;
+			Point point1;
+			Point point2;
+			for( int j  = 0; j < cluster[i].size(); j++)
+			{
+				for( int jj  = 0; jj < cluster[i].size(); jj++)
 				{
-					line( temp, Point(cluster[i][j][0], cluster[i][j][1]),
-				      Point(cluster[i][j][2], cluster[i][j][3]), Scalar(0,0,255), 1, 8 );
-				}
-				
-				stringstream ss;
-				ss << i;
-				imshow("cluster"+ss.str(),temp);
-				cout << "cluster" << i << " " << cluster[i].size() << endl;
-			}	
-		}
-
-		Mat temp;
-		black.copyTo(temp);
-		if(cluster.size() > 0)
-		{
-			for( int i  = 0; i < cluster.size(); i++)
-			{	
-				double max_length = 0;
-				Point point1;
-				Point point2;
-				for( int j  = 0; j < cluster[i].size(); j++)
-				{
-					for( int jj  = 0; jj < cluster[i].size(); jj++)
+					for( int k  = 0; k < 2; k++)
 					{
-						for( int k  = 0; k < 2; k++)
+						for( int p  = 0; p < 2; p++)
 						{
-							for( int p  = 0; p < 2; p++)
-							{
-								if(points_distance(Point(cluster[i][j][2*k],cluster[i][j][2*k+1]),Point(cluster[i][jj][2*p],cluster[i][jj][2*p+1])) > max_length){
-									max_length = points_distance(Point(cluster[i][j][2*k],cluster[i][j][2*k+1]),Point(cluster[i][jj][2*p],cluster[i][jj][2*p+1]));
-									point1 = Point(cluster[i][j][2*k],cluster[i][j][2*k+1]);
-									point2 = Point(cluster[i][jj][2*p],cluster[i][jj][2*p+1]);
-								}
+							if(points_distance(Point(cluster[i][j][2*k],cluster[i][j][2*k+1]),Point(cluster[i][jj][2*p],cluster[i][jj][2*p+1])) > max_length){
+								max_length = points_distance(Point(cluster[i][j][2*k],cluster[i][j][2*k+1]),Point(cluster[i][jj][2*p],cluster[i][jj][2*p+1]));
+								point1 = Point(cluster[i][j][2*k],cluster[i][j][2*k+1]);
+								point2 = Point(cluster[i][jj][2*p],cluster[i][jj][2*p+1]);
 							}
 						}
 					}
 				}
-				line( temp, point1,
-				      		point2, Scalar(0,0,255), 2, 8 );				
 			}
+			line( temp, point1,
+			      		point2, Scalar(0,0,255), 2, 8 );				
 		}
-		imshow("lines_awesome", temp);
-
-		Mat field = Mat::zeros(image.rows, image.cols, CV_8UC3);
-
-		for( size_t i = 0; i < lines.size(); i++ )
-		{
-			line( field, Point(lines[i][0], lines[i][1]),
-			      Point(lines[i][2], lines[i][3]), Scalar(0,0,255), 1, 8 );
-			//circle(field, Point(lines[i][0], lines[i][1]), 5, Scalar(0,255,0), 1, 8, 0);
-			//circle(field, Point(lines[i][2], lines[i][3]), 5, Scalar(0,255,0), 1, 8, 0);
-			//circle(field, line_center(lines[i]), 5, Scalar(0,255,0), 1, 8, 0);
-		}
-		imshow("original lines", field);
-
 	}
-	else
+	imshow("lines_awesome", temp);
+
+	Mat field = Mat::zeros(image.rows, image.cols, CV_8UC3);
+
+	for( size_t i = 0; i < lines.size(); i++ )
 	{
-		return;
+		line( field, Point(lines[i][0], lines[i][1]),
+		      Point(lines[i][2], lines[i][3]), Scalar(0,0,255), 1, 8 );
+		//circle(field, Point(lines[i][0], lines[i][1]), 5, Scalar(0,255,0), 1, 8, 0);
+		//circle(field, Point(lines[i][2], lines[i][3]), 5, Scalar(0,255,0), 1, 8, 0);
+		//circle(field, line_center(lines[i]), 5, Scalar(0,255,0), 1, 8, 0);
 	}
+	imshow("original lines", field);
+	return;
 }

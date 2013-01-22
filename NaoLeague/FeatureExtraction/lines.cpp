@@ -179,8 +179,11 @@ void find_candidate_points(vector<Point> points, Point start, Point previous, ve
 		if(!equal_points(points[i],previous))
 		{
 			double temp_sim_value = points_distance(previous, points[i]);
+			if(line.size() > 1){
+				temp_sim_value = point_line_distance(points[i], Vec4i(start.x, start.y, previous.x, previous.y));
+			}
 
-			if(candidates.size() == 5)
+			if(candidates.size() == 3)
 			{
 				for(int j=0; j<candidates.size(); j++)
 				{
@@ -194,9 +197,9 @@ void find_candidate_points(vector<Point> points, Point start, Point previous, ve
 						}
 					}
 				}
-				if(temp_sim_value < candidates[1].distance)
+				if(temp_sim_value < candidates[candidates.size() - 1].distance)
 				{
-					candidates.erase(candidates.begin() + 4);
+					candidates.erase(candidates.begin() + candidates.size() - 1);
 					point_dis temp;
 					temp.pnt = points[i];
 					temp.distance = temp_sim_value;
@@ -216,11 +219,11 @@ void find_candidate_points(vector<Point> points, Point start, Point previous, ve
 }
 
 
-void line_clustering(Mat image, vector<Vec4i> lines, vector<Vec4i> &clustered_lines)
+void line_clustering(Mat image)
 {
 	Mat black = Mat::zeros(image.rows, image.cols, CV_8UC3);
 	vector<Point> points;
-
+	vector< vector<Point> > lines;
 	mark_lines(image, black, points);
 
 	imshow("binary", image);
@@ -249,8 +252,14 @@ void line_clustering(Mat image, vector<Vec4i> lines, vector<Vec4i> &clustered_li
 				double white = compute_white_ratio(image, previous, next);
 				double distance = points_distance(previous, next);
 				double angle = abs(points_angle(start, next) - points_angle(start, previous));
-				double score = distance;
-				if(white < 0.7){
+				double score;
+				if(line.size() > 1){
+					score = (1.01 - white) * angle;
+				}else{
+					score = (1.01 - white) * distance;
+				}
+				if(white < 0.7)
+				{
 					score += 300;
 				}
 				if(score < best_score)
@@ -259,6 +268,7 @@ void line_clustering(Mat image, vector<Vec4i> lines, vector<Vec4i> &clustered_li
 					best_score = score;
 				}
 			}
+
 			if(best_score > 300)
 			{
 				end = true;
@@ -274,7 +284,7 @@ void line_clustering(Mat image, vector<Vec4i> lines, vector<Vec4i> &clustered_li
 			else
 			{
 				double sum_error = 0;
-				if(line.size() > 3)
+				if(line.size() >= 3)
 				{
 					for(int i = 0; i < line.size(); i++)
 					{
@@ -282,10 +292,7 @@ void line_clustering(Mat image, vector<Vec4i> lines, vector<Vec4i> &clustered_li
 							Vec4i(start.x, start.y, best_candidate.x, best_candidate.y)),3);
 					}
 				}
-				if(iteration == 2){
-					cout << sum_error << endl;
-				}
-				if(sum_error < 50)
+				if(sum_error < 200)
 				{
 					line.push_back(best_candidate);
 					for(int i=0; i < points.size(); i++)
@@ -296,16 +303,19 @@ void line_clustering(Mat image, vector<Vec4i> lines, vector<Vec4i> &clustered_li
 							break;
 						}
 					}
+
 					previous = best_candidate;
+
 				}
 				else
 				{
-					if(line.size()<=4 && line.size() != 0)
+					if(line.size() <= 4 && line.size() != 0)
 					{
 						for(int i=0; i<line.size(); i++)
 						{
 							points.push_back(line[i]);
 						}
+						line.clear();
 					}
 					end = true;
 				}
@@ -318,15 +328,36 @@ void line_clustering(Mat image, vector<Vec4i> lines, vector<Vec4i> &clustered_li
 		{
 			circle(t, Point(line[i].y, line[i].x), 2, Scalar(0,255,0), 1, 8, 0);
 		}
+		circle(t, Point(start.y, start.x), 2, Scalar(0,0,255), 1, 8, 0);
 		stringstream ss;
 		ss << iteration;
 		imshow("line"+ss.str(),t);
+		lines.push_back(line);
 		line.clear();
-		//break;
-
 	}
+	
 
-	//circle(black, Point(line[0].y, line[0].x), 2, Scalar(0,0,255), 1, 8, 0);
+	// lines visualization...
 
-	imshow("points", black);
+	// for(int i = 0; i < lines.size(); i++){
+	// 	cout << "sdfSBRB" << endl;
+	// 	Point point1,point2;
+	// 	double max_distance = 0;
+	// 	for(int j1 = 0; j1 < lines[i].size(); j1++){
+	// 		for(int j2 = 0; j2 < lines[i].size(); j2++){
+	// 			if(j1 != j2){
+	// 				double temp = points_distance(lines[i][j1], lines[i][j2]);
+	// 				if(temp > max_distance){
+	// 					point1 = lines[i][j1];
+	// 					point2 = lines[i][j2];
+	// 					max_distance = temp;
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// 	line( black, Point(point1.y, point1.x),
+	// 	      Point(point2.y, point2.x), Scalar(0,0,255), 1, 8 );
+	// }
+	
+	imshow("s", black);
 }
