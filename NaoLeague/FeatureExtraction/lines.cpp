@@ -256,7 +256,7 @@ void line_clustering(Mat image)
 				double score;
 				if(line.size() > 1)
 				{
-					score = (1.01 - white) * angle;
+					score = (1.01 - white) * 0.3 * angle;
 				}
 				else
 				{
@@ -343,30 +343,30 @@ void line_clustering(Mat image)
 
 	// lines visualization...
 
-	// for(int i = 0; i < lines.size(); i++)
-	// {
-	// 	cout << "sdfSBRB" << endl;
-	// 	Point point1,point2;
-	// 	double max_distance = 0;
-	// 	for(int j1 = 0; j1 < lines[i].size(); j1++)
-	// 	{
-	// 		for(int j2 = 0; j2 < lines[i].size(); j2++)
-	// 		{
-	// 			if(j1 != j2)
-	// 			{
-	// 				double temp = points_distance(lines[i][j1], lines[i][j2]);
-	// 				if(temp > max_distance)
-	// 				{
-	// 					point1 = lines[i][j1];
-	// 					point2 = lines[i][j2];
-	// 					max_distance = temp;
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-	// 	line( black, Point(point1.y, point1.x),
-	// 	      Point(point2.y, point2.x), Scalar(0,0,255), 1, 8 );
-	// }
+	for(int i = 0; i < lines.size(); i++)
+	{
+		cout << "sdfSBRB" << endl;
+		Point point1,point2;
+		double max_distance = 0;
+		for(int j1 = 0; j1 < lines[i].size(); j1++)
+		{
+			for(int j2 = 0; j2 < lines[i].size(); j2++)
+			{
+				if(j1 != j2)
+				{
+					double temp = points_distance(lines[i][j1], lines[i][j2]);
+					if(temp > max_distance)
+					{
+						point1 = lines[i][j1];
+						point2 = lines[i][j2];
+						max_distance = temp;
+					}
+				}
+			}
+		}
+		line( black, Point(point1.y, point1.x),
+		      Point(point2.y, point2.x), Scalar(0,0,255), 1, 8 );
+	}
 
 	imshow("s", black);
 }
