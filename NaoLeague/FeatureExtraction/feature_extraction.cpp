@@ -18,7 +18,7 @@ int main(int argc, char** argv)
 
 	if( argc != 2 || !(img_rgb=imread(argv[1], 1)).data)
 		return -1;
-	//imshow("original", img_rgb);
+	imshow("original", img_rgb);
 
 	cvtColor(img_rgb,img_hsv,CV_BGR2HSV);
 
