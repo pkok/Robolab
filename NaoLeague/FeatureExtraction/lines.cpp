@@ -106,11 +106,8 @@ double points_angle(Point point1, Point point2)
 	return angle;
 }
 
-
-void line_clustering(Mat image, vector<Vec4i> lines, vector<Vec4i> &clustered_lines)
+void mark_lines(Mat image, Mat &point_image, vector<Point> &points)
 {
-	Mat black = Mat::zeros(image.rows, image.cols, CV_8UC3);
-	vector<Point> points;
 
 	for(int i = 0; i < image.rows; i += 10)
 	{
@@ -125,9 +122,9 @@ void line_clustering(Mat image, vector<Vec4i> lines, vector<Vec4i> &clustered_li
 				{
 					pass = false;
 					int pixel = floor((col + j)/2);
-					black.at<Vec3b>(i,pixel)[0] = 255;
-					black.at<Vec3b>(i,pixel)[1] = 255;
-					black.at<Vec3b>(i,pixel)[2] = 255;
+					point_image.at<Vec3b>(i,pixel)[0] = 255;
+					point_image.at<Vec3b>(i,pixel)[1] = 255;
+					point_image.at<Vec3b>(i,pixel)[2] = 255;
 					points.push_back(Point(i ,pixel));
 				}
 			}
@@ -156,9 +153,9 @@ void line_clustering(Mat image, vector<Vec4i> lines, vector<Vec4i> &clustered_li
 					pass = false;
 
 					int pixel = floor((row + i)/2);
-					black.at<Vec3b>(pixel,j)[0] = 255;
-					black.at<Vec3b>(pixel,j)[1] = 255;
-					black.at<Vec3b>(pixel,j)[2] = 255;
+					point_image.at<Vec3b>(pixel,j)[0] = 255;
+					point_image.at<Vec3b>(pixel,j)[1] = 255;
+					point_image.at<Vec3b>(pixel,j)[2] = 255;
 					points.push_back(Point(pixel,j));
 
 				}
@@ -173,6 +170,56 @@ void line_clustering(Mat image, vector<Vec4i> lines, vector<Vec4i> &clustered_li
 			}
 		}
 	}
+}
+
+void find_candidate_points(vector<Point> points, Point start, vector<Point> line, vector<point_dis> &candidates)
+{
+	for(int i=0; i < points.size(); i++)
+	{
+		if(!equal_points(points[i],start))
+		{
+			double temp_dis = points_distance(start, points[i]);
+			if(candidates.size() == 5)
+			{
+				for(int j=0; j<candidates.size(); j++)
+				{
+					for(int l=0; l<j; l++)
+					{
+						if(candidates[j].distance < candidates[l].distance)
+						{
+							point_dis temp=candidates[j];
+							candidates[j]=candidates[l];
+							candidates[l]=temp;
+						}
+					}
+				}
+				if(temp_dis < candidates[4].distance)
+				{
+					candidates.erase(candidates.begin() + 4);
+					point_dis temp;
+					temp.pnt = points[i];
+					temp.distance = temp_dis;
+					candidates.push_back(temp);
+				}
+			}
+			else
+			{
+				point_dis temp;
+				temp.pnt = points[i];
+				temp.distance = temp_dis;
+				candidates.push_back(temp);
+			}
+		}
+	}
+}
+
+
+void line_clustering(Mat image, vector<Vec4i> lines, vector<Vec4i> &clustered_lines)
+{
+	Mat black = Mat::zeros(image.rows, image.cols, CV_8UC3);
+	vector<Point> points;
+
+	mark_lines(image, black, points);
 
 	imshow("binary", image);
 	int iteration = 0;
@@ -188,52 +235,15 @@ void line_clustering(Mat image, vector<Vec4i> lines, vector<Vec4i> &clustered_li
 		{
 			line.push_back(s);
 			double min_dis = DBL_MAX;
-			vector<point_dis> closest_points;
-			for(int i=0; i < points.size(); i++)
-			{
-				if(!equal_points(points[i],s))
-				{
-					double temp_dis = points_distance(s, points[i]);
-					if(closest_points.size() == 5)
-					{
-						for(int j=0; j<closest_points.size(); j++)
-						{
-							for(int l=0; l<j; l++)
-							{
-								if(closest_points[j].distance < closest_points[l].distance)
-								{
-									point_dis temp=closest_points[j];
-									closest_points[j]=closest_points[l];
-									closest_points[l]=temp;
-								}
 
-							}
-
-						}
-						if(temp_dis < closest_points[4].distance)
-						{
-							closest_points.erase(closest_points.begin() + 4);
-							point_dis temp;
-							temp.pnt = points[i];
-							temp.distance = temp_dis;
-							closest_points.push_back(temp);
-						}
-					}
-					else
-					{
-						point_dis temp;
-						temp.pnt = points[i];
-						temp.distance = temp_dis;
-						closest_points.push_back(temp);
-					}
-				}
-			}
+			vector<point_dis> candidates;
+			find_candidate_points(points, s, line, candidates);
 
 			Point best_candidate;
 			double best_score = DBL_MAX;
-			for(int i = 0; i < closest_points.size(); i ++)
+			for(int i = 0; i < candidates.size(); i ++)
 			{
-				Point p = closest_points[i].pnt;
+				Point p = candidates[i].pnt;
 				double white = compute_white_ratio(image, s, p);
 				double distance = points_distance(s, p);
 				double angle = abs(points_angle(startpoint, p) - points_angle(startpoint, s));
