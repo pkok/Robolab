@@ -30,6 +30,7 @@ class ParticleFilter {
 
 public:
 
+	bool augmented;
 	//vars
 	int x_dim;
 	int y_dim;
@@ -48,6 +49,14 @@ public:
 	//motion model update
 	double error_range;
 	double error_bearing;
+
+	//additional parameters for augmented Monte carlo method:
+	double alpha_slow;
+	double alpha_fast;
+
+	double w_slow;
+	double w_fast;
+
 
 	vector<Particle> particles;
 

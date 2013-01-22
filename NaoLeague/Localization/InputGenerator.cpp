@@ -183,8 +183,8 @@ int InputGenerator::calculate_range_bearing(FeatureMap fm,double x, double y, do
 
 
 		double bear = acos(proj/(1*r));//(x_unity * delta_x + y_unity * delta_y) / (1 * r);
-		cout<<"goal origin:"<<i<<" "<<delta_x<<"|"<<delta_y<<endl;
-		cout<<"goal:"<<i<<" "<<proj_x<<" "<<x_unity<<"|"<<proj_y<<" "<<y_unity<<endl;
+		//cout<<"goal origin:"<<i<<" "<<delta_x<<"|"<<delta_y<<endl;
+		//cout<<"goal:"<<i<<" "<<proj_x<<" "<<x_unity<<"|"<<proj_y<<" "<<y_unity<<endl;
 
 		VisualFeature f;
 		f.bearing = bear;

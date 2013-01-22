@@ -63,8 +63,8 @@ void ParticleFilter::set_params(){
 	//augmented pf parameters
 	////0<=alpha_slow<<alpha_fast;
 	//value taken from python code
-	this->alpha_slow = 0.05;
-	this->alpha_fast = 0.3;
+	this->alpha_slow = 0.05;//0.05;
+	this->alpha_fast = 0.5;//0.3;
 
 	this->w_slow = 0;
 	this->w_fast = 0;
@@ -222,6 +222,8 @@ int ParticleFilter::find_landmark(VisualFeature feature, Particle* current_pose,
 	//iterate through all features of that type, calculate distance to feature observed in map
 
 	//TODO: Include mahalanobis distance (takes into account that measurement error in different dimensions of the data is different) i.e. range and bearing.
+	//TODO: If does not work well enough, ensure, that for two observation not the same landmark is chosen !
+	//TODO: Include likelihood of observing other landmarks, that contribute enough to the likelihood
 
 	//calculate position on map(assuming we are in the current pose):
 	int x_feat = current_pose->x + cos(feature.bearing+current_pose->rot)*feature.range;

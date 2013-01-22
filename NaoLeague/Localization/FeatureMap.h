@@ -4,7 +4,8 @@
  *  Created on: Jan 14, 2013
  *      Author: owner
  */
-
+#ifndef FEATUREMAP_H_
+#define FEATUREMAP_H_
 
 //position of each feature
 struct Pos
@@ -68,5 +69,7 @@ struct FeatureMap{
 	}
 
 };
+
+#endif
 
 
