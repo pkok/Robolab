@@ -25,7 +25,7 @@ int main(int argc, char** argv)
 	remove_background(img_hsv, img_lines, img_posts, img_ball);
 
 	vector<Vec4i> lines, clustered_lines;
-	probabilistic_hough_trans(img_lines, lines);
+	//probabilistic_hough_trans(img_lines, lines);
 	
 	line_clustering(img_lines, lines, clustered_lines);
 

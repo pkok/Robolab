@@ -172,13 +172,14 @@ void mark_lines(Mat image, Mat &point_image, vector<Point> &points)
 	}
 }
 
-void find_candidate_points(vector<Point> points, Point start, vector<Point> line, vector<point_dis> &candidates)
+void find_candidate_points(vector<Point> points, Point start, Point previous, vector<Point> line, vector<point_dis> &candidates)
 {
 	for(int i=0; i < points.size(); i++)
 	{
-		if(!equal_points(points[i],start))
+		if(!equal_points(points[i],previous))
 		{
-			double temp_dis = points_distance(start, points[i]);
+			double temp_sim_value = points_distance(previous, points[i]);
+
 			if(candidates.size() == 5)
 			{
 				for(int j=0; j<candidates.size(); j++)
@@ -193,12 +194,12 @@ void find_candidate_points(vector<Point> points, Point start, vector<Point> line
 						}
 					}
 				}
-				if(temp_dis < candidates[4].distance)
+				if(temp_sim_value < candidates[1].distance)
 				{
 					candidates.erase(candidates.begin() + 4);
 					point_dis temp;
 					temp.pnt = points[i];
-					temp.distance = temp_dis;
+					temp.distance = temp_sim_value;
 					candidates.push_back(temp);
 				}
 			}
@@ -206,11 +207,12 @@ void find_candidate_points(vector<Point> points, Point start, vector<Point> line
 			{
 				point_dis temp;
 				temp.pnt = points[i];
-				temp.distance = temp_dis;
+				temp.distance = temp_sim_value;
 				candidates.push_back(temp);
 			}
 		}
 	}
+	
 }
 
 
@@ -229,28 +231,31 @@ void line_clustering(Mat image, vector<Vec4i> lines, vector<Vec4i> &clustered_li
 		iteration++;
 		vector<Point> line;
 		bool end = false;
-		Point startpoint = points[0];
-		Point s = points[0];
+		Point start = points[0];
+		Point previous = points[0];
 		do
 		{
-			line.push_back(s);
+			line.push_back(previous);
 			double min_dis = DBL_MAX;
 
 			vector<point_dis> candidates;
-			find_candidate_points(points, s, line, candidates);
+			find_candidate_points(points, start, previous, line, candidates);
 
 			Point best_candidate;
 			double best_score = DBL_MAX;
 			for(int i = 0; i < candidates.size(); i ++)
 			{
-				Point p = candidates[i].pnt;
-				double white = compute_white_ratio(image, s, p);
-				double distance = points_distance(s, p);
-				double angle = abs(points_angle(startpoint, p) - points_angle(startpoint, s));
-				double score = distance/white;
+				Point next = candidates[i].pnt;
+				double white = compute_white_ratio(image, previous, next);
+				double distance = points_distance(previous, next);
+				double angle = abs(points_angle(start, next) - points_angle(start, previous));
+				double score = distance;
+				if(white < 0.7){
+					score += 300;
+				}
 				if(score < best_score)
 				{
-					best_candidate = p;
+					best_candidate = next;
 					best_score = score;
 				}
 			}
@@ -259,7 +264,7 @@ void line_clustering(Mat image, vector<Vec4i> lines, vector<Vec4i> &clustered_li
 				end = true;
 				for(int i=0; i < points.size(); i++)
 				{
-					if(equal_points(s, points[i]))
+					if(equal_points(previous, points[i]))
 					{
 						points.erase(points.begin() + i);
 						break;
@@ -274,22 +279,24 @@ void line_clustering(Mat image, vector<Vec4i> lines, vector<Vec4i> &clustered_li
 					for(int i = 0; i < line.size(); i++)
 					{
 						sum_error += pow(point_line_distance(line[i],
-						                                     Vec4i(startpoint.x, startpoint.y, best_candidate.x, best_candidate.y)),3);
+							Vec4i(start.x, start.y, best_candidate.x, best_candidate.y)),3);
 					}
 				}
-				cout << sum_error << endl;
+				if(iteration == 2){
+					cout << sum_error << endl;
+				}
 				if(sum_error < 50)
 				{
 					line.push_back(best_candidate);
 					for(int i=0; i < points.size(); i++)
 					{
-						if(equal_points(s, points[i]))
+						if(equal_points(previous, points[i]))
 						{
 							points.erase(points.begin() + i);
 							break;
 						}
 					}
-					s = best_candidate;
+					previous = best_candidate;
 				}
 				else
 				{
