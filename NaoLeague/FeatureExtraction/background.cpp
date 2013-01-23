@@ -73,8 +73,8 @@ void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball)
 	ball = Mat::zeros(image.rows, image.cols, CV_8UC3);
 	Mat field = Mat::zeros(image.rows, image.cols, CV_8UC3);
 	Mat background_border = Mat::zeros(image.rows, image.cols, CV_8UC1);
-  vector<Vec2i> background_border_points = vector<Vec2i>();
-	
+	vector<Vec2i> background_border_points = vector<Vec2i>();
+
 	// boolean variable which declares if the current row pixel is above field
 	// height...
 	bool background, continuous;
@@ -102,18 +102,18 @@ void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball)
 					ass_val_pixel(field.at<Vec3b>(i,j), 0, 0, 0);
 					if(counter > BACK_THRESHOLD)
 					{
-            ass_val_pixel(field.at<Vec3b>(i - BACK_THRESHOLD, j), 255, 255, 255);
-            background_border.at<uchar>(i - BACK_THRESHOLD, j) = 255;
-            background_border_points.push_back(Vec2i(i - BACK_THRESHOLD, j));
+						ass_val_pixel(field.at<Vec3b>(i - BACK_THRESHOLD, j), 255, 255, 255);
+						background_border.at<uchar>(i - BACK_THRESHOLD, j) = 255;
+						background_border_points.push_back(Vec2i(i - BACK_THRESHOLD, j));
 						for( int k = 0; k < BACK_THRESHOLD + 5; k++)
 						{
 							if((i-k) >= 0)
-              {
+							{
 								ass_val_pixel2pixel(field.at<Vec3b>(i-k,j), image.at<Vec3b>(i-k,j));
-              }
+							}
 						}
 						background = false;
-            //ass_val_pixel(background_border.at<Vec3b>(i,j), 255, 255, 255);
+						//ass_val_pixel(background_border.at<Vec3b>(i,j), 255, 255, 255);
 					}
 				}
 				else

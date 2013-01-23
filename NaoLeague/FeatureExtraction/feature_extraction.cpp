@@ -26,7 +26,7 @@ int main(int argc, char** argv)
 
 	vector<Vec4i> lines, clustered_lines;
 	//probabilistic_hough_trans(img_lines, lines);
-	
+
 	line_clustering(img_lines);
 
 	std::cout << double( clock() - startTime )*1000 / (double)CLOCKS_PER_SEC<< " ms." << std::endl;

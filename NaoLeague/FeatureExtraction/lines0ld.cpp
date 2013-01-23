@@ -5,14 +5,19 @@
 #include <highgui.h>
 #include "lines.h"
 #include <queue>
+
 using namespace cv;
 using namespace std;
+
 #define ANGLE_THR 10
+
 struct point_dis
 {
 	Point pnt;
 	double distance;
 };
+
+
 double points_distance(Point point1, Point point2)
 {
 	double dx = point2.x - point1.x;
@@ -20,17 +25,22 @@ double points_distance(Point point1, Point point2)
 	double distance = sqrt(dx*dx + dy*dy);
 	return distance;
 }
+
+
 double point_line_distance(Point point, Vec4i line)
 {
 	double normalLength = hypot(line[2] - line[0], line[3] - line[1]);
 	return abs((point.x - line[0]) * (line[3] - line[1]) - (point.y - line[1]) * (line[2] - line[0])) / normalLength;
 }
+
 bool equal_points(Point point1, Point point2)
 {
 	return (point1.x == point2.x && point1.y == point2.y);
 }
+
 double compute_white_ratio(Mat image, Point point1, Point point2)
 {
+
 	int white_counter = 0;
 	int all_counter = 0;
 	int x0 = point1.x;
@@ -39,6 +49,7 @@ double compute_white_ratio(Mat image, Point point1, Point point2)
 	int y1 = point2.y;
 	int dx = abs(x1-x0);
 	int dy = abs(y1-y0);
+
 	int err;
 	int sx = 0;
 	int sy = 0;
@@ -59,6 +70,7 @@ double compute_white_ratio(Mat image, Point point1, Point point2)
 		sy = -1;
 	}
 	err = dx-dy;
+
 	while(1)
 	{
 		all_counter ++;
@@ -84,6 +96,7 @@ double compute_white_ratio(Mat image, Point point1, Point point2)
 	}
 	return (double) white_counter/all_counter;
 }
+
 double points_angle(Point point1, Point point2)
 {
 	double angle = atan2(point2.x-point1.x,point2.y-point1.y);
@@ -92,10 +105,13 @@ double points_angle(Point point1, Point point2)
 		angle += 180;
 	return angle;
 }
+
 void mark_lines(Mat image, Mat &point_image, vector<Point> &points)
 {
-	for(int i = 0; i < image.rows; i += 5)
+
+	for(int i = 0; i < image.rows; i += 6)
 	{
+
 		bool pass = false;
 		int col = 0;
 		for(int j = 0; j < image.cols; j++)
@@ -122,7 +138,9 @@ void mark_lines(Mat image, Mat &point_image, vector<Point> &points)
 			}
 		}
 	}
-	for(int j = 0; j < image.cols; j += 5)
+
+
+	for(int j = 0; j < image.cols; j += 6)
 	{
 		bool pass = false;
 		int row = 0;
@@ -133,11 +151,13 @@ void mark_lines(Mat image, Mat &point_image, vector<Point> &points)
 				if(image.at<Vec3b>(i,j)[0] == 0)
 				{
 					pass = false;
+
 					int pixel = floor((row + i)/2);
 					point_image.at<Vec3b>(pixel,j)[0] = 255;
 					point_image.at<Vec3b>(pixel,j)[1] = 255;
 					point_image.at<Vec3b>(pixel,j)[2] = 255;
 					points.push_back(Point(pixel,j));
+
 				}
 			}
 			else
@@ -151,17 +171,16 @@ void mark_lines(Mat image, Mat &point_image, vector<Point> &points)
 		}
 	}
 }
-void find_candidate_points(vector<Point> points,Point start, Point previous, vector<Point> line, vector<point_dis> &candidates)
+
+void find_candidate_points(vector<Point> points, Point previous, vector<Point> line, vector<point_dis> &candidates)
 {
 	for(int i=0; i < points.size(); i++)
 	{
 		if(!equal_points(points[i],previous))
 		{
 			double temp_sim_value = points_distance(previous, points[i]);
-			if(line.size() >= 3){
-				temp_sim_value = temp_sim_value * 0.05 + point_line_distance(points[i], Vec4i(start.x, start.y, previous.x, previous.y));
-			}
-			if(candidates.size() == 5)
+
+			if(candidates.size() == 3)
 			{
 				for(int j=0; j<candidates.size(); j++)
 				{
@@ -193,43 +212,9 @@ void find_candidate_points(vector<Point> points,Point start, Point previous, vec
 			}
 		}
 	}
+
 }
 
-void find_best_candidate(Mat image, vector<point_dis> candidates, vector<Point> line,  Point start, Point previous, Point &best_candidate, double &best_score){
-	
-	best_score = DBL_MAX;
-	double white;
-	double distance;
-	double score;
-	Point temp;
-
-	for(int i = 0; i < candidates.size(); i ++)
-	{
-		temp = candidates[i].pnt;
-		score = 0;
-		distance = points_distance(previous, temp);
-		white = compute_white_ratio(image, previous, temp);
-		score = (1.01 - white) * distance;
-		if(score < best_score)
-		{
-			best_candidate = temp;
-			best_score = score;
-		}
-	}
-	return;
-}
-
-void delete_point(Point element, vector<Point> &points){
-	for(int i=0; i < points.size(); i++)
-	{
-		if(equal_points(element, points[i]))
-		{
-			points.erase(points.begin() + i);
-			break;
-		}
-	}
-	return;
-}
 
 void line_clustering(Mat image)
 {
@@ -237,11 +222,10 @@ void line_clustering(Mat image)
 	vector<Point> points;
 	vector< vector<Point> > lines;
 	mark_lines(image, black, points);
+
 	imshow("binary", image);
 	int iteration = 0;
-	
-	Mat t;
-	black.copyTo(t);
+
 	while(points.size() != 0)
 	{
 		iteration++;
@@ -252,63 +236,102 @@ void line_clustering(Mat image)
 		do
 		{
 			line.push_back(previous);
-			vector<point_dis> candidates;
-			find_candidate_points(points, start,  previous, line, candidates);
+			double min_dis = DBL_MAX;
 
-			// find best candidate to connect
+			vector<point_dis> candidates;
+			find_candidate_points(points, previous, line, candidates);
+
 			Point best_candidate;
-			double error;
-			find_best_candidate(image, candidates, line, start, previous, best_candidate, error);
-			candidates.clear();
-			if(error > 10){
-				end = true;	
-			}else{
-				if(line.size() >= 4){
-					double sum_error = 0;
+			double best_score = DBL_MAX;
+			double white;
+			double distance;
+			double score;
+			Point temp;
+			for(int i = 0; i < candidates.size(); i ++)
+			{
+				temp = candidates[i].pnt;
+				white = compute_white_ratio(image, previous, temp);
+				distance = points_distance(previous, temp);
+				score = (1.01 - white) * distance;
+			
+				if(score < best_score)
+				{
+					best_candidate = temp;
+					best_score = score;
+				}
+			}
+			cout << best_score << endl;
+
+			if(best_score > 20)
+			{
+				end = true;
+				for(int i=0; i < points.size(); i++)
+				{
+					if(equal_points(previous, points[i]))
+					{
+						points.erase(points.begin() + i);
+						break;
+					}
+				}
+			}
+			else
+			{
+				double sum_error = 0;
+				if(line.size() >= 3)
+				{
 					for(int i = 0; i < line.size(); i++)
 					{
 						sum_error += pow(point_line_distance(line[i],
 						Vec4i(start.x, start.y, best_candidate.x, best_candidate.y)),3);
 					}
-					if(sum_error < 10){
-						previous = best_candidate;
-					}else{
-						if(line.size() <= 4 && line.size() != 0)
+
+				}
+				if(sum_error < 10)
+				{
+					line.push_back(best_candidate);
+					for(int i=0; i < points.size(); i++)
+					{
+						if(equal_points(previous, points[i]))
 						{
-							for(int i=0; i<line.size(); i++)
-							{
-								points.push_back(line[i]);
-							}
-							line.clear();
+							points.erase(points.begin() + i);
+							break;
 						}
-						end = true;	
 					}
+					previous = best_candidate;
 				}
 				else
 				{
-					line.push_back(best_candidate);
-					previous = best_candidate;
-				}	
+					if(line.size() <= 4 && line.size() != 0)
+					{
+						for(int i=0; i<line.size(); i++)
+						{
+							points.push_back(line[i]);
+						}
+						line.clear();
+					}
+					end = true;
+				}
 			}
-			delete_point(previous, points);
-		}while(!end);
-
-		// Mat t;
-		// black.copyTo(t);
-		// for(int i=0; i < line.size(); i++)
-		// {
-		// 	circle(t, Point(line[i].y, line[i].x), 2, Scalar(0,255,0), 1, 8, 0);
-		// }
-		// circle(t, Point(start.y, start.x), 2, Scalar(255,0,0), 1, 8, 0);
-		// stringstream ss;
-		// ss << iteration;
-		// imshow("line"+ss.str(),t);
+		}
+		while(!end);
+		Mat t;
+		black.copyTo(t);
+		for(int i=0; i < line.size(); i++)
+		{
+			circle(t, Point(line[i].y, line[i].x), 2, Scalar(0,255,0), 1, 8, 0);
+		}
+		circle(t, Point(start.y, start.x), 2, Scalar(0,0,255), 1, 8, 0);
+		stringstream ss;
+		ss << iteration;
+		imshow("line"+ss.str(),t);
 		lines.push_back(line);
 		line.clear();
-		// break;
-
+//		break;
 	}
-	//lines visualization...
+
+
+	// lines visualization...
+
 	for(int i = 0; i < lines.size(); i++)
 	{
 		cout << "line" << endl;
@@ -333,5 +356,7 @@ void line_clustering(Mat image)
 		line( black, Point(point1.y, point1.x),
 		      Point(point2.y, point2.x), Scalar(0,0,255), 1, 8 );
 	}
+
 	imshow("s", black);
+
 }
