@@ -82,17 +82,19 @@ int InputGenerator::generate_features(double x,double y, double rot,FeatureMap f
 int InputGenerator::calculate_range_bearing(FeatureMap fm,double x, double y, double rot, vector<VisualFeature>* poss_feat){
 
 	//iterate l_cross
-	for(int i = 0; i<8 ; i++){
+	vector<LandMark*> lm_l;
+	lm_l = fm.get_features(l_crossing);
+	for(int i = 0; i<lm_l.size() ; i++){
 
-		double delta_x =  fm.l_cross[i].x -x ;
-		double delta_y = fm.l_cross[i].y - y ;
+		double delta_x =  lm_l[i]->pos.x -x ;
+		double delta_y = lm_l[i]->pos.y - y ;
 
 		//position of unity vector with rotation:
 		double x_unity =cos(rot);
 		double y_unity = sin(rot);
 
 
-		double r = sqrt((x - fm.l_cross[i].x) * (x - fm.l_cross[i].x) + (y - fm.l_cross[i].y) * (y - fm.l_cross[i].y));
+		double r = sqrt((x - lm_l[i]->pos.x) * (x - lm_l[i]->pos.x) + (y - lm_l[i]->pos.y) * (y - lm_l[i]->pos.y));
 
 		//check if "behind" robot:
 		//project vector:
@@ -105,20 +107,22 @@ int InputGenerator::calculate_range_bearing(FeatureMap fm,double x, double y, do
 		VisualFeature f;
 		f.bearing = bear;
 		f.range =r;
-		f.type = 0 ;
+		f.type = l_crossing ;
 		poss_feat->push_back(f);
 	}
 	//iterate t_cross
+	vector<LandMark*> lm_t;
+	lm_t = fm.get_features(t_crossing);
 	for(int i = 0; i<6 ; i++){
-		double delta_x = fm.t_cross[i].x - x ;
-		double delta_y = fm.t_cross[i].y - y;
+		double delta_x = lm_t[i]->pos.x - x ;
+		double delta_y = lm_t[i]->pos.y - y;
 
 		//position of unity vector with rotation:
 		double x_unity = cos(rot);
 		double y_unity = sin(rot);
 
 
-		double r = sqrt((x - fm.t_cross[i].x) * (x - fm.t_cross[i].x) + (y - fm.t_cross[i].y) * (y - fm.t_cross[i].y));
+		double r = sqrt((x - lm_t[i]->pos.x) * (x - lm_t[i]->pos.x) + (y - lm_t[i]->pos.y) * (y - lm_t[i]->pos.y));
 
 
 
@@ -132,18 +136,20 @@ int InputGenerator::calculate_range_bearing(FeatureMap fm,double x, double y, do
 		VisualFeature f;
 		f.bearing = bear;
 		f.range =r;
-		f.type = 1 ;
+		f.type = t_crossing ;
 		poss_feat->push_back(f);
 	}
 	//iterate x_cross
+	vector<LandMark*> lm_x;
+	lm_x = fm.get_features(x_crossing);
 	for(int i = 0; i<5 ; i++){
-		double delta_x =  fm.x_cross[i].x -x ;
-		double delta_y = fm.x_cross[i].y  -y;
+		double delta_x =  lm_x[i]->pos.x -x ;
+		double delta_y = lm_x[i]->pos.y  -y;
 
 		//position of unity vector with rotation:
 		double x_unity = cos(rot);
 		double y_unity = sin(rot);
-		double r = sqrt((x - fm.x_cross[i].x) * (x - fm.x_cross[i].x) + (y - fm.x_cross[i].y) * (y - fm.x_cross[i].y));
+		double r = sqrt((x - lm_x[i]->pos.x) * (x - lm_x[i]->pos.x) + (y - lm_x[i]->pos.y) * (y - lm_x[i]->pos.y));
 
 		//check if "behind" robot:
 		//project vector:
@@ -156,20 +162,22 @@ int InputGenerator::calculate_range_bearing(FeatureMap fm,double x, double y, do
 		VisualFeature f;
 		f.bearing = bear;
 		f.range =r;
-		f.type = 2 ;
+		f.type = x_crossing ;
 		poss_feat->push_back(f);
 	}
 	//iterate g_cross
+	vector<LandMark*> lm_g;
+	lm_g = fm.get_features(goal_post);
 	for(int i = 0; i<4 ; i++){
-		double delta_x =  fm.g_cross[i].x - x ;
-		double delta_y =   fm.g_cross[i].y - y;
+		double delta_x =  lm_g[i]->pos.x - x ;
+		double delta_y =   lm_g[i]->pos.y - y;
 
 		//position of unity vector with rotation:
 		double x_unity = cos(rot);
 		double y_unity = sin(rot);
 
 
-		double r = sqrt((x - fm.g_cross[i].x) * (x - fm.g_cross[i].x) + (y - fm.g_cross[i].y) * (y - fm.g_cross[i].y));
+		double r = sqrt((x - lm_g[i]->pos.x) * (x - lm_g[i]->pos.x) + (y - lm_g[i]->pos.y) * (y - lm_g[i]->pos.y));
 
 
 
@@ -189,7 +197,7 @@ int InputGenerator::calculate_range_bearing(FeatureMap fm,double x, double y, do
 		VisualFeature f;
 		f.bearing = bear;
 		f.range =r;
-		f.type = 3 ;
+		f.type = goal_post ;
 		poss_feat->push_back(f);
 	}
 
