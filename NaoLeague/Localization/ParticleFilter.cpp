@@ -218,7 +218,7 @@ int ParticleFilter::sample_motion_model_simple(OdometryInformation odometry_info
 
 	//TODO: reject particles outside the field !!
 }
-int ParticleFilter::find_landmark(VisualFeature feature, Particle* current_pose,double* dist){
+LandMark* ParticleFilter::find_landmark(VisualFeature feature, Particle* current_pose,double* dist){
 	//iterate through all features of that type, calculate distance to feature observed in map
 
 	//TODO: Include mahalanobis distance (takes into account that measurement error in different dimensions of the data is different) i.e. range and bearing.
@@ -233,65 +233,82 @@ int ParticleFilter::find_landmark(VisualFeature feature, Particle* current_pose,
 		double min_dist = 1000; //10 meter
 		int feature_index = 0;
 
+		LandMark* lm_on_map;
+
 		switch (feature.type){
-		case 0: //L crossing observed 8
+		case l_crossing: //L crossing observed 8
 		{
-			for(int i = 0;i < 8; i++){
+			vector<LandMark*> lm_ptrs= this->feature_map.get_features(l_crossing);
+
+			for(int i = 0;i < lm_ptrs.size(); i++){
+				assert(lm_ptrs.size() == 8);
 				//calculate distance
-				double delta_x =  x_feat - this->feature_map.l_cross[i].x ;
-				double delta_y = y_feat - this->feature_map.l_cross[i].y ;
+				double delta_x =  x_feat - lm_ptrs[i]->pos.x ;
+				double delta_y = y_feat - lm_ptrs[i]->pos.y ;
 				double dist =  sqrt(delta_x * delta_x + delta_y * delta_y);
 
 				if(dist < min_dist){
 					min_dist = dist;
-					feature_index = i;
-
+					//feature_index = i;
+					lm_on_map = lm_ptrs[i];
 				}
 			}
 			break;
 		}
-		case 1: //T crossing observed 7
+		case t_crossing: //T crossing observed 6
 		{
-
-			for(int i = 0; i<7; i++){
+			vector<LandMark*> lm_ptrs= this->feature_map.get_features(t_crossing);
+			for(int i = 0; i<lm_ptrs.size(); i++){
+				assert(lm_ptrs.size() == 6);
 				//calculate distance
-				double delta_x = x_feat - this->feature_map.t_cross[i].x ;
-				double delta_y = y_feat - this->feature_map.t_cross[i].y ;
+				double delta_x = x_feat - lm_ptrs[i]->pos.x ;
+				double delta_y = y_feat - lm_ptrs[i]->pos.y ;
 				double dist =  sqrt(delta_x * delta_x + delta_y * delta_y);
 
 				if(dist < min_dist){
 					min_dist = dist;
-					feature_index = i;
+					//feature_index = i;
+
+					lm_on_map = lm_ptrs[i];
 				}
 			}
 			break;
 		}
-		case 2: //X crossing observed 5
+		case x_crossing: //X crossing observed 5
 		{
-			for(int i = 0;i<5;i++){
+			vector<LandMark*> lm_ptrs= this->feature_map.get_features(x_crossing);
+			for(int i = 0;i<lm_ptrs.size();i++){
+				assert(lm_ptrs.size() == 5);
 				//dist calculation
-				double delta_x = x_feat - this->feature_map.x_cross[i].x ;
-				double delta_y = y_feat - this->feature_map.x_cross[i].y ;
+				double delta_x = x_feat - lm_ptrs[i]->pos.x ;
+				double delta_y = y_feat - lm_ptrs[i]->pos.y ;
 				double dist =  sqrt(delta_x * delta_x + delta_y * delta_y);
 
 				if(dist < min_dist){
 					min_dist = dist;
-					feature_index = i;
+					//feature_index = i;
+
+					lm_on_map = lm_ptrs[i];
 				}
 			}
 			break;
 		}
-		case 3: //Goal post crossing crossing observed 4
+		case goal_post: //Goal post crossing crossing observed 4
 		{
-			for(int i = 0;i<4;i++){
+			vector<LandMark*> lm_ptrs= this->feature_map.get_features(goal_post);
+			for(int i = 0;i<lm_ptrs.size();i++){
+				assert(lm_ptrs.size() == 4);
 				//dist calculation
-				double delta_x = x_feat - this->feature_map.g_cross[i].x ;
-				double delta_y = y_feat - this->feature_map.g_cross[i].y ;
+				double delta_x = x_feat - lm_ptrs[i]->pos.x ;
+				double delta_y = y_feat - lm_ptrs[i]->pos.y ;
 				double dist =  sqrt(delta_x * delta_x + delta_y * delta_y);
 
 				if(dist < min_dist){
 					min_dist = dist;
-					feature_index = i;
+					min_dist = dist;
+					//feature_index = i;
+
+					lm_on_map = lm_ptrs[i];
 				}
 			}
 			break;
@@ -303,7 +320,7 @@ int ParticleFilter::find_landmark(VisualFeature feature, Particle* current_pose,
 
 		//save distance and return index of found landmark
 		*dist = min_dist;
-		return(feature_index);
+		return(lm_on_map);
 }
 
 /*
@@ -323,19 +340,28 @@ double ParticleFilter::measurement_model(vector<VisualFeature> features,Particle
 	//index, landmark type, landmark index
 	vector<vector<int> > landmarks;
 
+	//pointer to landmark
+	vector<LandMark*> lm_ptrs;
+
 	//for each feature found, try to map it with features on the map
+	//cout<<"mapping features to landmarks"<<endl;
 	for(int i = 0; i < features.size();i++){
 		double dist = 0;
 
-		int landmark_index = find_landmark(features[i],current_pose, &dist);
+		LandMark* landmark_ptr= find_landmark(features[i],current_pose, &dist);
+		//cout<<" mapped landmark "<<i<<" from"<<features.size()<<endl;
+		lm_ptrs.push_back(landmark_ptr);
 
+		dists.push_back(dist);
+		//old code
+		/*
 		vector<int> feat;
 		feat.push_back(features[i].type);
 		feat.push_back(landmark_index);
 		feat.push_back(dist);
 
 		landmarks.push_back(feat);
-		dists.push_back(dist);
+	*/
 	}
 
 
@@ -343,62 +369,64 @@ double ParticleFilter::measurement_model(vector<VisualFeature> features,Particle
 	//for every assigned landmark (no unassigned landmarks possible at the moment)
 	vector<double> q;
 
+	//cout<<"calculating weights for particles"<<endl;
 	for(int i = 0; i < dists.size(); i++){
 		double ra = -1;
 		double phi = -1;
 		double res = -1;
 
-		switch(landmarks[i][0]){
-		case 0: //L crossing
+		////switch(landmarks[i][0]){
+		switch(lm_ptrs[i]->type){
+		case l_crossing: //L crossing
 		{
-			double delta_x = this->feature_map.l_cross[landmarks[i][1]].x - current_pose->x;
-			double delta_y = this->feature_map.l_cross[landmarks[i][1]].y - current_pose->y;
+			double delta_x = lm_ptrs[i]->pos.x - current_pose->x;
+			double delta_y = lm_ptrs[i]->pos.y - current_pose->y;
 
 			//range
 			ra = sqrt( delta_x * delta_x + delta_y * delta_y );//landmarks[i][2];
 			//bearing
-			phi = atan2(abs(this->feature_map.l_cross[landmarks[i][1]].y) - abs(current_pose->y ),abs(this->feature_map.l_cross[landmarks[i][1]].x )  -  abs(current_pose->x ));
+			phi = atan2(abs(lm_ptrs[i]->pos.y) - abs(current_pose->y ),abs(lm_ptrs[i]->pos.x )  -  abs(current_pose->x ));
 
+			//how good is our estimate?
+			res = this->measurement_factor * prob_gaussian(abs(features[i].range) - abs(ra),this->variance_range) * prob_gaussian(abs(features[i].bearing)  - abs(phi),this->variance_bearing) * prob_gaussian(0,1); //prob(si-sj,sigma_s) is last probability, how likeli ist that feature that landmark?
+			//cout<<"found l crossing!"<<endl;
+			break;
+		}
+		case t_crossing: //T crossings
+		{
+			double delta_x = lm_ptrs[i]->pos.x - current_pose->x;
+			double delta_y = lm_ptrs[i]->pos.y - current_pose->y;
+
+			//range
+			ra = sqrt( delta_x * delta_x + delta_y * delta_y );//landmarks[i][2];
+			//bearing
+			phi = atan2(abs(lm_ptrs[i]->pos.y) - abs(current_pose->y ),abs(lm_ptrs[i]->pos.x )  -  abs(current_pose->x ));
+
+			//how good is our estimate?
+			res = this->measurement_factor * prob_gaussian(abs(features[i].range) - abs(ra),this->variance_range) * prob_gaussian(abs(features[i].bearing)  - abs(phi),this->variance_bearing) * prob_gaussian(0,1); //prob(si-sj,sigma_s) is last probability, how likeli ist that feature that landmark?
+			break;
+		}
+		case x_crossing: //X crossings
+		{
+			double delta_x = lm_ptrs[i]->pos.x - current_pose->x;
+			double delta_y = lm_ptrs[i]->pos.y - current_pose->y;
+			//range
+			ra = sqrt( delta_x * delta_x + delta_y * delta_y );//landmarks[i][2];
+			//bearing
+			phi = atan2(abs(lm_ptrs[i]->pos.y) - abs(current_pose->y ),abs(lm_ptrs[i]->pos.x )  -  abs(current_pose->x ));
 			//how good is our estimate?
 			res = this->measurement_factor * prob_gaussian(abs(features[i].range) - abs(ra),this->variance_range) * prob_gaussian(abs(features[i].bearing)  - abs(phi),this->variance_bearing) * prob_gaussian(0,1); //prob(si-sj,sigma_s) is last probability, how likeli ist that feature that landmark?
 
 			break;
 		}
-		case 1: //T crossings
+		case goal_post: //Goal Post crossings
 		{
-			double delta_x = this->feature_map.t_cross[landmarks[i][1]].x - current_pose->x;
-			double delta_y = this->feature_map.t_cross[landmarks[i][1]].y - current_pose->y;
-
+			double delta_x = lm_ptrs[i]->pos.x - current_pose->x;
+			double delta_y = lm_ptrs[i]->pos.y - current_pose->y;
 			//range
 			ra = sqrt( delta_x * delta_x + delta_y * delta_y );//landmarks[i][2];
 			//bearing
-			phi = atan2(abs(this->feature_map.t_cross[landmarks[i][1]].y) - abs(current_pose->y ),abs(this->feature_map.t_cross[landmarks[i][1]].x )  -  abs(current_pose->x ));
-
-			//how good is our estimate?
-			res = this->measurement_factor * prob_gaussian(abs(features[i].range) - abs(ra),this->variance_range) * prob_gaussian(abs(features[i].bearing)  - abs(phi),this->variance_bearing) * prob_gaussian(0,1); //prob(si-sj,sigma_s) is last probability, how likeli ist that feature that landmark?
-			break;
-		}
-		case 2: //X crossings
-		{
-			double delta_x = this->feature_map.x_cross[landmarks[i][1]].x - current_pose->x;
-			double delta_y = this->feature_map.x_cross[landmarks[i][1]].y - current_pose->y;
-			//range
-			ra = sqrt( delta_x * delta_x + delta_y * delta_y );//landmarks[i][2];
-			//bearing
-			phi = atan2(abs(this->feature_map.x_cross[landmarks[i][1]].y) - abs(current_pose->y ),abs(this->feature_map.x_cross[landmarks[i][1]].x )  -  abs(current_pose->x ));
-			//how good is our estimate?
-			res = this->measurement_factor * prob_gaussian(abs(features[i].range) - abs(ra),this->variance_range) * prob_gaussian(abs(features[i].bearing)  - abs(phi),this->variance_bearing) * prob_gaussian(0,1); //prob(si-sj,sigma_s) is last probability, how likeli ist that feature that landmark?
-
-			break;
-		}
-		case 3: //Goal Post crossings
-		{
-			double delta_x = this->feature_map.g_cross[landmarks[i][1]].x - current_pose->x;
-			double delta_y = this->feature_map.g_cross[landmarks[i][1]].y - current_pose->y;
-			//range
-			ra = sqrt( delta_x * delta_x + delta_y * delta_y );//landmarks[i][2];
-			//bearing
-			phi = atan2(abs(this->feature_map.g_cross[landmarks[i][1]].y) - abs(current_pose->y ),abs(this->feature_map.g_cross[landmarks[i][1]].x )  -  abs(current_pose->x ));
+			phi = atan2(abs(lm_ptrs[i]->pos.y) - abs(current_pose->y ),abs(lm_ptrs[i]->pos.x )  -  abs(current_pose->x ));
 			//how good is our estimate?
 			res = this->measurement_factor * prob_gaussian(abs(features[i].range) - abs(ra),this->variance_range) * prob_gaussian(abs(features[i].bearing)  - abs(phi),this->variance_bearing) * prob_gaussian(0,1); //prob(si-sj,sigma_s) is last probability, how likeli ist that feature that landmark?
 			break;
