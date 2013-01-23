@@ -3,8 +3,7 @@
 #include <time.h>
 #include <cv.h>
 #include <highgui.h>
-#include "background.h"
-#include "lines.h"
+#include "img_processing.h"
 
 using namespace cv;
 using namespace std;
@@ -31,6 +30,63 @@ using namespace std;
 #define WH_SAT_MAX  60
 #define WH_VAL_MIN  200
 #define WH_VAL_MAX  255
+
+
+double compute_white_ratio(Mat image, Point point1, Point point2)
+{
+	int white_counter = 0;
+	int all_counter = 0;
+	int x0 = point1.x;
+	int y0 = point1.y;
+	int x1 = point2.x;
+	int y1 = point2.y;
+	int dx = abs(x1-x0);
+	int dy = abs(y1-y0);
+	int err;
+	int sx = 0;
+	int sy = 0;
+	if (x0 < x1)
+	{
+		sx = 1;
+	}
+	else
+	{
+		sx = -1;
+	}
+	if (y0 < y1)
+	{
+		sy = 1;
+	}
+	else
+	{
+		sy = -1;
+	}
+	err = dx-dy;
+	while(1)
+	{
+		all_counter ++;
+		if((int)image.at<Vec3b>(x0,y0)[0] != 0)
+		{
+			white_counter ++;
+		}
+		if (x0 == x1 && y0 == y1)
+		{
+			break;
+		}
+		int e2 = 2*err;
+		if (e2 > -dy)
+		{
+			err = err - dy;
+			x0 = x0 + sx;
+		}
+		if(e2 <  dx)
+		{
+			err = err + dx;
+			y0 = y0 + sy;
+		}
+	}
+	return (double) white_counter/all_counter;
+}
 
 bool hsv_range(Vec3b pixel, int h_min, int h_max, int s_min, int s_max, int v_min, int v_max)
 {
