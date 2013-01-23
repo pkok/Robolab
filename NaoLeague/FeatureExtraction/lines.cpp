@@ -8,11 +8,39 @@
 using namespace cv;
 using namespace std;
 #define ANGLE_THR 10
+
+
+//
+// Generate a random number between 0 and 1
+// return a uniform number in [0,1].
+double unifRand()
+{
+    return rand() / double(RAND_MAX);
+}
+//
+// Generate a random number in a real interval.
+// param a one end point of the interval
+// param b the other end of the interval
+// return a inform rand numberin [a,b].
+double unifRand(double a, double b)
+{
+    return (b-a)*unifRand() + a;
+}
+//
+// Reset the random number generator with the system clock.
+void seed()
+{
+    srand(time(0));
+}
+
+
 struct point_dis
 {
 	Point pnt;
 	double distance;
 };
+
+
 double points_distance(Point point1, Point point2)
 {
 	double dx = point2.x - point1.x;
@@ -259,7 +287,7 @@ void delete_point(Point element, vector<Point> &points)
 	return;
 }
 
-void store_line(vector< vector<Point> > &lines, vector<Point> line)
+void store_line(Mat image, vector< vector<Point> > &lines, vector<Point> line)
 {
 	if(line.size() == 1)
 		return;
@@ -268,14 +296,16 @@ void store_line(vector< vector<Point> > &lines, vector<Point> line)
 	}else{
 		
 		Point current[2];
-		current[0] = line[0];
 		double temp_distance_current;
 		double max_distance_current = 0;
 		for( int i = 0; i < line.size(); i++){
-			temp_distance_current = points_distance(current[0], line[0]);
-			if(temp_distance_current > max_distance_current){
-				max_distance_current = temp_distance_current;
-				current[1] = line[i];
+			for( int j = 0; j < line.size(); j++){
+				temp_distance_current = points_distance(line[i], line[j]);
+				if(temp_distance_current > max_distance_current){
+					max_distance_current = temp_distance_current;
+					current[0] = line[i];
+					current[1] = line[j];
+				}
 			}
 		}
 		double current_line_angle = points_angle(current[0], current[1]);
@@ -283,18 +313,21 @@ void store_line(vector< vector<Point> > &lines, vector<Point> line)
 		double best_match_error = DBL_MAX;
 		double temp_match_error;
 		int best_match_line;
+
 		for(int i=0; i < lines.size(); i++){
 			
 			
 			Point stored[2];
-			stored[0] = line[0];
 			double temp_distance_stored;
 			double max_distance_stored = 0;
-			for( int j = 0; j < lines[i].size(); j++){
-				temp_distance_stored = points_distance(stored[0], lines[i][0]);
-				if(temp_distance_current > max_distance_stored){
-					max_distance_stored = temp_distance_stored;
-					stored[1] = lines[i][j];
+			for( int ii = 0; ii < lines[i].size(); ii++){
+				for( int jj = 0; jj < lines[i].size(); jj++){
+					temp_distance_stored = points_distance(lines[i][ii], lines[i][jj]);
+					if(temp_distance_stored > max_distance_stored){
+						max_distance_stored = temp_distance_stored;
+						stored[0] = lines[i][ii];
+						stored[1] = lines[i][jj];
+					}
 				}
 			}
 
@@ -304,8 +337,11 @@ void store_line(vector< vector<Point> > &lines, vector<Point> line)
 
 				Point start_new;
 				Point end_new;
+				Point close_stored;
+				Point close_new;
 				double max_distance_new = 0;
 				double temp_distance_new;
+				double min_distance_new = DBL_MAX;
 				for(int jj=0; jj < 2; jj++ ){
 					for(int j=0; j < 2; j++ ){
 						temp_distance_new = points_distance(stored[jj], current[j]);
@@ -314,10 +350,18 @@ void store_line(vector< vector<Point> > &lines, vector<Point> line)
 							start_new = stored[jj];
 							end_new = current[j];
 						}
+						if(temp_distance_new < min_distance_new){
+							min_distance_new = temp_distance_new;
+							close_stored = stored[jj];
+							close_new = current[j];
+						}
 					}
 				}
-
 				double_line_error(lines[i], line, start_new, end_new, temp_match_error);
+				if(compute_white_ratio(image, close_new, close_stored) < 0.4){
+					temp_match_error += 2000;
+				}
+				temp_match_error /= lines[i].size() + line.size();
 
 			}else
 			{
@@ -330,7 +374,7 @@ void store_line(vector< vector<Point> > &lines, vector<Point> line)
 			}
 		}
 		cout << best_match_error << endl;
-		if(best_match_error < 50){
+		if(best_match_error < 5){
 			for(int i=0; i<line.size(); i++){
 				lines[best_match_line].push_back(line[i]);
 			}
@@ -379,8 +423,8 @@ void line_clustering(Mat image)
 				if(line.size() >= 4)
 				{
 					double sum_error;
-					line_error(line, start, best_candidate, sum_error);
-					if(sum_error < 10)
+					line_error(line, start, best_candidate, sum_error); 
+					if(sum_error < 5)
 					{
 						previous = best_candidate;
 					}
@@ -407,17 +451,17 @@ void line_clustering(Mat image)
 		}
 		while(!end);
 
-		Mat t;
-		black.copyTo(t);
-		for(int i=0; i < line.size(); i++)
-		{
-			circle(t, Point(line[i].y, line[i].x), 2, Scalar(0,255,0), 1, 8, 0);
-		}
-		circle(t, Point(start.y, start.x), 2, Scalar(255,0,0), 1, 8, 0);
-		stringstream ss;
-		ss << iteration;
-		imshow("line"+ss.str(),t);
-		store_line(lines, line);
+		// Mat t;
+		// black.copyTo(t);
+		// for(int i=0; i < line.size(); i++)
+		// {
+		// 	circle(t, Point(line[i].y, line[i].x), 2, Scalar(0,255,0), 1, 8, 0);
+		// }
+		// circle(t, Point(start.y, start.x), 2, Scalar(255,0,0), 1, 8, 0);
+		// stringstream ss;
+		// ss << iteration;
+		// imshow("line"+ss.str(),t);
+		store_line(image, lines, line);
 		line.clear();
 		// break;
 
@@ -428,6 +472,7 @@ void line_clustering(Mat image)
 
 
 	//lines visualization...
+	seed();
 	for(int i = 0; i < lines.size(); i++)
 	{
 		cout << "line" << endl;
@@ -449,8 +494,14 @@ void line_clustering(Mat image)
 				}
 			}
 		}
+		
+		int r = floor(unifRand(0.0, 255.0));
+		int g = floor(unifRand(0.0, 255.0));
+		int b = floor(unifRand(0.0, 255.0));
+
+
 		line( black, Point(point1.y, point1.x),
-		      Point(point2.y, point2.x), Scalar(0,0,255), 1, 8 );
+		      Point(point2.y, point2.x), Scalar(g,r,b), 1, 8 );
 	}
 	imshow("s", black);
 }
