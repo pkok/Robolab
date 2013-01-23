@@ -221,6 +221,31 @@ void find_best_candidate(Mat image, vector<point_dis> candidates, vector<Point> 
 	return;
 }
 
+void line_error(vector<Point> line, Point start, Point best_candidate, double &error){
+	error = 0;
+	for(int i = 0; i < line.size(); i++)
+	{
+		error += pow(point_line_distance(line[i],
+		Vec4i(start.x, start.y, best_candidate.x, best_candidate.y)),3);
+	}
+	return;
+}
+
+void double_line_error(vector<Point> line1, vector<Point> line2, Point start, Point end, double &error){
+	error = 0;
+	for(int i = 0; i < line1.size(); i++)
+	{
+		error += pow(point_line_distance(line1[i],
+		Vec4i(start.x, start.y, end.x, end.y)),3);
+	}
+	for(int i = 0; i < line2.size(); i++)
+	{
+		error += pow(point_line_distance(line2[i],
+		Vec4i(start.x, start.y, end.x, end.y)),3);
+	}
+	return;
+}
+
 void delete_point(Point element, vector<Point> &points)
 {
 	for(int i=0; i < points.size(); i++)
@@ -229,6 +254,88 @@ void delete_point(Point element, vector<Point> &points)
 		{
 			points.erase(points.begin() + i);
 			break;
+		}
+	}
+	return;
+}
+
+void store_line(vector< vector<Point> > &lines, vector<Point> line)
+{
+	if(line.size() == 1)
+		return;
+	if(lines.size() == 0){
+		lines.push_back(line);
+	}else{
+		
+		Point current[2];
+		current[0] = line[0];
+		double temp_distance_current;
+		double max_distance_current = 0;
+		for( int i = 0; i < line.size(); i++){
+			temp_distance_current = points_distance(current[0], line[0]);
+			if(temp_distance_current > max_distance_current){
+				max_distance_current = temp_distance_current;
+				current[1] = line[i];
+			}
+		}
+		double current_line_angle = points_angle(current[0], current[1]);
+
+		double best_match_error = DBL_MAX;
+		double temp_match_error;
+		int best_match_line;
+		for(int i=0; i < lines.size(); i++){
+			
+			
+			Point stored[2];
+			stored[0] = line[0];
+			double temp_distance_stored;
+			double max_distance_stored = 0;
+			for( int j = 0; j < lines[i].size(); j++){
+				temp_distance_stored = points_distance(stored[0], lines[i][0]);
+				if(temp_distance_current > max_distance_stored){
+					max_distance_stored = temp_distance_stored;
+					stored[1] = lines[i][j];
+				}
+			}
+
+			double stored_line_angle = points_angle(stored[0], stored[1]);
+
+			if(abs(current_line_angle - stored_line_angle) < 10){
+
+				Point start_new;
+				Point end_new;
+				double max_distance_new = 0;
+				double temp_distance_new;
+				for(int jj=0; jj < 2; jj++ ){
+					for(int j=0; j < 2; j++ ){
+						temp_distance_new = points_distance(stored[jj], current[j]);
+						if(temp_distance_new > max_distance_new){
+							max_distance_new = temp_distance_new;
+							start_new = stored[jj];
+							end_new = current[j];
+						}
+					}
+				}
+
+				double_line_error(lines[i], line, start_new, end_new, temp_match_error);
+
+			}else
+			{
+				temp_match_error = DBL_MAX;
+			}
+
+			if(temp_match_error < best_match_error){
+				best_match_error = temp_match_error;
+				best_match_line = i;
+			}
+		}
+		cout << best_match_error << endl;
+		if(best_match_error < 50){
+			for(int i=0; i<line.size(); i++){
+				lines[best_match_line].push_back(line[i]);
+			}
+		}else{
+			lines.push_back(line);
 		}
 	}
 	return;
@@ -263,7 +370,7 @@ void line_clustering(Mat image)
 			double error;
 			find_best_candidate(image, candidates, line, start, previous, best_candidate, error);
 			candidates.clear();
-			if(error > 10)
+			if(error > 3)
 			{
 				end = true;
 			}
@@ -271,12 +378,8 @@ void line_clustering(Mat image)
 			{
 				if(line.size() >= 4)
 				{
-					double sum_error = 0;
-					for(int i = 0; i < line.size(); i++)
-					{
-						sum_error += pow(point_line_distance(line[i],
-						                                     Vec4i(start.x, start.y, best_candidate.x, best_candidate.y)),3);
-					}
+					double sum_error;
+					line_error(line, start, best_candidate, sum_error);
 					if(sum_error < 10)
 					{
 						previous = best_candidate;
@@ -304,21 +407,26 @@ void line_clustering(Mat image)
 		}
 		while(!end);
 
-		// Mat t;
-		// black.copyTo(t);
-		// for(int i=0; i < line.size(); i++)
-		// {
-		// 	circle(t, Point(line[i].y, line[i].x), 2, Scalar(0,255,0), 1, 8, 0);
-		// }
-		// circle(t, Point(start.y, start.x), 2, Scalar(255,0,0), 1, 8, 0);
-		// stringstream ss;
-		// ss << iteration;
-		// imshow("line"+ss.str(),t);
-		lines.push_back(line);
+		Mat t;
+		black.copyTo(t);
+		for(int i=0; i < line.size(); i++)
+		{
+			circle(t, Point(line[i].y, line[i].x), 2, Scalar(0,255,0), 1, 8, 0);
+		}
+		circle(t, Point(start.y, start.x), 2, Scalar(255,0,0), 1, 8, 0);
+		stringstream ss;
+		ss << iteration;
+		imshow("line"+ss.str(),t);
+		store_line(lines, line);
 		line.clear();
 		// break;
 
 	}
+
+
+
+
+
 	//lines visualization...
 	for(int i = 0; i < lines.size(); i++)
 	{
