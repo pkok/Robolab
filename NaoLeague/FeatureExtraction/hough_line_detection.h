@@ -1,5 +1,5 @@
-#ifndef HOUGH_H
-#define HOUGH_H
+#ifndef HOUGH_LINE_DETECTION_H
+#define HOUGH_LINE_DETECTION_H
 
 #include <iostream>
 #include <math.h>

@@ -18,4 +18,6 @@ void ass_val_pixel2pixel(Vec3b &src, Vec3b &dst);
 
 void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball);
 
+double compute_white_ratio(Mat image, Point point1, Point point2);
+
 #endif

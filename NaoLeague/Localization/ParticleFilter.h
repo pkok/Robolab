@@ -15,7 +15,7 @@ using namespace std;
 struct VisualFeature {
 	  double range; //according to camera position
 	  double bearing; //according to global coordinate system
-	  int type; //0 : L-crossing, 1 : T-crossing 2 : X-crossing
+	  FeatureType type; //0 : L-crossing, 1 : T-crossing 2 : X-crossing
 	};
 	struct OdometryInformation {
 		double x;
@@ -77,7 +77,7 @@ public:
 	//weight particles accroding to new sensory information (vision)
 	double measurement_model(vector<VisualFeature> features,Particle* current_pose);
 	//finds most likeli landmark for given feature observation
-	int find_landmark(VisualFeature feature, Particle* current_pose,double* dist);
+	LandMark* find_landmark(VisualFeature feature, Particle* current_pose,double* dist);
 
 	//wander through all particles and update odometry and weight according to visual measurement
 	int dynamic(OdometryInformation odo_inf,vector<VisualFeature> vis_feats);
