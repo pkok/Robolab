@@ -15,8 +15,6 @@ public:
 	//x: field width, y field height, rot ranges from 0..2*pie*100, weight 0..100;
 	double x,y;
 	double rot,weight;
-	//for linked list of particles
-	Particle* next;
 
 	//functions
 	Particle();

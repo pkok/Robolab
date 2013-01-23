@@ -12,7 +12,6 @@ Particle::Particle() {
 	this->x = 0;
 	this->y = 0;
 	this->rot = 0;
-	this->next = 0; //null pointer
 
 }
 Particle::Particle(double x,double y, double rot,double weight)
@@ -22,7 +21,6 @@ Particle::Particle(double x,double y, double rot,double weight)
 	this->x = x;
 	this->y = y;
 	this->rot = rot;
-	this->next = 0;
 }
 Particle::~Particle() {
 	// TODO Auto-generated destructor stub
