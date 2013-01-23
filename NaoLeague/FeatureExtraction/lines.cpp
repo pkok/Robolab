@@ -158,7 +158,8 @@ void find_candidate_points(vector<Point> points,Point start, Point previous, vec
 		if(!equal_points(points[i],previous))
 		{
 			double temp_sim_value = points_distance(previous, points[i]);
-			if(line.size() >= 3){
+			if(line.size() >= 3)
+			{
 				temp_sim_value = temp_sim_value * 0.05 + point_line_distance(points[i], Vec4i(start.x, start.y, previous.x, previous.y));
 			}
 			if(candidates.size() == 5)
@@ -195,8 +196,9 @@ void find_candidate_points(vector<Point> points,Point start, Point previous, vec
 	}
 }
 
-void find_best_candidate(Mat image, vector<point_dis> candidates, vector<Point> line,  Point start, Point previous, Point &best_candidate, double &best_score){
-	
+void find_best_candidate(Mat image, vector<point_dis> candidates, vector<Point> line,  Point start, Point previous, Point &best_candidate, double &best_score)
+{
+
 	best_score = DBL_MAX;
 	double white;
 	double distance;
@@ -219,7 +221,8 @@ void find_best_candidate(Mat image, vector<point_dis> candidates, vector<Point> 
 	return;
 }
 
-void delete_point(Point element, vector<Point> &points){
+void delete_point(Point element, vector<Point> &points)
+{
 	for(int i=0; i < points.size(); i++)
 	{
 		if(equal_points(element, points[i]))
@@ -239,7 +242,7 @@ void line_clustering(Mat image)
 	mark_lines(image, black, points);
 	imshow("binary", image);
 	int iteration = 0;
-	
+
 	Mat t;
 	black.copyTo(t);
 	while(points.size() != 0)
@@ -260,19 +263,26 @@ void line_clustering(Mat image)
 			double error;
 			find_best_candidate(image, candidates, line, start, previous, best_candidate, error);
 			candidates.clear();
-			if(error > 10){
-				end = true;	
-			}else{
-				if(line.size() >= 4){
+			if(error > 10)
+			{
+				end = true;
+			}
+			else
+			{
+				if(line.size() >= 4)
+				{
 					double sum_error = 0;
 					for(int i = 0; i < line.size(); i++)
 					{
 						sum_error += pow(point_line_distance(line[i],
-						Vec4i(start.x, start.y, best_candidate.x, best_candidate.y)),3);
+						                                     Vec4i(start.x, start.y, best_candidate.x, best_candidate.y)),3);
 					}
-					if(sum_error < 10){
+					if(sum_error < 10)
+					{
 						previous = best_candidate;
-					}else{
+					}
+					else
+					{
 						if(line.size() <= 4 && line.size() != 0)
 						{
 							for(int i=0; i<line.size(); i++)
@@ -281,17 +291,18 @@ void line_clustering(Mat image)
 							}
 							line.clear();
 						}
-						end = true;	
+						end = true;
 					}
 				}
 				else
 				{
 					line.push_back(best_candidate);
 					previous = best_candidate;
-				}	
+				}
 			}
 			delete_point(previous, points);
-		}while(!end);
+		}
+		while(!end);
 
 		// Mat t;
 		// black.copyTo(t);
