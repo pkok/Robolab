@@ -9,27 +9,13 @@
 using namespace cv;
 using namespace std;
 
-double unifRand()
-{
-	return rand() / double(RAND_MAX);
-}
-double unifRand(double a, double b)
-{
-	return (b-a)*unifRand() + a;
-}
-
-void seed()
-{
-	srand(time(0));
-}
-
 struct point_dis
 {
 	Point pnt;
 	double distance;
 };
 
-void mark_lines(Mat image, Mat &point_image, vector<Point> &points)
+void mark_lines(Mat image, vector<Point> &points)
 {
 	for(int i = 0; i < image.rows; i += 5)
 	{
@@ -43,9 +29,6 @@ void mark_lines(Mat image, Mat &point_image, vector<Point> &points)
 				{
 					pass = false;
 					int pixel = floor((col + j)/2);
-					point_image.at<Vec3b>(i,pixel)[0] = 255;
-					point_image.at<Vec3b>(i,pixel)[1] = 255;
-					point_image.at<Vec3b>(i,pixel)[2] = 255;
 					points.push_back(Point(i ,pixel));
 				}
 			}
@@ -71,9 +54,6 @@ void mark_lines(Mat image, Mat &point_image, vector<Point> &points)
 				{
 					pass = false;
 					int pixel = floor((row + i)/2);
-					point_image.at<Vec3b>(pixel,j)[0] = 255;
-					point_image.at<Vec3b>(pixel,j)[1] = 255;
-					point_image.at<Vec3b>(pixel,j)[2] = 255;
 					points.push_back(Point(pixel,j));
 				}
 			}
@@ -277,7 +257,7 @@ void store_line(Mat image, vector< vector<Point> > &lines, vector<Point> line)
 				best_match_line = i;
 			}
 		}
-		if(best_match_error < 5)
+		if(best_match_error < 10)
 		{
 			for(int i=0; i<line.size(); i++)
 			{
@@ -294,18 +274,12 @@ void store_line(Mat image, vector< vector<Point> > &lines, vector<Point> line)
 
 void line_extraction(Mat image, vector<Vec4i> &produced_lines)
 {
-	Mat black = Mat::zeros(image.rows, image.cols, CV_8UC3);
 	vector<Point> points;
 	vector< vector<Point> > lines;
-	mark_lines(image, black, points);
-	imshow("binary", image);
-	int iteration = 0;
+	mark_lines(image, points);
 
-	Mat t;
-	black.copyTo(t);
 	while(points.size() != 0)
 	{
-		iteration++;
 		vector<Point> line;
 		bool end = false;
 		Point start = points[0];
@@ -362,8 +336,8 @@ void line_extraction(Mat image, vector<Vec4i> &produced_lines)
 		line.clear();
 
 	}
-	//lines visualization...
-	seed();
+
+	//lines construction and export...
 	for(int i = 0; i < lines.size(); i++)
 	{
 		Point point1,point2;
@@ -384,14 +358,6 @@ void line_extraction(Mat image, vector<Vec4i> &produced_lines)
 				}
 			}
 		}
-
-		int r = floor(unifRand(0.0, 255.0));
-		int g = floor(unifRand(0.0, 255.0));
-		int b = floor(unifRand(0.0, 255.0));
-
-
-		line( black, Point(point1.y, point1.x),
-		      Point(point2.y, point2.x), Scalar(g,r,b), 1, 8 );
+		produced_lines.push_back(Vec4i(point1.y, point1.x, point2.y, point2.x));
 	}
-	imshow("s", black);
 }

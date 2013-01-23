@@ -28,7 +28,7 @@ int main(int argc, char** argv)
 
 	line_extraction(img_lines_binary, lines);
 
-	line_features(lines);
+	line_features(img_lines_binary, lines);
 
 	std::cout << double( clock() - startTime )*1000 / (double)CLOCKS_PER_SEC<< " ms." << std::endl;
 	waitKey(0);
