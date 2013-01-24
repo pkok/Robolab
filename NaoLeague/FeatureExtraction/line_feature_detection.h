@@ -7,6 +7,6 @@
 
 using namespace cv;
 
-void line_features(vector<Vec4i> lines);
+void line_features(Mat image, vector<Vec4i> lines);
 
 #endif
