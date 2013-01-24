@@ -25,12 +25,12 @@ void seed()
 Point closest_intersection_point(Point* inters, Vec4i line){
 	
 	Point close;
-	if(intersection_in_line(Point(inters->x, inters->y), line))
-	{
-		return Point(inters->x, inters->y);
-	}
-	else
-	{
+	// if(intersection_in_line(Point(inters->x, inters->y), line))
+	// {
+	// 	return Point(inters->x, inters->y);
+	// }
+	// else
+	// {
 		double temp;
 		double min_distance = DBL_MAX;
 		for(int p=0; p<2;p++)
@@ -42,7 +42,7 @@ Point closest_intersection_point(Point* inters, Vec4i line){
 			 	close = Point(line[2*p], line[2*p+1]);
 			}
 		}
-	}
+	// }
 	return close;
 }
 
@@ -79,8 +79,7 @@ void line_features(Mat image, vector<Vec4i> lines)
 						Point intersection = Point(inters->x, inters->y);
 
 						Point close_i = closest_intersection_point(inters, lines[i]);
-						Point close_j = closest_intersection_point(inters, lines[j]);
-						
+						Point close_j = closest_intersection_point(inters, lines[j]);	
 
 						double white_i = compute_white_ratio(image, close_i, intersection);
 						double white_j = compute_white_ratio(image, close_j, intersection);
@@ -102,13 +101,19 @@ void line_features(Mat image, vector<Vec4i> lines)
 
 						if(l_measure_one_j < 0.0) l_measure_one_j = 0.0;
 
-						l_measure_one_i *= white_i;
-						l_measure_one_j *= white_j;
-
 						
-						if(l_measure_one_i > 0.7 && l_measure_one_j > 0.7){
-							cout << l_measure_one_i << endl;
-							cout << l_measure_one_j << endl;
+
+						double l_measure_i = l_measure_one_i * white_i;
+						double l_measure_j = l_measure_one_j * white_j;
+						
+
+						if(l_measure_i*l_measure_j > 0.01){
+							cout << l_measure_one_i << "  " << l_measure_one_j << endl;
+							cout << white_i << endl;
+							cout << white_j << endl;
+							cout << l_measure_i*l_measure_j << endl;
+							cout << "in" << endl;
+							
 							circle(black, Point(intersection.y, intersection.x), 2, Scalar(0,0,255), 2, 8, 0);		
 						}
 						
