@@ -64,17 +64,6 @@ function [xGrid, yGrid, interpMap] = getInterpMap(xMap, yMap, camera, params)
 % IPM = sum(orig(interpMap.pixels).*interpMap.weights, 3);
 % where orig is the original image and IPM is the IPM image.  For a color
 % image, simply do this for each color channel.
-%
-% Author:
-%----------
-% Eric Johnson
-% University of Utah
-% CS 5320/6320 - Computer Vision 
-% April 14, 2007
-%
-% Custom functions used:
-%------------------------
-% none
 
 % Extract the needed fields of the camera and params structures.
 m = camera.m;
