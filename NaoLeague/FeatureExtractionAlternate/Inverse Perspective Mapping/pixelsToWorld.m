@@ -39,17 +39,6 @@ function [xMap, yMap] = pixelsToWorld(camera)
 %              coordinate frame. For example, the bottom row of these
 %              matrices give the x, y coordinates where each pixel in the
 %              bottom row of the image should map.
-%
-% Authors:
-%----------
-% Eric Johnson and Randy Hamburger
-% University of Utah
-% CS 5320/6320 - Computer Vision 
-% April 9, 2007
-%
-% Custom functions used:
-%------------------------
-% none
 
 % Extract the fields of the camera structure for easy reference.
 m = camera.m;
