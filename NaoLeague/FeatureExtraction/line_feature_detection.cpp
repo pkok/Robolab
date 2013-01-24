@@ -22,6 +22,30 @@ void seed()
 	srand(time(0));
 }
 
+void closest_intersection_point(Point* inters, Vec4i line){
+	
+	Point close;
+	if(intersection_in_line(Point(inters->y, inters->x), lines[i]))
+	{
+		return Point(inters->y, inters->x);
+	}
+	else
+	{
+		double temp;
+		double min_distance = DBL_MAX;
+		for(int p=0; p<2;p++)
+		{
+			double temp = points_distance(Point(line[2*p+1], line[2*p]), Point(inters->y, inters->x));
+			if(temp < min_distance)
+			{
+				min_distance = temp;
+			 	close = Point(line[2*p+1], line[2*p]);
+			}
+		}
+	}
+	return close;
+}
+
 void line_features(Mat image, vector<Vec4i> lines)
 {
 	Mat black = Mat::zeros(image.rows, image.cols, CV_8UC3);
@@ -42,28 +66,28 @@ void line_features(Mat image, vector<Vec4i> lines)
 		{
 			if(i != j)
 			{
-				Point* inters = intersection(lines[i],lines[j]);
+				Point* inters = intersection(lines[i], lines[j], image);
 				if(abs(line_angle(lines[i]) - line_angle(lines[j])) >= 5)
 				{
 					if(inters != NULL)
 					{
-						// Point close_point_line1;
-						// Point close_point_line2;
-						// double min_dis_p1 = DBL_MAX;
-						// double min_dis_p2 = DBL_MAX;
-						// for(int ii = 0; ii < 2; ii ++)
-						// {
-						// 	double temp_dis_point1 = points_distance(Point(lines[i][2*ii+1], lines[i][2*ii]), Point(inters->x, inters->y));
-						// 	double temp_dis_point2 = points_distance(Point(lines[j][2*ii+1], lines[j][2*ii]), Point(inters->x, inters->y));
-						// 	if(temp_dis_point1 < min_dis_p1){
-						// 		min_dis_p1 = temp_dis_point1;
-						// 		close_point_line1 = Point(lines[i][2*ii+1], lines[i][2*ii]);
-						// 	}
+						
+						
+						Point close_i = closest_intersection_point(inters, lines[i]);
+						Point close_j = closest_intersection_point(inters, lines[j]);
+						
 
-						// }
-						// if(compute_white_ratio(image, close_point_line1, Point(inters->x, inters->y)) > 0.5){
-							circle(black, Point(inters->x, inters->y), 2, Scalar(0,255,0), 1, 8, 0);
-						// }
+						double white1 = compute_white_ratio(image, close_i, Point(inters->y, inters->x));
+						double white2 = compute_white_ratio(image, close_j, Point(inters->y, inters->x));
+
+
+
+						if(white1 > 0.8 && white2 > 0.8){
+							cout << "point" << endl;
+							circle(black, Point(inters->x, inters->y), 2, Scalar(0,0,255), 1, 8, 0);	
+						}
+						
+						
 					}
 				}
 			}
