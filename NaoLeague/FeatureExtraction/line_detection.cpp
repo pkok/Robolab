@@ -358,6 +358,6 @@ void line_extraction(Mat image, vector<Vec4i> &produced_lines)
 				}
 			}
 		}
-		produced_lines.push_back(Vec4i(point1.y, point1.x, point2.y, point2.x));
+		produced_lines.push_back(Vec4i(point1.x, point1.y, point2.x, point2.y));
 	}
 }

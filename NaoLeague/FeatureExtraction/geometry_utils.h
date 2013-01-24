@@ -7,6 +7,8 @@
 
 using namespace cv;
 
+Point line_middle_point(Vec4i line);
+
 bool intersection_in_line(Point point, Vec4i line);
 
 void line_error(vector<Point> line, Point start, Point best_candidate, double &error);
