@@ -77,3 +77,11 @@ double points_angle(Point point1, Point point2)
 		angle += 180;
 	return angle;
 }
+double line_angle(Vec4i line)
+{
+	double angle = atan2(line[2]-line[0],line[3]-line[0]);
+	angle = angle * (180 / CV_PI);
+	if( angle < 0 )
+		angle += 180;
+	return angle;
+}
