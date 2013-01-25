@@ -239,11 +239,11 @@ void store_line(Mat image, vector< vector<Point> > &lines, vector<Point> line)
 					}
 				}
 				line_error(lines[i], line, start_new, end_new, temp_match_error);
+				temp_match_error /= lines[i].size() + line.size();
 				if(compute_white_ratio(image, close_new, close_stored) < 0.4)
 				{
 					temp_match_error += 2000;
 				}
-				temp_match_error /= lines[i].size() + line.size();
 
 			}
 			else
@@ -257,7 +257,8 @@ void store_line(Mat image, vector< vector<Point> > &lines, vector<Point> line)
 				best_match_line = i;
 			}
 		}
-		if(best_match_error < 10)
+		double threshold_error = lines[best_match_line].size();
+		if(best_match_error < threshold_error)
 		{
 			for(int i=0; i<line.size(); i++)
 			{
@@ -358,6 +359,6 @@ void line_extraction(Mat image, vector<Vec4i> &produced_lines)
 				}
 			}
 		}
-		produced_lines.push_back(Vec4i(point1.y, point1.x, point2.y, point2.x));
+		produced_lines.push_back(Vec4i(point1.x, point1.y, point2.x, point2.y));
 	}
 }

@@ -5,6 +5,13 @@
 
 using namespace cv;
 
+Point line_middle_point(Vec4i line){
+	double x1 = line[0], x2 = line[2];
+	double y1 = line[1], y2 = line[3];
+
+	return Point(floor((x1+x2) / 2), floor((y1+y2) / 2));
+}
+
 bool intersection_in_line(Point point, Vec4i line){
 	
 	double x1 = line[0], x2 = line[2];
