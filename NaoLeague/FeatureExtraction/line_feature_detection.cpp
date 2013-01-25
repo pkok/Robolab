@@ -107,13 +107,7 @@ void line_features(Mat image, vector<Vec4i> lines)
 						double l_measure_j = l_measure_one_j * white_j;
 						
 
-						if(l_measure_i*l_measure_j > 0.01){
-							cout << l_measure_one_i << "  " << l_measure_one_j << endl;
-							cout << white_i << endl;
-							cout << white_j << endl;
-							cout << l_measure_i*l_measure_j << endl;
-							cout << "in" << endl;
-							
+						if(l_measure_i*l_measure_j > 0.1){
 							circle(black, Point(intersection.y, intersection.x), 2, Scalar(0,0,255), 2, 8, 0);		
 						}
 						
