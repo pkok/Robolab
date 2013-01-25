@@ -110,24 +110,26 @@ double t_measure(Point* inters, Mat image, Vec4i line_i, Vec4i line_j){
 
 	if(intersection_in_line(intersection, line_i) && intersection_in_line(intersection, line_j))
 	{
-			//how close is the intersection point to the line start or end...
+		//how close is the intersection point to the line start or end...
 		Point middle_point_i = line_middle_point(line_i);
 		double middle_point_distance_i = points_distance(middle_point_i, close_i);
 
-		double l_measure_one_i = ( middle_point_distance_i - 
-		points_distance(intersection, close_i)) / middle_point_distance_i;
+		double t_measure_i = (middle_point_distance_i - points_distance(intersection, close_i)) / middle_point_distance_i;
 
-		if(l_measure_one_i < 0.0) l_measure_one_i = 0.0;
+		if(t_measure_i < 0.0) t_measure_i = 0.0;
+
+		t_measure_i = pow(t_measure_i, 5);
 
 		Point middle_point_j = line_middle_point(line_j);
 		double middle_point_distance_j = points_distance(middle_point_j, close_j);
 
-		double l_measure_one_j = ( middle_point_distance_j - 
-			points_distance(intersection, close_j)) / middle_point_distance_j;
+		double t_measure_j = (middle_point_distance_j - points_distance(intersection, close_j)) / middle_point_distance_j;
 
-		if(l_measure_one_j < 0.0) l_measure_one_j = 0.0;
+		if(t_measure_j < 0.0) t_measure_j = 0.0;
 
-		return abs(pow(l_measure_one_j,2) - pow(l_measure_one_i,2));
+		t_measure_j = pow(t_measure_j, 5);
+
+		return abs(t_measure_j - t_measure_i);
 	}
 	else if(intersection_in_line(intersection, line_i) || intersection_in_line(intersection, line_j))
 	{
@@ -142,7 +144,7 @@ double t_measure(Point* inters, Mat image, Vec4i line_i, Vec4i line_j){
 		double dis_j = points_distance(intersection, close_j);
 		double dis_line_base;
 
-		if(intersection_in_line(intersection, line_i){
+		if(intersection_in_line(intersection, line_i)){
 			line_base = line_j;
 			close_point_base = close_j;
 			close_point_t = intersection;
@@ -158,8 +160,16 @@ double t_measure(Point* inters, Mat image, Vec4i line_i, Vec4i line_j){
 			dis_line_base = dis_i;
 		}
 
-		double white_base = compute_white_ratio(image, close_point_base, intersection);
+		double white_base = compute_white_ratio(image, close_point_base, close_point_t);
 		double white_t = 1;
+
+		Point middle_point_base = line_middle_point(line_base);
+		double middle_point_distance_base = points_distance(middle_point_base, close_point_base);
+
+		double base_line_measure = ( middle_point_distance_base - 
+		points_distance(intersection, close_point_base)) / middle_point_distance_base;
+
+		if(base_line_measure < 0.0) base_line_measure = 0.0;
 
 		return 762.0;
 
