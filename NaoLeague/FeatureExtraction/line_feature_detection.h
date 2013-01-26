@@ -11,17 +11,20 @@
 #define X_CROSS 3
 #define ELLIPSE 4
 
-using namespace cv;
+#define L_THRESHOLD 0.5
+#define T_THRESHOLD 0.5
+#define X_THRESHOLD 0.5
 
-struct Orient{
-	double angle1;
-	double angle2;
-};
+#define DIFF_THRESHOLD 0.1
+
+#define LOW_THRESHOLD 0.1
+
+using namespace cv;
 
 struct field_point{
 	int type;
 	Point position;
-	Orient orientation;
+	double orientation[2];
 	double confidence;
 };
 
