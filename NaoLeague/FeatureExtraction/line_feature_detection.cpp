@@ -60,7 +60,6 @@ Point closest_point(Point* inters, Vec4i line)
 
 double l_measure(Point* inters, Mat image, Vec4i line_i, Vec4i line_j)
 {
-
 	double measure;
 	Point intersection = Point(inters->x, inters->y);
 	Point close_i = closest_end_point(inters, line_i);
@@ -94,39 +93,11 @@ double l_measure(Point* inters, Mat image, Vec4i line_i, Vec4i line_j)
 	return measure;
 }
 
-double x_measure(Point* inters, Mat image, Vec4i line_i, Vec4i line_j)
+double x_measure(Point* inters, Mat image, Vec4i line_i, Vec4i line_j, double t_measure)
 {
-
-	double measure;
-	Vec4i line_base;
-	Vec4i line_t;
 	Point intersection = Point(inters->x, inters->y);
-
-	Point close_i = closest_point(inters, line_i);
-	Point close_j = closest_point(inters, line_j);
-
 	if(intersection_in_line(intersection, line_i) && intersection_in_line(intersection, line_j)) {
-		//how close is the intersection point to the line start or end...
-		Point middle_point_i = line_middle_point(line_i);
-		double middle_point_distance_i = points_distance(middle_point_i, close_i);
-
-		double x_measure_i = (middle_point_distance_i - points_distance(intersection, close_i)) / middle_point_distance_i;
-
-		if(x_measure_i < 0.0) x_measure_i = 0.0;
-
-		x_measure_i = pow(x_measure_i, 5);
-
-		Point middle_point_j = line_middle_point(line_j);
-		double middle_point_distance_j = points_distance(middle_point_j, close_j);
-
-		double x_measure_j = (middle_point_distance_j - points_distance(intersection, close_j)) / middle_point_distance_j;
-
-		if(x_measure_j < 0.0) x_measure_j = 0.0;
-
-		x_measure_j = pow(x_measure_j, 5);
-
-		return max(1.0 - (x_measure_j + x_measure_i), 0.0);
-
+		return 1 - t_measure;
 	} else {
 		return 0.0;
 	}
@@ -192,7 +163,7 @@ double t_measure(Point* inters, Mat image, Vec4i line_i, Vec4i line_j)
 		double point_distance_base = points_distance(middle_point_base, close_base);
 
 		double base_line_measure = ( point_distance_base -
-		                             points_distance(close_t, close_base)) / point_distance_base;
+		                             points_distance(intersection, close_base)) / point_distance_base;
 
 		if(base_line_measure < 0.0) base_line_measure = 0.0;
 
@@ -201,6 +172,9 @@ double t_measure(Point* inters, Mat image, Vec4i line_i, Vec4i line_j)
 		double point_distance_t = points_distance(intersection, closest_end_point(inters, line_t));
 
 		double t_line_measure = (points_distance(closest_end_point(inters, line_t), middle_point_t) - point_distance_t) / points_distance(closest_end_point(inters, line_t), middle_point_t);
+		
+		if(t_line_measure < 0.0) t_line_measure = 0.0;
+
 		t_line_measure = 1.0 - pow(t_line_measure,5);
 
 		measure = white * t_line_measure * base_line_measure;
@@ -232,22 +206,26 @@ void line_features(Mat image, vector<Vec4i> lines)
 				double angle_j = points_angle(Point(lines[j][1], lines[j][0]), Point(lines[j][3], lines[j][2]));
 				Point* inters = intersection(lines[i], lines[j], image);
 
-				if(inters != NULL) {
-					intersection_num ++;
-					Mat temp;
-					black.copyTo(temp);
+				if(abs(angle_j - angle_i) > 10){
 
-					double l_m = l_measure(inters, image, lines[i], lines[j]);
-					double t_m = t_measure(inters, image, lines[i], lines[j]);
-					double x_m = x_measure(inters, image, lines[i], lines[j]);
+					if(inters != NULL) {
+						intersection_num ++;
+						Mat temp;
+						black.copyTo(temp);
 
-					cout << "intersection " << intersection_num << " L: " << l_m << " T: " << t_m << " X: " << x_m <<endl;
-					stringstream ss;
-					ss << intersection_num;
-					if(t_m == 2){
+						double l_m = l_measure(inters, image, lines[i], lines[j]);
+						double t_m = t_measure(inters, image, lines[i], lines[j]);
+						double x_m = x_measure(inters, image, lines[i], lines[j], t_m);
 
-						circle(temp, Point(inters->y, inters->x), 2, Scalar(0,0,255), 2, 8, 0);
-						imshow("intersection"+ss.str(),temp);
+						if(t_m > 0.01 || l_m > 0.01 ||  x_m > 0.01){
+						
+							cout << "intersection " << intersection_num << " L: " << l_m << " T: " << t_m << " X: " << x_m <<endl;
+							stringstream ss;
+							ss << intersection_num;
+
+							circle(temp, Point(inters->y, inters->x), 2, Scalar(0,0,255), 2, 8, 0);
+							imshow("intersection"+ss.str(),temp);
+						}
 					}
 				}
 			}
