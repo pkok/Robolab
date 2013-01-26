@@ -57,7 +57,8 @@ Point* intersection(Vec4i line1, Vec4i line2, Mat image)
 void line_error(vector<Point> line, Point start, Point best_candidate, double &error)
 {
 	error = 0;
-	for(int i = 0; i < line.size(); i++) {
+	for(int i = 0; i < line.size(); i++)
+	{
 		error += pow(point_line_distance(line[i],
 		                                 Vec4i(start.x, start.y, best_candidate.x, best_candidate.y)),3);
 	}
@@ -66,11 +67,13 @@ void line_error(vector<Point> line, Point start, Point best_candidate, double &e
 void line_error(vector<Point> line1, vector<Point> line2, Point start, Point end, double &error)
 {
 	error = 0;
-	for(int i = 0; i < line1.size(); i++) {
+	for(int i = 0; i < line1.size(); i++)
+	{
 		error += pow(point_line_distance(line1[i],
 		                                 Vec4i(start.x, start.y, end.x, end.y)),3);
 	}
-	for(int i = 0; i < line2.size(); i++) {
+	for(int i = 0; i < line2.size(); i++)
+	{
 		error += pow(point_line_distance(line2[i],
 		                                 Vec4i(start.x, start.y, end.x, end.y)),3);
 	}
@@ -100,6 +103,18 @@ double points_angle(Point point1, Point point2)
 		angle += 180;
 	return angle;
 }
+
+double points_angle_360(Point point1, Point point2)
+{
+	double angle = atan2(point2.x-point1.x,point2.y-point1.y);
+	angle = angle * (180 / CV_PI);
+	if(angle < 0)
+	{
+		return 360 - angle;
+	}
+	return angle;
+}
+
 double line_angle(Vec4i line)
 {
 	double angle = atan2(line[2]-line[0],line[3]-line[0]);

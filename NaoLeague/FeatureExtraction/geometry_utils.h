@@ -27,4 +27,6 @@ Point* intersection(Vec4i line1, Vec4i line2, Mat image);
 
 double line_angle(Vec4i line);
 
+double points_angle_360(Point point1, Point point2);
+
 #endif

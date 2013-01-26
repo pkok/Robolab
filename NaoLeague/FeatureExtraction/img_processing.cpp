@@ -21,31 +21,42 @@ double compute_white_ratio(Mat image, Point point1, Point point2)
 	int err;
 	int sx = 0;
 	int sy = 0;
-	if (x0 < x1) {
+	if (x0 < x1)
+	{
 		sx = 1;
-	} else {
+	}
+	else
+	{
 		sx = -1;
 	}
-	if (y0 < y1) {
+	if (y0 < y1)
+	{
 		sy = 1;
-	} else {
+	}
+	else
+	{
 		sy = -1;
 	}
 	err = dx-dy;
-	while(1) {
+	while(1)
+	{
 		all_counter ++;
-		if((int)image.at<Vec3b>(x0,y0)[0] != 0) {
+		if((int)image.at<Vec3b>(x0,y0)[0] != 0)
+		{
 			white_counter ++;
 		}
-		if (x0 == x1 && y0 == y1) {
+		if (x0 == x1 && y0 == y1)
+		{
 			break;
 		}
 		int e2 = 2*err;
-		if (e2 > -dy) {
+		if (e2 > -dy)
+		{
 			err = err - dy;
 			x0 = x0 + sx;
 		}
-		if(e2 <  dx) {
+		if(e2 <  dx)
+		{
 			err = err + dx;
 			y0 = y0 + sy;
 		}
@@ -56,13 +67,16 @@ double compute_white_ratio(Mat image, Point point1, Point point2)
 bool hsv_range(Vec3b pixel, int h_min, int h_max, int s_min, int s_max, int v_min, int v_max)
 {
 	bool isAtRange = true;
-	if(pixel[0] < h_min || pixel[0] > h_max) {
+	if(pixel[0] < h_min || pixel[0] > h_max)
+	{
 		isAtRange = false;
 	}
-	if(pixel[1] < s_min || pixel[1] > s_max) {
+	if(pixel[1] < s_min || pixel[1] > s_max)
+	{
 		isAtRange = false;
 	}
-	if(pixel[2] < v_min || pixel[2] > v_max) {
+	if(pixel[2] < v_min || pixel[2] > v_max)
+	{
 		isAtRange = false;
 	}
 	return isAtRange;
@@ -97,42 +111,57 @@ void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball)
 	// height...
 	bool background, continuous;
 	int counter;
-	for(int j = 0; j < image.cols; j++) {
+	for(int j = 0; j < image.cols; j++)
+	{
 		background = true;
 		counter = 0;
-		for(int i = 0; i < image.rows; i++) {
+		for(int i = 0; i < image.rows; i++)
+		{
 			// hue refers to yellow, binary white will be stored in the goalposts image
 			// in order to find the posts later...
-			if(hsv_range(image.at<Vec3b>(i,j), YEL_HUE_MIN, YEL_HUE_MAX, YEL_SAT_MIN, YEL_SAT_MAX, YEL_VAL_MIN, YEL_VAL_MAX)) {
+			if(hsv_range(image.at<Vec3b>(i,j), YEL_HUE_MIN, YEL_HUE_MAX, YEL_SAT_MIN, YEL_SAT_MAX, YEL_VAL_MIN, YEL_VAL_MAX))
+			{
 				ass_val_pixel(posts.at<Vec3b>(i,j), 255, 255, 255);
 				ass_val_pixel2pixel(field.at<Vec3b>(i,j), image.at<Vec3b>(i,j));
 			}
 
 			// check for the horizontal start of the field
-			if(background) {
-				if(hsv_range(image.at<Vec3b>(i,j), GR_HUE_MIN, GR_HUE_MAX, GR_SAT_MIN, GR_SAT_MAX, GR_VAL_MIN, GR_VAL_MAX)) {
+			if(background)
+			{
+				if(hsv_range(image.at<Vec3b>(i,j), GR_HUE_MIN, GR_HUE_MAX, GR_SAT_MIN, GR_SAT_MAX, GR_VAL_MIN, GR_VAL_MAX))
+				{
 					counter ++;
 					ass_val_pixel(field.at<Vec3b>(i,j), 0, 0, 0);
-					if(counter > BACK_THRESHOLD) {
+					if(counter > BACK_THRESHOLD)
+					{
 						ass_val_pixel(field.at<Vec3b>(i - BACK_THRESHOLD, j), 255, 255, 255);
 						background_border.at<uchar>(i - BACK_THRESHOLD, j) = 255;
 						background_border_points.push_back(Vec2i(i - BACK_THRESHOLD, j));
-						for( int k = 0; k < BACK_THRESHOLD + 5; k++) {
-							if((i-k) >= 0) {
+						for( int k = 0; k < BACK_THRESHOLD + 5; k++)
+						{
+							if((i-k) >= 0)
+							{
 								ass_val_pixel2pixel(field.at<Vec3b>(i-k,j), image.at<Vec3b>(i-k,j));
 							}
 						}
 						background = false;
 						//ass_val_pixel(background_border.at<Vec3b>(i,j), 255, 255, 255);
 					}
-				} else {
+				}
+				else
+				{
 					continuous = false;
 					counter = 0;
 				}
-			} else {
-				if(hsv_range(image.at<Vec3b>(i,j), WH_HUE_MIN, WH_HUE_MAX, WH_SAT_MIN, WH_SAT_MAX, WH_VAL_MIN, WH_VAL_MAX)) {
+			}
+			else
+			{
+				if(hsv_range(image.at<Vec3b>(i,j), WH_HUE_MIN, WH_HUE_MAX, WH_SAT_MIN, WH_SAT_MAX, WH_VAL_MIN, WH_VAL_MAX))
+				{
 					ass_val_pixel(lines.at<Vec3b>(i,j), 255, 255, 255);
-				} else {
+				}
+				else
+				{
 					ass_val_pixel(lines.at<Vec3b>(i,j), 0, 0, 0);
 				}
 				ass_val_pixel2pixel(field.at<Vec3b>(i,j), image.at<Vec3b>(i,j));
