@@ -98,6 +98,47 @@ double l_measure(Point* inters, Mat image, Vec4i line_i, Vec4i line_j){
 	return measure;
 }
 
+double x_measure(Point* inters, Mat image, Vec4i line_i, Vec4i line_j){
+
+	double measure;
+	Vec4i line_base;
+	Vec4i line_t;
+	Point intersection = Point(inters->x, inters->y);
+
+	Point close_i = closest_point(inters, line_i);
+	Point close_j = closest_point(inters, line_j);
+
+	if(intersection_in_line(intersection, line_i) && intersection_in_line(intersection, line_j))
+	{
+		//how close is the intersection point to the line start or end...
+		Point middle_point_i = line_middle_point(line_i);
+		double middle_point_distance_i = points_distance(middle_point_i, close_i);
+
+		double x_measure_i = (middle_point_distance_i - points_distance(intersection, close_i)) / middle_point_distance_i;
+
+		if(x_measure_i < 0.0) x_measure_i = 0.0;
+
+		x_measure_i = pow(x_measure_i, 5);
+
+		Point middle_point_j = line_middle_point(line_j);
+		double middle_point_distance_j = points_distance(middle_point_j, close_j);
+
+		double x_measure_j = (middle_point_distance_j - points_distance(intersection, close_j)) / middle_point_distance_j;
+
+		if(x_measure_j < 0.0) x_measure_j = 0.0;
+
+		x_measure_j = pow(x_measure_j, 5);
+
+		return max(1.0 - (x_measure_j + x_measure_i), 0.0);
+
+	}
+	else
+	{
+		return 0.0;
+	}
+
+}
+
 double t_measure(Point* inters, Mat image, Vec4i line_i, Vec4i line_j){
 
 	double measure;
@@ -171,12 +212,22 @@ double t_measure(Point* inters, Mat image, Vec4i line_i, Vec4i line_j){
 
 		if(base_line_measure < 0.0) base_line_measure = 0.0;
 
-		return 762.0;
+		base_line_measure = white_base * pow(base_line_measure, 5);
 
+		Point middle_point_t = line_middle_point(line_t);
+		double middle_point_distance_t = points_distance(middle_point_t, close_point_t);
+
+		double t_measure = (middle_point_distance_t - points_distance(intersection, close_point_t)) / middle_point_distance_t;
+
+		if(t_measure < 0.0) t_measure = 0.0;
+
+		t_measure = pow(t_measure, 5);
+
+		return abs(t_measure - base_line_measure);
 	}
 	else
 	{
-		return 762.0;
+		return 0.0;
 	}
 }
 
@@ -211,15 +262,16 @@ void line_features(Mat image, vector<Vec4i> lines)
 					Mat temp;
 					black.copyTo(temp);
 					
-					double l_m = t_measure(inters, image, lines[i], lines[j]);				
-	
-					cout << "intersection " << intersection_num << " L_meas: " << l_m << endl;
+					double l_m = l_measure(inters, image, lines[i], lines[j]);
+					double t_m = t_measure(inters, image, lines[i], lines[j]);
+					double x_m = x_measure(inters, image, lines[i], lines[j]);
+
+					cout << "intersection " << intersection_num << " L: " << l_m << " T: " << t_m << " X: " << x_m <<endl;
 					stringstream ss;
 					ss << intersection_num;
-					if(l_m != 762.0){
-						circle(temp, Point(inters->y, inters->x), 2, Scalar(0,0,255), 2, 8, 0);	
-						imshow("intersection"+ss.str(),temp);	
-					}
+
+					circle(temp, Point(inters->y, inters->x), 2, Scalar(0,0,255), 2, 8, 0);	
+					imshow("intersection"+ss.str(),temp);	
 				}
 				
 			}
