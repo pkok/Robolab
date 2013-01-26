@@ -22,6 +22,7 @@ void seed()
 	srand(time(0));
 }
 
+
 Point closest_end_point(Point* inters, Vec4i line)
 {
 
@@ -136,14 +137,12 @@ double t_measure(Point* inters, Mat image, Vec4i line_i, Vec4i line_j)
 {
 
 	double measure;
-	Vec4i line_base;
-	Vec4i line_t;
 	Point intersection = Point(inters->x, inters->y);
 
-	Point close_i = closest_end_point(inters, line_i);
-	Point close_j = closest_end_point(inters, line_j);
-
 	if(intersection_in_line(intersection, line_i) && intersection_in_line(intersection, line_j)) {
+
+		Point close_i = closest_end_point(inters, line_i);
+		Point close_j = closest_end_point(inters, line_j);
 		//how close is the intersection point to the line start or end...
 		Point middle_point_i = line_middle_point(line_i);
 		double middle_point_distance_i = points_distance(middle_point_i, close_i);
@@ -166,53 +165,47 @@ double t_measure(Point* inters, Mat image, Vec4i line_i, Vec4i line_j)
 		return abs(t_measure_j - t_measure_i);
 	} else if(intersection_in_line(intersection, line_i) || intersection_in_line(intersection, line_j)) {
 
+		// cout << "Two part t" << endl;
 		// distinquish among these two lines which is the
 		// the base of the possible T shape and which is
 		// the other...
 		// line_base is the T's |
-		Point close_point_base;
-		Point close_point_t;
-		double dis_i = points_distance(intersection, close_i);
-		double dis_j = points_distance(intersection, close_j);
-		double dis_line_base;
+		Vec4i line_base;
+		Vec4i line_t;
+		Point close_base;
+		Point close_t;
 
 		if(intersection_in_line(intersection, line_i)) {
 			line_base = line_j;
-			close_point_base = close_j;
-			close_point_t = intersection;
 			line_t = line_i;
-			dis_line_base = dis_j;
 		} else {
 			line_base = line_i;
-			close_point_base = close_i;
-			close_point_t = closest_end_point(inters, line_j);
 			line_t = line_j;
-			dis_line_base = dis_i;
 		}
-
-		double white_base = compute_white_ratio(image, close_point_base, close_point_t);
-		double white_t = 1;
+		close_base = closest_end_point(inters, line_base);
+		close_t = intersection;
+		double white = compute_white_ratio(image, intersection, close_base);
 
 		Point middle_point_base = line_middle_point(line_base);
-		double middle_point_distance_base = points_distance(middle_point_base, close_point_base);
+		Point middle_point_t = line_middle_point(line_t);
+		
+		double point_distance_base = points_distance(middle_point_base, close_base);
 
-		double base_line_measure = ( middle_point_distance_base -
-		                             points_distance(intersection, close_point_base)) / middle_point_distance_base;
+		double base_line_measure = ( point_distance_base -
+		                             points_distance(close_t, close_base)) / point_distance_base;
 
 		if(base_line_measure < 0.0) base_line_measure = 0.0;
 
-		base_line_measure = white_base * pow(base_line_measure, 5);
+		base_line_measure = pow(base_line_measure, 1);
 
-		Point middle_point_t = line_middle_point(line_t);
-		double middle_point_distance_t = points_distance(middle_point_t, close_point_t);
+		double point_distance_t = points_distance(intersection, closest_end_point(inters, line_t));
 
-		double t_measure = (middle_point_distance_t - points_distance(intersection, close_point_t)) / middle_point_distance_t;
+		double t_line_measure = (points_distance(closest_end_point(inters, line_t), middle_point_t) - point_distance_t) / points_distance(closest_end_point(inters, line_t), middle_point_t);
+		t_line_measure = 1.0 - pow(t_line_measure,5);
 
-		if(t_measure < 0.0) t_measure = 0.0;
+		measure = white * t_line_measure * base_line_measure;
 
-		t_measure = pow(t_measure, 5);
-
-		return abs(t_measure - base_line_measure);
+		return measure;
 	} else {
 		return 0.0;
 	}
@@ -221,6 +214,7 @@ double t_measure(Point* inters, Mat image, Vec4i line_i, Vec4i line_j)
 void line_features(Mat image, vector<Vec4i> lines)
 {
 	Mat black = Mat::zeros(image.rows, image.cols, CV_8UC3);
+	Mat black2 = Mat::zeros(image.rows, image.cols, CV_8UC3);
 	seed();
 	for(int i = 0; i < lines.size(); i++) {
 		int r = floor(unifRand(0.0, 255.0));
@@ -250,9 +244,11 @@ void line_features(Mat image, vector<Vec4i> lines)
 					cout << "intersection " << intersection_num << " L: " << l_m << " T: " << t_m << " X: " << x_m <<endl;
 					stringstream ss;
 					ss << intersection_num;
+					if(t_m == 2){
 
-					circle(temp, Point(inters->y, inters->x), 2, Scalar(0,0,255), 2, 8, 0);
-					imshow("intersection"+ss.str(),temp);
+						circle(temp, Point(inters->y, inters->x), 2, Scalar(0,0,255), 2, 8, 0);
+						imshow("intersection"+ss.str(),temp);
+					}
 				}
 			}
 		}
