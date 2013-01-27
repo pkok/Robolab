@@ -330,10 +330,11 @@ void store_intersection(field_intersection current, vector<field_intersection> &
 }
 
 
-void line_features(Mat image, vector<Vec4i> lines)
+void line_features(Mat image, vector<Vec4i> lines, vector<field_intersection> &result_intersections/*, vector<field_point> result_intersections*/)
 {
 	//visualization stuff
-	Mat black = Mat::zeros(image.rows, image.cols, CV_8UC3);
+	
+	/*Mat black = Mat::zeros(image.rows, image.cols, CV_8UC3);
 	seed();
 	for(int i = 0; i < lines.size(); i ++)
 	{
@@ -344,11 +345,13 @@ void line_features(Mat image, vector<Vec4i> lines)
 		      Point(lines[i][3],lines[i][2]), Scalar(g,r,b), 1, 8 );
 		
 	}
+	imshow("s", black);*/
+
 	//..end of visualization stuff
+
 	double l_confidence, t_confidence, x_confidence, angle_i, angle_j;
 	double l_orientation[2], t_orientation[2], x_orientation[2];
 	Point* inters;
-	vector<field_intersection> intersections;
 	for(int i = 0; i < lines.size(); i++)
 	{
 		for(int j = i+1; j < lines.size(); j++)
@@ -385,30 +388,47 @@ void line_features(Mat image, vector<Vec4i> lines)
 							current_intersection.min_pl_length = min(
 								points_distance(Point(lines[i][1], lines[i][0]), Point(lines[i][3], lines[i][2])),
 								points_distance(Point(lines[j][1], lines[j][0]), Point(lines[j][3], lines[j][2])));
-							store_intersection(current_intersection, intersections);
+							store_intersection(current_intersection, result_intersections);
 						}
 					}
 				}
 			}
 		}
 	}
-	int intersection_num = 0;
-	for (int i = 0; i < intersections.size(); i++)
+
+	// only of visualization of the intersections points
+	// with the confidence for each one...
+
+	/*int intersection_num = 0;
+	for (int i = 0; i < result_intersections.size(); i++)
 	{
 		intersection_num ++;
 		Mat temp;
 		black.copyTo(temp);
 		
 		
-		cout << "inter " << intersections[i].position.x << "," << intersections[i].position.y << " "  << intersection_num << " L: " << intersections[i].l.confidence << " T: " << intersections[i].t.confidence << " X: " << intersections[i].x.confidence << endl;
+		cout << "inter " << result_intersections[i].position.x << "," << result_intersections[i].position.y << " "  << intersection_num << " L: " << result_intersections[i].l.confidence << " T: " << result_intersections[i].t.confidence << " X: " << result_intersections[i].x.confidence << endl;
 
 		stringstream ss;
 		ss << intersection_num;
-		circle(temp, Point(intersections[i].position.x, intersections[i].position.y), 2, Scalar(0,0,255), 2, 8, 0);
+		circle(temp, Point(result_intersections[i].position.x, result_intersections[i].position.y), 2, Scalar(0,0,255), 2, 8, 0);
 		imshow("intersection"+ss.str(),temp);
+	}*/
+	// end of visualization...
+
+	return;
+}
+
+void line_most_prob_features(Mat image, vector<Vec4i> lines, vector<field_point> &result_intersections)
+{
+	vector<field_intersection> all_type_intersections;
+	line_features(image, lines, all_type_intersections);
+	
+	for (int i = 0; i < all_type_intersections.size(); ++i)
+	{
+		field_point most_prob = decide_type(all_type_intersections[i]);
+		result_intersections.push_back(most_prob);
 	}
-
-
-	imshow("s", black);
+	all_type_intersections.clear();
 	return;
 }

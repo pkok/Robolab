@@ -6,6 +6,7 @@
 #include "img_processing.h"
 #include "line_detection.h"
 #include "line_feature_detection.h"
+#include "ellipse_detector.h"
 
 using namespace cv;
 using namespace std;
@@ -28,7 +29,21 @@ int main(int argc, char** argv)
 
 	line_extraction(img_lines_binary, lines);
 
-	line_features(img_lines_binary, lines);
+	detect_ellipse(img_lines_binary, lines);
+
+#if 1
+	// the next two lines find intersections and return 
+	// a triple X,T,L with the confidence, orientation, position 
+	// for each one...
+	vector<field_intersection> result_intersections;
+	line_features(img_lines_binary, lines, result_intersections);
+#else
+	// the next two lines find intersections and return 
+	// only the most probable cross type for each intersectiion
+	// with it confidence, orientation, position
+	vector<field_point> result_intersections;
+	line_most_prob_features(img_lines_binary, lines, result_intersections);
+#endif
 
 	std::cout << double( clock() - startTime )*1000 / (double)CLOCKS_PER_SEC<< " ms." << std::endl;
 	waitKey(0);

@@ -1,5 +1,5 @@
-#ifndef BACKGROUND_H
-#define BACKGROUND_H
+#ifndef IMG_PROCESSING_H
+#define IMG_PROCESSING_H
 
 #include <iostream>
 #include <math.h>
