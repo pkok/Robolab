@@ -12,6 +12,10 @@ geometry_utils.h
 geometry_utils.cpp
 line_feature_detection.h
 line_feature_detection.cpp
+ellipse_detector.h
+ellipse_detector.cpp
+goal_detection.h
+goal_detection.cpp
 feature_extraction.cpp)
 
 target_link_libraries(feature_extraction ${OpenCV_LIBS})
