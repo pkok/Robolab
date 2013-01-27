@@ -9,17 +9,32 @@
 #define L_CROSS 0
 #define T_CROSS 1
 #define X_CROSS 3
-#define ELLIPSE 4
+#define UNKNOWN 4
 
 #define L_THRESHOLD 0.5
 #define T_THRESHOLD 0.5
 #define X_THRESHOLD 0.5
 
-#define DIFF_THRESHOLD 0.1
+#define DIFF_THRESHOLD_L 0.3
+#define DIFF_THRESHOLD_T 0.3
+#define DIFF_THRESHOLD_X 0.3
 
-#define LOW_THRESHOLD 0.1
+#define TRANS_2T_X_THRESHOLD 0.7
+#define DISTANCE_2T_X 6
 
 using namespace cv;
+
+struct field_feature{
+	double orientation[2];
+	double confidence;
+};
+
+struct field_intersection{
+	Point position;
+	field_feature t;
+	field_feature l;
+	field_feature x;
+};
 
 struct field_point{
 	int type;

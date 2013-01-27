@@ -8,6 +8,12 @@
 
 using namespace cv;
 
+struct point_dis
+{
+	Point pnt;
+	double distance;
+};
+
 void line_extraction(Mat image, vector<Vec4i> &produced_lines);
 
 #endif

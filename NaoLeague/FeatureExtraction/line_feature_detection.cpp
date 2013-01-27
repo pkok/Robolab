@@ -4,22 +4,11 @@
 #include <time.h>
 #include "geometry_utils.h"
 #include "img_processing.h"
+#include "line_feature_detection.h"
 
 
 using namespace cv;
 using namespace std;
-
-struct field_feature{
-	Point position;
-	double orientation[2];
-	double confidence;
-};
-
-struct field_intersection{
-	field_feature t;
-	field_feature l;
-	field_feature x;
-};
 
 double unifRand()
 {
@@ -33,48 +22,6 @@ double unifRand(double a, double b)
 void seed()
 {
 	srand(time(0));
-}
-
-Point closest_end_point(Point* inters, Vec4i line)
-{
-
-	Point close;
-	double temp;
-	double min_distance = DBL_MAX;
-	for(int p=0; p<2; p++)
-	{
-		double temp = points_distance(Point(line[2*p], line[2*p+1]), Point(inters->x, inters->y));
-		if(temp < min_distance)
-		{
-			min_distance = temp;
-			close = Point(line[2*p], line[2*p+1]);
-		}
-	}
-	return close;
-}
-
-Point closest_point(Point* inters, Vec4i line)
-{
-	Point close;
-	if(intersection_in_line(Point(inters->x, inters->y), line))
-	{
-		return Point(inters->x, inters->y);
-	}
-	else
-	{
-		double temp;
-		double min_distance = DBL_MAX;
-		for(int p=0; p<2; p++)
-		{
-			double temp = points_distance(Point(line[2*p], line[2*p+1]), Point(inters->x, inters->y));
-			if(temp < min_distance)
-			{
-				min_distance = temp;
-				close = Point(line[2*p], line[2*p+1]);
-			}
-		}
-	}
-	return close;
 }
 
 void l_measure(Point* inters, Mat image, Vec4i line_i, Vec4i line_j, double &l_confidence, double* l_orientation)
@@ -201,6 +148,55 @@ void t_measure(Point* inters, Mat image, Vec4i line_i, Vec4i line_j, double &t_c
 	}
 }
 
+field_point decide_type(field_intersection intersection)
+{
+	field_point result;
+	// we decide x when...
+	if(intersection.x.confidence > X_THRESHOLD &&
+		DIFF_THRESHOLD_X * intersection.x.confidence > intersection.t.confidence &&
+		DIFF_THRESHOLD_X * intersection.x.confidence > intersection.l.confidence)
+	{
+		result.type = X_CROSS;
+		result.confidence = intersection.x.confidence;
+		result.position = intersection.position;
+		for(int a = 0; a < 2; a ++)
+		{
+			result.orientation[a] = intersection.x.orientation[a];
+			result.orientation[a] = intersection.x.orientation[a];
+			result.orientation[a] = intersection.x.orientation[a];
+		}
+	}
+	else if(intersection.l.confidence > L_THRESHOLD &&
+		DIFF_THRESHOLD_L * intersection.l.confidence > intersection.t.confidence &&
+		DIFF_THRESHOLD_L * intersection.l.confidence > intersection.x.confidence)
+	{
+		result.type = L_CROSS;
+		result.confidence = intersection.l.confidence;
+		result.position = intersection.position;
+		for(int a = 0; a < 2; a ++)
+		{
+			result.orientation[a] = intersection.l.orientation[a];
+		}
+	}
+	else if(intersection.t.confidence > T_THRESHOLD &&
+		DIFF_THRESHOLD_T * intersection.t.confidence > intersection.l.confidence &&
+		DIFF_THRESHOLD_T * intersection.t.confidence > intersection.x.confidence)
+	{
+		result.type = T_CROSS;
+		result.confidence = intersection.t.confidence;
+		result.position = intersection.position;
+		for(int a = 0; a < 2; a ++)
+		{
+			result.orientation[a] = intersection.t.orientation[a];
+		}
+	}
+	else
+	{
+		result.type = UNKNOWN;
+	}
+	return result;
+}
+
 void store_intersection(field_intersection current, vector<field_intersection> &intersections)
 {
 	if(intersections.size() == 0)
@@ -209,7 +205,63 @@ void store_intersection(field_intersection current, vector<field_intersection> &
 	}
 	else
 	{
+		for(int i = 0; i < intersections.size(); i++)
+		{
+			if(points_distance(intersections[i].position, current.position) < DISTANCE_2T_X)
+			{
+				// if both intersections are going to be Ts then we check if we can
+				// form an X from them.
+				if (decide_type(intersections[i]).type == T_CROSS &&
+					decide_type(current).type == T_CROSS)
+				{
+					// check angles if the are in exactly or almost 
+					// opposite...
+					double base_angle_stored = intersections[i].t.orientation[0];
+					double base_angle_current = current.t.orientation[0];
+					// we are getting the minimum angle difference
+					double angle_diff_base = 180 - abs(abs(base_angle_stored - base_angle_current) - 180);
+					double confidence_change = angle_diff_base / 180;
+					// we have to compare the other lines' orientation 
+					// as well
+					double t_angle_stored = intersections[i].t.orientation[1];
+					double t_angle_current = current.t.orientation[1];
+					double angle_diff_t = 180 - abs(abs(t_angle_stored - t_angle_current) - 180);
+					confidence_change *= angle_diff_t / 180;
 
+					// change the stored intersection into a X cross...
+					if (confidence_change > TRANS_2T_X_THRESHOLD)
+					{
+						// update confidence for every type
+						intersections[i].t.confidence = 0;
+						intersections[i].l.confidence = 0;
+						intersections[i].x.confidence = 1;
+						// set new angles in the produced X cross
+						double angle11 = (base_angle_stored > 180) ? base_angle_stored - 180 : base_angle_stored;
+						double angle12 = (base_angle_current > 180) ? base_angle_current - 180 : base_angle_current;
+						double angle21 = (t_angle_stored > 180) ? t_angle_stored - 180 : t_angle_stored;
+						double angle22 = (t_angle_current > 180) ? t_angle_current - 180 : t_angle_current;
+						intersections[i].x.orientation[0] = (angle11 + angle12) / 2;
+						intersections[i].x.orientation[1] = (angle21 + angle22) / 2;
+						//update the position taking the average of the two
+						// Ts positions, which are located near..
+						intersections[i].position = line_middle_point(Vec4i(intersections[i].position.x,
+							intersections[i].position.y, current.position.x, current.position.y));
+					}
+				}
+				// same point...same decision about it.
+				else if(decide_type(intersections[i]).type == decide_type(current).type)
+				{
+					// we have to merge these intersections, adding more probability 
+					// to the type
+				}
+				// different desicion about the same point weird?
+				else
+				{
+					// check line lengths and confidence to decide or 
+					// to reject the one or the other.
+				}
+			}
+		}
 	}
 }
 
@@ -255,32 +307,28 @@ void line_features(Mat image, vector<Vec4i> lines)
 						t_measure(inters, image, lines[i], lines[j], t_confidence, t_orientation);
 						x_measure(inters, image, lines[i], lines[j], t_confidence, x_confidence, x_orientation);
 
-						field_feature l, t, x;
-						l.position = Point(inters->y, inters->x);
-						l.confidence = l_confidence;
-
-						t.position = Point(inters->y, inters->x);
-						t.confidence = t_confidence;
-
-						x.position = Point(inters->y, inters->x);
-						x.confidence = x_confidence;
-
-						for(int a = 0; a < 2; a ++){
-							x.orientation[a] = x_orientation[a];
-							l.orientation[a] = l_orientation[a];
-							t.orientation[a] = t_orientation[a];
-						}
-						
-						field_intersection current_intersection;
-						current_intersection.x = x;
-						current_intersection.t = t;
-						current_intersection.l = l;
-
-						store_intersection(current_intersection, intersections);
-
-
 						if(t_confidence > 0.0 || l_confidence > 0.0 ||  x_confidence > 0.0)
 						{
+
+							field_feature l, t, x;
+							l.confidence = l_confidence;
+							t.confidence = t_confidence;
+							x.confidence = x_confidence;
+
+							for(int a = 0; a < 2; a ++){
+								x.orientation[a] = x_orientation[a];
+								l.orientation[a] = l_orientation[a];
+								t.orientation[a] = t_orientation[a];
+							}
+							
+							field_intersection current_intersection;
+							current_intersection.position = Point(inters->y, inters->x);
+							current_intersection.x = x;
+							current_intersection.t = t;
+							current_intersection.l = l;
+
+							store_intersection(current_intersection, intersections);
+						
 							cout << i << endl;
 							cout << j << endl;
 							double l1 = points_distance(Point(lines[i][1], lines[i][0]), Point(lines[i][3], lines[i][2]));

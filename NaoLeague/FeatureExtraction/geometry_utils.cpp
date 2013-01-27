@@ -123,3 +123,45 @@ double line_angle(Vec4i line)
 		angle += 180;
 	return angle;
 }
+
+Point closest_end_point(Point* inters, Vec4i line)
+{
+
+	Point close;
+	double temp;
+	double min_distance = DBL_MAX;
+	for(int p=0; p<2; p++)
+	{
+		double temp = points_distance(Point(line[2*p], line[2*p+1]), Point(inters->x, inters->y));
+		if(temp < min_distance)
+		{
+			min_distance = temp;
+			close = Point(line[2*p], line[2*p+1]);
+		}
+	}
+	return close;
+}
+
+Point closest_point(Point* inters, Vec4i line)
+{
+	Point close;
+	if(intersection_in_line(Point(inters->x, inters->y), line))
+	{
+		return Point(inters->x, inters->y);
+	}
+	else
+	{
+		double temp;
+		double min_distance = DBL_MAX;
+		for(int p=0; p<2; p++)
+		{
+			double temp = points_distance(Point(line[2*p], line[2*p+1]), Point(inters->x, inters->y));
+			if(temp < min_distance)
+			{
+				min_distance = temp;
+				close = Point(line[2*p], line[2*p+1]);
+			}
+		}
+	}
+	return close;
+}

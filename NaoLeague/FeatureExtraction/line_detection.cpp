@@ -5,15 +5,10 @@
 #include <highgui.h>
 #include "geometry_utils.h"
 #include "img_processing.h"
+#include "line_detection.h"
 
 using namespace cv;
 using namespace std;
-
-struct point_dis
-{
-	Point pnt;
-	double distance;
-};
 
 void mark_lines(Mat image, vector<Point> &points)
 {
@@ -163,7 +158,6 @@ void store_line(Mat image, vector< vector<Point> > &lines, vector<Point> line)
 	}
 	else
 	{
-
 		Point current[2];
 		double temp_distance_current;
 		double max_distance_current = 0;

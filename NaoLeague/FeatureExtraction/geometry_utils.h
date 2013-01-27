@@ -29,4 +29,8 @@ double line_angle(Vec4i line);
 
 double points_angle_360(Point point1, Point point2);
 
+Point closest_end_point(Point* inters, Vec4i line);
+
+Point closest_point(Point* inters, Vec4i line);
+
 #endif
