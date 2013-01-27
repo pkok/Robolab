@@ -8,30 +8,6 @@
 using namespace cv;
 using namespace std;
 
-#define BACK_THRESHOLD 1
-
-#define YEL_HUE_MIN 20
-#define YEL_HUE_MAX  38
-#define YEL_SAT_MIN  100
-#define YEL_SAT_MAX  255
-#define YEL_VAL_MIN  100
-#define YEL_VAL_MAX  255
-
-#define GR_HUE_MIN  38
-#define GR_HUE_MAX  75
-#define GR_SAT_MIN  50
-#define GR_SAT_MAX  255
-#define GR_VAL_MIN  50
-#define GR_VAL_MAX  255
-
-#define WH_HUE_MIN  0
-#define WH_HUE_MAX  255
-#define WH_SAT_MIN  0
-#define WH_SAT_MAX  60
-#define WH_VAL_MIN  200
-#define WH_VAL_MAX  255
-
-
 double compute_white_ratio(Mat image, Point point1, Point point2)
 {
 	int white_counter = 0;
