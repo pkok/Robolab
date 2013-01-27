@@ -14,57 +14,77 @@ void detect_ellipse(Mat image, vector<Vec4i> lines)
 	Mat black = Mat::zeros(image.rows, image.cols, CV_8UC3);
 	vector< vector<Vec4i> > ellipse_lines;
 
-	vector<Vec4i> temp;
-	temp.push_back(lines[0]);
-	ellipse_lines.push_back(temp);
-	
-	for (int i = 1; i < lines.size(); i++)
-	{
-		double angle_current = points_angle_360(Point(lines[i][1], lines[i][0]),
-	      Point(lines[i][3],lines[i][2]));
-
-		double best_fit = DBL_MAX;
-		int cluster_fit = 0;
-		for (int j = 0; j < ellipse_lines.size(); j++)
-		{
-			double angle_current = points_angle_360(Point(lines[j][1], lines[j][0]), Point(lines[j][3],lines[j][2]));
-			for (int jj = 0; jj < ellipse_lines[j].size(); jj++)
+	bool added;
+	while(lines.size() != 0){
+		vector<Vec4i> temp;
+		temp.push_back(lines[0]);
+		lines.erase(lines.begin() + 0);
+		do{
+			added = false;
+			double min_angle = DBL_MAX;
+			double min_dis = DBL_MAX;
+			int best_line = 0;
+			for (int i = 0; i < lines.size(); i++)
 			{
-				double angle_stored = points_angle_360(Point(ellipse_lines[j][jj][1], ellipse_lines[j][jj][0]), Point(ellipse_lines[j][jj][3],ellipse_lines[j][jj][2]));
-				double angle_diff = 180 - abs(abs(angle_current - angle_stored) - 180);
-				double min_dis = DBL_MAX;
-				if(angle_diff < 50){
-					for(int j1=0; j1 < 2; j1++ )
+				double best_angle = DBL_MAX;
+				double best_dis = DBL_MAX;
+				for (int j = 0; j < temp.size(); j++)
+				{
+					double angle_diff;
+					Point* inters = intersection(temp[j], lines[i], image);
+					double min_temp = DBL_MAX;
+					if(inters != NULL)
 					{
+						double min_dis1 = DBL_MAX;
+						double min_dis2 = DBL_MAX;
+						int temp_close = 0;
+						int stored_close = 0;
+						Point intersect = Point(inters->x, inters->y);
 						for(int j2=0; j2 < 2; j2++ )
 						{
-							double temp = points_distance(Point(ellipse_lines[j][jj][2*j1+1], ellipse_lines[j][jj][2*j1]),
-								Point(lines[i][2*j2+1], lines[i][2*j2]));
-							if(temp < min_dis)
+							double temp_dis1 = points_distance( Point(inters->x, inters->y), Point(temp[j][2*j2], temp[j][2*j2+1]));
+							double temp_dis2 = points_distance( Point(inters->x, inters->y), Point(lines[i][2*j2], lines[i][2*j2+1]));
+							if(temp_dis1 < min_dis1)
 							{
-								min_dis = temp;
+								min_dis1 = temp_dis1;
+								temp_close = j2;
+							}
+							if(temp_dis2 < min_dis2)
+							{
+								min_dis2 = temp_dis2;
+								stored_close = j2;
 							}
 						}
+						double angle_current = points_angle_360(Point(temp[j][2*temp_close], temp[j][2*temp_close+1]), line_middle_point(Vec4i(temp[j][0], temp[j][1],temp[j][2],temp[j][3])));
+						double angle_stored = points_angle_360(line_middle_point(Vec4i(lines[i][0], lines[i][1],lines[i][2],lines[i][3])),Point(lines[i][2*stored_close], lines[i][2*stored_close+1]));
+						angle_diff = 180 - abs(abs(angle_current - angle_stored) - 180);
+						double angle_ratio = angle_diff /180;
+						min_temp = 20 * angle_ratio + (min_dis2 + min_dis1);
 					}
-					double fit = min_dis;
-					if(fit < best_fit)
+					else
 					{
-						best_fit = fit;
-						cluster_fit = j;
+						min_temp = DBL_MAX;
+					}
+					if(min_temp < best_dis)
+					{
+						best_dis = min_temp;
 					}
 				}
+				if(best_dis < min_dis)
+				{
+					min_dis = best_dis;
+					best_line = i;
+				}
 			}
-		}
-		if(best_fit < 35)
-		{
-			ellipse_lines[cluster_fit].push_back(lines[i]);
-		}
-		else
-		{
-			std::vector<Vec4i> temp_line;
-			temp_line.push_back(lines[i]);
-			ellipse_lines.push_back(temp_line);
-		}
+			if(min_dis < 25)
+			{
+				added = true;
+				temp.push_back(lines[best_line]);
+				lines.erase(lines.begin() + best_line);
+			}
+		}while(added);
+		ellipse_lines.push_back(temp);
+		temp.clear();
 	}
 
 	int cluster = 0;
@@ -75,8 +95,12 @@ void detect_ellipse(Mat image, vector<Vec4i> lines)
 		black.copyTo(temp);
 		for (int j = 0; j < ellipse_lines[i].size(); j++)
 		{
-			line( temp, Point(ellipse_lines[i][j][1], ellipse_lines[i][j][0]),
-		      Point(ellipse_lines[i][j][3],ellipse_lines[i][j][2]), Scalar(0,0,255), 1, 8 );
+			circle(temp, Point(ellipse_lines[i][j][1], ellipse_lines[i][j][0]), 2, Scalar(0,0,255), 2, 8, 0);
+			circle(temp, Point(ellipse_lines[i][j][3],ellipse_lines[i][j][2]), 2, Scalar(0,0,255), 2, 8, 0);
+			circle(temp, line_middle_point(Vec4i(ellipse_lines[i][j][1], ellipse_lines[i][j][0],ellipse_lines[i][j][3], ellipse_lines[i][j][2])), 2, Scalar(0,0,255), 2, 8, 0);
+
+			// line( temp, Point(ellipse_lines[i][j][1], ellipse_lines[i][j][0]),
+		 //      Point(ellipse_lines[i][j][3],ellipse_lines[i][j][2]), Scalar(0,0,255), 1, 8 );
 		}
 		
 		stringstream ss;
