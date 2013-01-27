@@ -20,7 +20,7 @@
 #define DIFF_THRESHOLD_X 0.3
 
 #define TRANS_2T_X_THRESHOLD 0.7
-#define DISTANCE_2T_X 6
+#define DISTANCE_2T_X 8
 
 using namespace cv;
 
@@ -34,6 +34,7 @@ struct field_intersection{
 	field_feature t;
 	field_feature l;
 	field_feature x;
+	double min_pl_length;
 };
 
 struct field_point{

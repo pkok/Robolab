@@ -108,9 +108,8 @@ double points_angle_360(Point point1, Point point2)
 {
 	double angle = atan2(point2.x-point1.x,point2.y-point1.y);
 	angle = angle * (180 / CV_PI);
-	if(angle < 0)
-	{
-		return 360 - angle;
+	if(angle < 0){
+		angle = 360 + angle;
 	}
 	return angle;
 }

@@ -205,6 +205,7 @@ void store_intersection(field_intersection current, vector<field_intersection> &
 	}
 	else
 	{
+		bool added = false;
 		for(int i = 0; i < intersections.size(); i++)
 		{
 			if(points_distance(intersections[i].position, current.position) < DISTANCE_2T_X)
@@ -226,15 +227,15 @@ void store_intersection(field_intersection current, vector<field_intersection> &
 					double t_angle_stored = intersections[i].t.orientation[1];
 					double t_angle_current = current.t.orientation[1];
 					double angle_diff_t = 180 - abs(abs(t_angle_stored - t_angle_current) - 180);
-					confidence_change *= angle_diff_t / 180;
+					confidence_change *= (180 - angle_diff_t) / 180;
 
 					// change the stored intersection into a X cross...
 					if (confidence_change > TRANS_2T_X_THRESHOLD)
 					{
 						// update confidence for every type
-						intersections[i].t.confidence = 0;
-						intersections[i].l.confidence = 0;
-						intersections[i].x.confidence = 1;
+						intersections[i].t.confidence = 0.0;
+						intersections[i].l.confidence = 0.0;
+						intersections[i].x.confidence = 1.0;
 						// set new angles in the produced X cross
 						double angle11 = (base_angle_stored > 180) ? base_angle_stored - 180 : base_angle_stored;
 						double angle12 = (base_angle_current > 180) ? base_angle_current - 180 : base_angle_current;
@@ -246,6 +247,8 @@ void store_intersection(field_intersection current, vector<field_intersection> &
 						// Ts positions, which are located near..
 						intersections[i].position = line_middle_point(Vec4i(intersections[i].position.x,
 							intersections[i].position.y, current.position.x, current.position.y));
+						added = true;
+						break;
 					}
 				}
 				// same point...same decision about it.
@@ -253,14 +256,75 @@ void store_intersection(field_intersection current, vector<field_intersection> &
 				{
 					// we have to merge these intersections, adding more probability 
 					// to the type
+					added = true;
+					if(decide_type(intersections[i]).type == L_CROSS)
+					{
+						intersections[i].t.confidence = 0.0;
+						intersections[i].l.confidence = 1.0;
+						intersections[i].x.confidence = 0.0;
+					}
+					else if(decide_type(intersections[i]).type == T_CROSS)
+					{
+						intersections[i].t.confidence = 1.0;
+						intersections[i].l.confidence = 0.0;
+						intersections[i].x.confidence = 0.0;
+					}
+					else if(decide_type(intersections[i]).type == X_CROSS)
+					{
+						intersections[i].t.confidence = 0.0;
+						intersections[i].l.confidence = 0.0;
+						intersections[i].x.confidence = 1.0;
+					}
+					else
+					{
+						intersections[i].t.confidence = 0.33;
+						intersections[i].l.confidence = 0.33;
+						intersections[i].x.confidence = 0.33;
+					}
+					intersections[i].position = line_middle_point(Vec4i(intersections[i].position.x,
+							intersections[i].position.y, current.position.x, current.position.y));
+					break;
 				}
-				// different desicion about the same point weird?
+				// different decision about the same point
 				else
 				{
 					// check line lengths and confidence to decide or 
 					// to reject the one or the other.
+					double line_current_length = current.min_pl_length;
+					double line_stored_length = intersections[i].min_pl_length;
+					if (line_stored_length >= line_current_length)
+					{
+						// stored intersection shortest line is longer than the current intersections'.
+						// we only update the confidence
+						double diff_ratio_length = line_stored_length / (line_stored_length + line_current_length);
+						intersections[i].t.confidence = diff_ratio_length * intersections[i].t.confidence + (1 - diff_ratio_length) * current.t.confidence;
+						intersections[i].l.confidence = diff_ratio_length * intersections[i].l.confidence + (1 - diff_ratio_length) * current.l.confidence;
+						intersections[i].x.confidence = diff_ratio_length * intersections[i].x.confidence + (1 - diff_ratio_length) * current.x.confidence;
+					}
+					else
+					{
+						// stored intersection shortest line is smaller than the current intersections'.
+						// we update the confidence, the position, and the orientations based on the current intersection.
+						double diff_ratio_length = line_current_length / (line_stored_length + line_current_length);
+						intersections[i].t.confidence = (1 - diff_ratio_length) * intersections[i].t.confidence + diff_ratio_length * current.t.confidence;
+						intersections[i].l.confidence = (1 - diff_ratio_length) * intersections[i].l.confidence + diff_ratio_length * current.l.confidence;
+						intersections[i].x.confidence = (1 - diff_ratio_length) * intersections[i].x.confidence + diff_ratio_length * current.x.confidence;
+						intersections[i].position = current.position;
+						for (int a = 0; a < 2; a++)
+						{
+							intersections[i].t.orientation[a] = current.t.orientation[a];
+							intersections[i].l.orientation[a] = current.l.orientation[a];
+							intersections[i].x.orientation[a] = current.x.orientation[a];
+						}
+					}
+					added = true;
+					break;
 				}
 			}
+		}
+		if(!added)
+		{
+			intersections.push_back(current);
 		}
 	}
 }
@@ -284,7 +348,6 @@ void line_features(Mat image, vector<Vec4i> lines)
 	double l_confidence, t_confidence, x_confidence, angle_i, angle_j;
 	double l_orientation[2], t_orientation[2], x_orientation[2];
 	Point* inters;
-	int intersection_num = 0;
 	vector<field_intersection> intersections;
 	for(int i = 0; i < lines.size(); i++)
 	{
@@ -299,53 +362,53 @@ void line_features(Mat image, vector<Vec4i> lines)
 				{
 					if(inters != NULL)
 					{
-						intersection_num ++;
-						Mat temp;
-						black.copyTo(temp);
-
 						l_measure(inters, image, lines[i], lines[j], l_confidence, l_orientation);
 						t_measure(inters, image, lines[i], lines[j], t_confidence, t_orientation);
 						x_measure(inters, image, lines[i], lines[j], t_confidence, x_confidence, x_orientation);
-
 						if(t_confidence > 0.0 || l_confidence > 0.0 ||  x_confidence > 0.0)
 						{
-
 							field_feature l, t, x;
 							l.confidence = l_confidence;
 							t.confidence = t_confidence;
 							x.confidence = x_confidence;
-
-							for(int a = 0; a < 2; a ++){
+							for(int a = 0; a < 2; a ++)
+							{
 								x.orientation[a] = x_orientation[a];
 								l.orientation[a] = l_orientation[a];
 								t.orientation[a] = t_orientation[a];
 							}
-							
 							field_intersection current_intersection;
 							current_intersection.position = Point(inters->y, inters->x);
 							current_intersection.x = x;
 							current_intersection.t = t;
 							current_intersection.l = l;
-
+							current_intersection.min_pl_length = min(
+								points_distance(Point(lines[i][1], lines[i][0]), Point(lines[i][3], lines[i][2])),
+								points_distance(Point(lines[j][1], lines[j][0]), Point(lines[j][3], lines[j][2])));
 							store_intersection(current_intersection, intersections);
-						
-							cout << i << endl;
-							cout << j << endl;
-							double l1 = points_distance(Point(lines[i][1], lines[i][0]), Point(lines[i][3], lines[i][2]));
-							double l2 = points_distance(Point(lines[j][1], lines[j][0]), Point(lines[j][3], lines[j][2]));
-
-							cout << "inter " << inters->x << "," << inters->y << " "  << intersection_num << " L: " << l_confidence << " T: " << t_confidence << " X: " << x_confidence << " l:" << l1+l2 << endl;
-							stringstream ss;
-							ss << intersection_num;
-
-							circle(temp, Point(inters->y, inters->x), 2, Scalar(0,0,255), 2, 8, 0);
-							imshow("intersection"+ss.str(),temp);
 						}
 					}
 				}
 			}
 		}
 	}
+	int intersection_num = 0;
+	for (int i = 0; i < intersections.size(); i++)
+	{
+		intersection_num ++;
+		Mat temp;
+		black.copyTo(temp);
+		
+		
+		cout << "inter " << intersections[i].position.x << "," << intersections[i].position.y << " "  << intersection_num << " L: " << intersections[i].l.confidence << " T: " << intersections[i].t.confidence << " X: " << intersections[i].x.confidence << endl;
+
+		stringstream ss;
+		ss << intersection_num;
+		circle(temp, Point(intersections[i].position.x, intersections[i].position.y), 2, Scalar(0,0,255), 2, 8, 0);
+		imshow("intersection"+ss.str(),temp);
+	}
+
+
 	imshow("s", black);
 	return;
 }
