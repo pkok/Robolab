@@ -44,6 +44,8 @@ struct field_point{
 	double confidence;
 };
 
-void line_features(Mat image, vector<Vec4i> lines);
+void line_features(Mat image, vector<Vec4i> lines, vector<field_intersection> &result_intersections);
+
+void line_most_prob_features(Mat image, vector<Vec4i> lines, vector<field_point> &result_intersections);
 
 #endif

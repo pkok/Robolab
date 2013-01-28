@@ -6,13 +6,14 @@
 #include "img_processing.h"
 #include "line_detection.h"
 #include "line_feature_detection.h"
+#include "ellipse_detector.h"
+#include "goal_detection.h"
 
 using namespace cv;
 using namespace std;
 
 int main(int argc, char** argv)
 {
-	clock_t startTime = clock();
 	Mat img_rgb, img_hsv;
 	Mat img_lines_binary, img_posts_binary, img_ball_binary;
 
@@ -22,15 +23,32 @@ int main(int argc, char** argv)
 
 	cvtColor(img_rgb,img_hsv,CV_BGR2HSV);
 
-	remove_background(img_hsv, img_lines_binary, img_posts_binary, img_ball_binary);
+	vector<Point> goalRoots;
+	double hor_hist[img_hsv.cols];
+	remove_background(img_hsv, img_lines_binary, img_posts_binary, img_ball_binary, goalRoots, hor_hist);
 
 	vector<Vec4i> lines;
 
 	line_extraction(img_lines_binary, lines);
+#if 0
+	detect_ellipse(img_lines_binary, lines);
+#endif
 
-	line_features(img_lines_binary, lines);
+#if 1
+	// the next two lines find intersections and return 
+	// a triple X,T,L with the confidence, orientation, position 
+	// for each one...
+	vector<field_intersection> result_intersections;
+	line_features(img_lines_binary, lines, result_intersections);
+#else
+	// the next two lines find intersections and return 
+	// only the most probable cross type for each intersectiion
+	// with it confidence, orientation, position
+	vector<field_point> result_intersections;
+	line_most_prob_features(img_lines_binary, lines, result_intersections);
+#endif
 
-	std::cout << double( clock() - startTime )*1000 / (double)CLOCKS_PER_SEC<< " ms." << std::endl;
+	goalPostDetection(img_posts_binary, goalRoots, hor_hist);
 	waitKey(0);
 	return 0;
 }

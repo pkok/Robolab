@@ -97,7 +97,7 @@ void ass_val_pixel2pixel(Vec3b &src, Vec3b &dst)
 	src[2] = dst[2];
 }
 
-void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball)
+void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball, vector<Point> &goalRoot, double* hor_hist)
 {
 
 	lines = Mat::zeros(image.rows, image.cols, CV_8UC3);
@@ -113,6 +113,7 @@ void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball)
 	int counter;
 	for(int j = 0; j < image.cols; j++)
 	{
+		hor_hist[j] = 0;
 		background = true;
 		counter = 0;
 		for(int i = 0; i < image.rows; i++)
@@ -121,8 +122,16 @@ void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball)
 			// in order to find the posts later...
 			if(hsv_range(image.at<Vec3b>(i,j), YEL_HUE_MIN, YEL_HUE_MAX, YEL_SAT_MIN, YEL_SAT_MAX, YEL_VAL_MIN, YEL_VAL_MAX))
 			{
-				ass_val_pixel(posts.at<Vec3b>(i,j), 255, 255, 255);
+				hor_hist[j]++;
+				ass_val_pixel(posts.at<Vec3b>(i,j), 30, 200, 200);
 				ass_val_pixel2pixel(field.at<Vec3b>(i,j), image.at<Vec3b>(i,j));
+				if(i < image.cols-1)
+				{
+					if(hsv_range(image.at<Vec3b>(i+1,j), GR_HUE_MIN, GR_HUE_MAX, GR_SAT_MIN, GR_SAT_MAX, GR_VAL_MIN, GR_VAL_MAX))
+					{
+						goalRoot.push_back(Point(i,j));
+					}
+				}
 			}
 
 			// check for the horizontal start of the field
@@ -167,5 +176,6 @@ void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball)
 				ass_val_pixel2pixel(field.at<Vec3b>(i,j), image.at<Vec3b>(i,j));
 			}
 		}
+		hor_hist[j] /= image.rows;
 	}
 }
