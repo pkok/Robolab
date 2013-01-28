@@ -24,7 +24,7 @@ int main(int argc, char** argv)
 	cvtColor(img_rgb,img_hsv,CV_BGR2HSV);
 
 	vector<Point> goalRoots;
-	int hor_hist[img_hsv.cols];
+	double hor_hist[img_hsv.cols];
 	remove_background(img_hsv, img_lines_binary, img_posts_binary, img_ball_binary, goalRoots, hor_hist);
 
 	vector<Vec4i> lines;

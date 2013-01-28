@@ -97,7 +97,7 @@ void ass_val_pixel2pixel(Vec3b &src, Vec3b &dst)
 	src[2] = dst[2];
 }
 
-void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball, vector<Point> &goalRoot, int* hor_hist)
+void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball, vector<Point> &goalRoot, double* hor_hist)
 {
 
 	lines = Mat::zeros(image.rows, image.cols, CV_8UC3);
@@ -113,7 +113,7 @@ void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball, vector<Poin
 	int counter;
 	for(int j = 0; j < image.cols; j++)
 	{
-		hor_hist[j] = 1;
+		hor_hist[j] = 0;
 		background = true;
 		counter = 0;
 		for(int i = 0; i < image.rows; i++)
@@ -176,5 +176,6 @@ void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball, vector<Poin
 				ass_val_pixel2pixel(field.at<Vec3b>(i,j), image.at<Vec3b>(i,j));
 			}
 		}
+		hor_hist[j] /= image.rows;
 	}
 }

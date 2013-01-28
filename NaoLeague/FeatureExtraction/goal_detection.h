@@ -11,6 +11,11 @@
 #define L_POST 0
 #define O_POST 0
 
+#define HIST_THRESHOLD 0.3
+#define ROOT_GAIN 1.5
+#define CONTROL_MAX 0.2
+#define CROP_THRESHOLD 5
+
 using namespace cv;
 
 struct goalposts{
@@ -20,6 +25,6 @@ struct goalposts{
 	double width;
 };
 
-void goalPostDetection(Mat yellow, vector<Point> goalRoots, int* hor_hist);
+void goalPostDetection(Mat yellow, vector<Point> goalRoots, double* hor_hist);
 
 #endif

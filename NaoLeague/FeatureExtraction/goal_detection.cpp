@@ -4,72 +4,147 @@
 #include <cv.h>
 #include <highgui.h>
 #include "geometry_utils.h"
+#include "goal_detection.h" 
 
 using namespace std;
 using namespace cv;
 
-void goalPostDetection(Mat yellow, vector<Point> goalRoots, int* hor_hist)
+void goalPostDetection(Mat yellow, vector<Point> goalRoots, double* hor_hist)
 {
 
 	Mat temp = Mat::zeros(yellow.rows, yellow.cols, CV_8UC3);
 	Mat temp1 = Mat::zeros(yellow.rows, yellow.cols, CV_8UC3);
 	yellow.copyTo(temp);
 	imshow("yellow",temp);
-	for( size_t i = 0; i < goalRoots.size(); i++ )
+	for( int i = 0; i < goalRoots.size(); i++ )
 	{
 		circle(temp, Point(goalRoots[i].y, goalRoots[i].x), 2, Scalar(0,0,255), 1, 8, 0);
-		hor_hist[goalRoots[i].y] *= 1.6; 
+		hor_hist[goalRoots[i].y] *= ROOT_GAIN;
 
 	}
-	imshow("possible roots",temp);
 
+	vector<int> candidate_cols;
+	bool inTransition = false;
+	double last_maximum = 0.0;
+	int last_candidate = 0;
 	for( int i = 0; i < temp.cols; i++ )
 	{
-		circle(temp1, Point(i, temp.rows - 1 - hor_hist[i]), 2, Scalar(0,0,255), 1, 8, 0);
+		if(inTransition)
+		{
+			if( hor_hist[i] > last_maximum )
+			{
+				inTransition = true;
+				last_maximum = hor_hist[i];
+				last_candidate = i;
+			}
+			else
+			{
+				if(hor_hist[i] < CONTROL_MAX * last_maximum)
+				{
+					inTransition = false;
+					candidate_cols.push_back(last_candidate);
+				}
+			}
+		}
+		else
+		{
+			if( hor_hist[i] > HIST_THRESHOLD )
+			{
+				inTransition = true;
+				last_maximum = hor_hist[i];
+				last_candidate = i;
+			}
+		}
 
+	}
+
+	imshow("possible roots",temp);
+	for( int i = 0; i < temp.cols; i++ )
+	{
+		circle(temp1, Point(i, temp.rows - 1 - floor(hor_hist[i]*temp.rows)), 2, Scalar(0,0,255), 1, 8, 0);
 	}
 	imshow("possible",temp1);
 
 
-	// Mat dst, color_dst;
-	// Canny( yellow, dst, 50, 200, 3 );
-	// cvtColor( dst, color_dst, CV_GRAY2BGR );
+	for( int i = 0; i < candidate_cols.size(); i++ )
+	{
+		line( temp1, Point(candidate_cols[i], 0),
+		      Point(candidate_cols[i], temp1.rows), Scalar(255,255,255), 1, 8 );
 
-	// vector<Vec4i> lines;
-	// HoughLinesP( dst, lines, 1, CV_PI/300, 20, 20, 20 );
+	}
 
-	// vector<Vec4i> lines_ver;
-	// vector<Vec4i> lines_hor;
-	// for( int i = 0; i < lines.size(); i++ )
-	// {
-	// 	std::cout << line_angle(Vec4i(lines[i][0],lines[i][1],lines[i][2],lines[i][3])) << std::endl;
-	// 	if(Vec4i(line_angle(lines[i][0],lines[i][1],lines[i][2],lines[i][3])) > 70 &&
-	// 	        line_angle(Vec4i(lines[i][0],lines[i][1],lines[i][2],lines[i][3])) < 110)
-	// 	{
-	// 		lines_ver.push_back(Vec4i(lines[i][0],lines[i][1],lines[i][2],lines[i][3]));
-	// 	}
-	// 	else
-	// 	{
-	// 		lines_hor.push_back(Vec4i(lines[i][0],lines[i][1],lines[i][2],lines[i][3]));
-	// 	}
-	// }
+	imshow("posts2",temp1);
+	
+	Mat post_image;
+	if(candidate_cols.size() == 0)
+	{
+		// no candidate..
+		return;
+	}
+	else if(candidate_cols.size() == 1)
+	{
+		//horizontal area of interest...
 
-	// // to determine the number of goals we see we are going
-	// // to split up the lines according to if they have yellow pixels
-	// // among them.
+		// vertical area of interest...
+		int left_thershold = 0;
+		bool left = false;
+		int counter = 0;
+		for( int i=candidate_cols[0]; i >= 0; i--){
+			cout << "l" << hor_hist[i] << endl;
+			if(hor_hist[i] == 0){
+				counter ++;
+				if(counter == CROP_THRESHOLD){
+					left_thershold = i;
+					left = true;
+					break;
+				}
+			}
+			else
+			{
+				counter = 0;
+			}
+		}
+		int right_threshold = 0;
+		bool right = false;
+		counter = 0; 
+		for( int i=candidate_cols[0]; i < temp1.cols; i++){
+			if(hor_hist[i] == 0){
+				counter ++;
+				if(counter == CROP_THRESHOLD){
+					right_threshold = i;
+					right = true;
+					break;
+				}
+			}
+			else
+			{
+				counter = 0;
+			}
+		}
+		cout << "r" << right << endl;
+		cout << "l" << left << endl;
+		int x = (left) ? (left_thershold) : 0;
+		int y = 0;
+		int width = (right) ? (candidate_cols[0] + right_threshold) : (temp1.cols - candidate_cols[0]);
+		int height = temp1.rows;
+		post_image = temp(Rect(x,y,width,height));
+		imshow("post_cropped", post_image);
+	}
 
-	// for( size_t i = 0; i < lines_ver.size(); i++ )
-	// {
-	// 	line( color_dst, Point(lines_ver[i][0], lines_ver[i][1]),
-	// 	      Point(lines_ver[i][2], lines_ver[i][3]), Scalar(0,0,255), 2, 8 );
-	// }
-	// for( size_t i = 0; i < lines_hor.size(); i++ )
-	// {
-	// 	line( color_dst, Point(lines_hor[i][0], lines_hor[i][1]),
-	// 	      Point(lines_hor[i][2], lines_hor[i][3]), Scalar(255,0,0), 2, 8 );
-	// }
 
 
-	// imshow("posts2",color_dst);
+
+
+
+
+
+
+
+
+
+
+
+
+
 	return;
 }
