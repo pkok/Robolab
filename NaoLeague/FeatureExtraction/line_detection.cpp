@@ -10,54 +10,62 @@
 using namespace cv;
 using namespace std;
 
-void mark_lines(Mat image, vector<Point> &points)
+void mark_lines(Mat image, vector<Point> &points, int hor_step, int ver_step)
 {
-	for(int i = 0; i < image.rows; i += 5)
+	if(hor_step > 0)
 	{
-		bool pass = false;
-		int col = 0;
-		for(int j = 0; j < image.cols; j++)
+		for(int i = 0; i < image.rows; i += hor_step)
 		{
-			if(pass)
+			bool pass = false;
+			int col = 0;
+			if(image.at<Vec3b>(i,0)[0] > 0) pass = true;
+			for(int j = 0; j < image.cols; j++)
 			{
-				if(image.at<Vec3b>(i,j)[0] == 0)
+				if(pass)
 				{
-					pass = false;
-					int pixel = floor((col + j)/2);
-					points.push_back(Point(i ,pixel));
+					if(image.at<Vec3b>(i,j)[0] == 0 || i == (image.cols - 1))
+					{
+						pass = false;
+						int pixel = floor((col + j)/2);
+						points.push_back(Point(i ,pixel));
+					}
 				}
-			}
-			else
-			{
-				if(image.at<Vec3b>(i,j)[0] > 0)
+				else
 				{
-					pass = true;
-					col = j;
+					if(image.at<Vec3b>(i,j)[0] > 0)
+					{
+						pass = true;
+						col = j;
+					}
 				}
 			}
 		}
 	}
-	for(int j = 0; j < image.cols; j += 5)
+	if(ver_step > 0)
 	{
-		bool pass = false;
-		int row = 0;
-		for(int i = 0; i < image.rows; i++)
+		for(int j = 0; j < image.cols; j += ver_step)
 		{
-			if(pass)
+			bool pass = false;
+			int row = 0;
+			if(image.at<Vec3b>(0,j)[0] > 0) pass = true;
+			for(int i = 0; i < image.rows; i++)
 			{
-				if(image.at<Vec3b>(i,j)[0] == 0)
+				if(pass)
 				{
-					pass = false;
-					int pixel = floor((row + i)/2);
-					points.push_back(Point(pixel,j));
+					if(image.at<Vec3b>(i,j)[0] == 0 || i == (image.rows - 1))
+					{
+						pass = false;
+						int pixel = floor((row + i)/2);
+						points.push_back(Point(pixel,j));
+					}
 				}
-			}
-			else
-			{
-				if(image.at<Vec3b>(i,j)[0] > 0)
+				else
 				{
-					pass = true;
-					row = i;
+					if(image.at<Vec3b>(i,j)[0] > 0)
+					{
+						pass = true;
+						row = i;
+					}
 				}
 			}
 		}
@@ -267,12 +275,18 @@ void store_line(Mat image, vector< vector<Point> > &lines, vector<Point> line)
 	return;
 }
 
-void line_extraction(Mat image, vector<Vec4i> &produced_lines)
+void line_extraction(Mat image, vector<Vec4i> &produced_lines, int hor_step, int ver_step)
 {
 	vector<Point> points;
 	vector< vector<Point> > lines;
-	mark_lines(image, points);
+	mark_lines(image, points, hor_step, ver_step);
 
+	// for(int i = 0; i < points.size(); i++)
+	// {
+	// 	circle(image, Point(points[i].y,points[i].x), 1, Scalar(0,0,255), 1, 8, 0);
+	// }
+
+	// imshow("sdadvg", image);
 	while(points.size() != 0)
 	{
 		vector<Point> line;

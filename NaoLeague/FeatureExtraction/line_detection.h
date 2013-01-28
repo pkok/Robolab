@@ -14,6 +14,6 @@ struct point_dis
 	double distance;
 };
 
-void line_extraction(Mat image, vector<Vec4i> &produced_lines);
+void line_extraction(Mat image, vector<Vec4i> &produced_lines, int hor_step, int ver_step);
 
 #endif

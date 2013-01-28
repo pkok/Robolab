@@ -5,29 +5,27 @@
 #include <highgui.h>
 #include "geometry_utils.h"
 #include "goal_detection.h" 
+#include "line_detection.h"
+#include "hough_line_detection.h"
 
 using namespace std;
 using namespace cv;
 
-void goalPostDetection(Mat yellow, vector<Point> goalRoots, double* hor_hist)
+void goalPostDetection(Mat image, vector<Point> goalRoots, double* hor_hist, int* ver_hist)
 {
-
-	Mat temp = Mat::zeros(yellow.rows, yellow.cols, CV_8UC3);
-	Mat temp1 = Mat::zeros(yellow.rows, yellow.cols, CV_8UC3);
-	yellow.copyTo(temp);
-	imshow("yellow",temp);
-	for( int i = 0; i < goalRoots.size(); i++ )
-	{
-		circle(temp, Point(goalRoots[i].y, goalRoots[i].x), 2, Scalar(0,0,255), 1, 8, 0);
-		hor_hist[goalRoots[i].y] *= ROOT_GAIN;
-
-	}
-
 	vector<int> candidate_cols;
 	bool inTransition = false;
 	double last_maximum = 0.0;
 	int last_candidate = 0;
-	for( int i = 0; i < temp.cols; i++ )
+
+imshow("original binary", image);
+	for( int i = 0; i < goalRoots.size(); i++ )
+	{
+		hor_hist[goalRoots[i].y] *= ROOT_GAIN;
+	}
+
+
+	for( int i = 0; i < image.cols; i++ )
 	{
 		if(inTransition)
 		{
@@ -58,38 +56,53 @@ void goalPostDetection(Mat yellow, vector<Point> goalRoots, double* hor_hist)
 
 	}
 
-	imshow("possible roots",temp);
-	for( int i = 0; i < temp.cols; i++ )
-	{
-		circle(temp1, Point(i, temp.rows - 1 - floor(hor_hist[i]*temp.rows)), 2, Scalar(0,0,255), 1, 8, 0);
-	}
-	imshow("possible",temp1);
+	// imshow("possible roots",temp);
+	// for( int i = 0; i < temp.cols; i++ )
+	// {
+	// 	circle(temp, Point(i, temp.rows - 1 - floor(hor_hist[i]*temp.rows)), 2, Scalar(0,0,255), 1, 8, 0);
+	// }
+	// imshow("possible",temp1);
 
 
-	for( int i = 0; i < candidate_cols.size(); i++ )
-	{
-		line( temp1, Point(candidate_cols[i], 0),
-		      Point(candidate_cols[i], temp1.rows), Scalar(255,255,255), 1, 8 );
+	// for( int i = 0; i < candidate_cols.size(); i++ )
+	// {
+	// 	line( temp1, Point(candidate_cols[i], 0),
+	// 	      Point(candidate_cols[i], temp1.rows), Scalar(255,255,255), 1, 8 );
 
-	}
-
-	imshow("posts2",temp1);
+	// }
+	// imshow("posts2",temp1);
 	
-	Mat post_image;
+	Mat cropped;
+	int right_threshold = 0;
+	bool right = false;
+	bool left = false;
+	int left_thershold = 0;
+	int top_interest = 0;
+	int bottom_interest = 0;
 	if(candidate_cols.size() == 0)
 	{
-		// no candidate..
 		return;
 	}
-	else if(candidate_cols.size() == 1)
+	else if(candidate_cols.size() >= 1)
 	{
-		//horizontal area of interest...
+		//horizontal area of interest
+		for (int i = 0; i < image.rows; i++){
+			if(ver_hist[i] > 0.0){
+				top_interest = i;
+				break;
+			}
+		}
+		for (int i = image.rows; i >= 0; i--){
+			if(ver_hist[i] > 0.0){
+				bottom_interest = i;
+				break;
+			}
+		}
 
 		// vertical area of interest...
-		int left_thershold = 0;
-		bool left = false;
 		int counter = 0;
-		for( int i=candidate_cols[0]; i >= 0; i--){
+		int candidate = 0;
+		for( int i=candidate_cols[candidate]; i >= 0; i--){
 			cout << "l" << hor_hist[i] << endl;
 			if(hor_hist[i] == 0){
 				counter ++;
@@ -104,10 +117,10 @@ void goalPostDetection(Mat yellow, vector<Point> goalRoots, double* hor_hist)
 				counter = 0;
 			}
 		}
-		int right_threshold = 0;
-		bool right = false;
-		counter = 0; 
-		for( int i=candidate_cols[0]; i < temp1.cols; i++){
+
+		counter = 0;
+		candidate = candidate_cols.size() - 1;
+		for( int i=candidate_cols[candidate]; i < image.cols; i++){
 			if(hor_hist[i] == 0){
 				counter ++;
 				if(counter == CROP_THRESHOLD){
@@ -121,30 +134,30 @@ void goalPostDetection(Mat yellow, vector<Point> goalRoots, double* hor_hist)
 				counter = 0;
 			}
 		}
-		cout << "r" << right << endl;
-		cout << "l" << left << endl;
-		int x = (left) ? (left_thershold) : 0;
-		int y = 0;
-		int width = (right) ? (candidate_cols[0] + right_threshold) : (temp1.cols - candidate_cols[0]);
-		int height = temp1.rows;
-		post_image = temp(Rect(x,y,width,height));
-		imshow("post_cropped", post_image);
+
 	}
+	cout << "r" << top_interest << endl;
+	cout << "l" << bottom_interest << endl;
+	int x = (left) ? (left_thershold) : 0;
+	int y = top_interest;
+	int width = (right) ? (right_threshold - x) : (image.cols - x);
+	int height = bottom_interest - top_interest;
+	cropped = image(Rect(x,y,width,height));
+	// Mat dst = Mat::zeros(post_image.rows * 2, post_image.cols * 2, CV_8UC3);
+	// resize(post_image, dst, dst.size(), 0, 0, 0);
+	imshow("post_cropped", cropped);
 
 
+	vector<Vec4i> lines;
+	line_extraction(cropped, lines, 5, 0);
 
-
-
-
-
-
-
-
-
-
-
-
-
+	for(int i = 0; i < lines.size(); i ++)
+	{
+		line( cropped, Point(lines[i][1], lines[i][0]),
+		      Point(lines[i][3],lines[i][2]), Scalar(0,0,255), 2, 8 );
+		
+	}
+	imshow("s", cropped);
 
 	return;
 }
