@@ -25,6 +25,6 @@ struct goalposts{
 	double width;
 };
 
-void goalPostDetection(Mat yellow, vector<Point> goalRoots, double* hor_hist);
+void goalPostDetection(Mat yellow, vector<Point> goalRoots, double* hor_hist, int* ver_hist);
 
 #endif

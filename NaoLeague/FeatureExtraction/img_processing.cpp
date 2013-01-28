@@ -97,7 +97,7 @@ void ass_val_pixel2pixel(Vec3b &src, Vec3b &dst)
 	src[2] = dst[2];
 }
 
-void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball, vector<Point> &goalRoot, double* hor_hist)
+void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball, vector<Point> &goalRoot, double* hor_hist, int* ver_hist)
 {
 
 	lines = Mat::zeros(image.rows, image.cols, CV_8UC3);
@@ -123,7 +123,8 @@ void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball, vector<Poin
 			if(hsv_range(image.at<Vec3b>(i,j), YEL_HUE_MIN, YEL_HUE_MAX, YEL_SAT_MIN, YEL_SAT_MAX, YEL_VAL_MIN, YEL_VAL_MAX))
 			{
 				hor_hist[j]++;
-				ass_val_pixel(posts.at<Vec3b>(i,j), 30, 200, 200);
+				ver_hist[i]++;
+				ass_val_pixel(posts.at<Vec3b>(i,j), 255, 255, 255);
 				ass_val_pixel2pixel(field.at<Vec3b>(i,j), image.at<Vec3b>(i,j));
 				if(i < image.cols-1)
 				{
