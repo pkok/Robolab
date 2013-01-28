@@ -1,0 +1,361 @@
+#include <iostream>
+#include <math.h>
+#include <time.h>
+#include <cv.h>
+#include <highgui.h>
+
+#define pi 22/7
+
+using namespace cv;
+using namespace std;
+
+struct camera
+{
+    int m, n;
+    double h, alpha, theta;
+};
+
+struct mapper
+{
+	cv::Mat x, y;
+};
+
+struct iMapper
+{
+	cv::Mat pixel[4], weight[4];
+	mapper grid;
+};
+
+struct parameter
+{
+	// params.xRange = [min(xMap(:,1)), 4];	
+	double xRange[2];
+	// params.yRange = [-2 2];
+	double yRange[2];
+	// params.mIPM = 320;
+	int mIPM;
+	//params.step = (params.yRange(2) - params.yRange(1))/(params.mIPM-1);
+	double step;
+};
+
+void getRowBounds( double xRow, int mCropped, int &r12, int &r34)
+{
+	if (xRow < mCropped)
+	{
+	        r12 = xRow + 1;
+	        r34 = xRow;
+	}
+	else
+	{
+	        r12 = xRow;
+        	r34 = xRow - 1;
+	}
+}
+
+void getColBounds(double y, cv::Mat yMap, int r12, int r34, int (&cVec)[4])
+{	
+	cv::Mat yVec12, yVec34;
+	for(int i = 0; i < 4; i++)	
+		cVec[i] = 0; // Start out pessimistically.
+	
+	yVec12 = yMap.row(r12); // (Remember column 1 will have the largest y)
+	int yCol12 = 0, yCol34 = 0;
+	for (int i = 0; i < yVec12.size.p[0]; i++)
+		if ( yVec12.at<double>(i) >= y && y >= yVec12.at<double>(yVec12.size.p[0]-1) )
+			yCol12 = yCol12 + yVec12.at<double>(i) * y;
+    
+    	if (yCol12 > 0) // Then we should be able to see it.
+	{        
+		yVec34 = yMap.row(r34);
+		for (int i = 0; i < yVec34.size.p[0]; i++)
+			if ( yVec34.at<double>(i) >= y && y >= yVec34.at<double>(yVec34.size.p[0]-1) )
+				yCol34 = yCol34 + yVec34.at<double>(i) * y;
+
+	        if (yCol34 > 0) // Then we know for sure we can see it.
+		{	
+	        	if (yCol12 < yVec12.size.p[0])
+			{		        
+		        	cVec[0] = yCol12;
+	        	        cVec[1] = yCol12 + 1;
+			}
+			else
+			{                	
+				cVec[0] = yCol12 - 1;
+		                cVec[1] = yCol12;
+		        }
+	                if (yCol34 < yVec34.size.p[0])
+			{		        
+			        cVec[2] = yCol34;
+		                cVec[3] = yCol34 + 1;
+			}
+            		else
+			{                	
+				cVec[2] = yCol34 - 1;
+		                cVec[3] = yCol34;
+			}
+            	}
+	} 
+}
+
+void getIndices(int m, int mCropped, int rVec[4], int cVec[4], int (&iVec)[4])
+{
+	
+    	// Get the shift that takes the row number in the xMap, yMap matrices back to the equivalent row number in the original image.
+	int shift = m - mCropped;
+    	// Shift all the rows.
+    	int rOrig[4] = {rVec[0] + shift, rVec[1] + shift, rVec[2] + shift, rVec[3] + shift };
+    	// Columns remain the same.
+    
+    	// Now covert to indices using the sub2ind function.
+    	//iVec = sub2ind([m, n], rOrig, cVec);
+	for (int i = 0; i < 4; i++)
+		iVec[i] = rOrig[i] * m + cVec[i];
+	cout<<"Indices Got!";
+}
+
+void getWeights(double x, double y, int rVec[4], int cVec[4], mapper mappy, double (&wVec)[4])
+{
+	double px[4] = {0, 0, 0, 0};
+	double py[4] = {0, 0, 0, 0};
+    	for (int p = 0; p < 4; p++)
+	{
+        	px[p] = mappy.x.at<double>(rVec[p],cVec[p]);
+        	py[p] = mappy.y.at<double>(rVec[p],cVec[p]);
+    	}
+	
+    	double d12y = py[0] - py[1];
+	double d1y = py[0] - y;
+    	double d2y = y - py[1];
+    	
+    	double d34y = py[2] - py[3];
+    	double d3y = py[2] - y;
+	double d4y = y - py[3];
+    	
+    	double d13x = px[2] - px[0];
+    	double d3x = px[2] - x;
+    	double d1x = x - px[0];
+
+    	wVec[0] = d3x*d2y/(d13x*d12y);
+    	wVec[1] = d3x*d1y/(d13x*d12y);
+    	wVec[3] = d1x*d4y/(d13x*d34y);
+    	wVec[4] = d1x*d3y/(d13x*d34y);
+	cout<<"Weights Got!";
+}
+
+
+mapper pixelsToWorld(camera cam)
+{	
+	mapper mappy;
+	
+	// Calculate the horizontal and vertical half-viewing angles from alpha and the image size.
+	double den = sqrt( pow((cam.m-1),2) + pow((cam.n-1),2) );
+	double alpha_u = atan( (cam.n-1)/den * tan(cam.alpha) );
+	double alpha_v = atan( (cam.m-1)/den * tan(cam.alpha) );
+
+	// Get the horizon row from theta0 add a few rows to avoid numerical issues from the true horizon row being way out at x = infinity.  Add 5% of the rows so the adjustment will scale with the image size.
+	int rHorizon = ceil( (cam.m-1) / 2*(1 - tan(cam.theta)/tan(alpha_v)) + 1 ) + ceil(cam.m*0.05); // with adjustment
+
+	// This makes the number of rows in the cropped image:
+	int mCropped = cam.m - rHorizon + 1;
+	// Get xMap yMap Matrices
+	// Initialize to proper size.
+	cout<<"\nMCrop: "<<mCropped<<endl;
+	mappy.x.create(mCropped,cam.n,CV_64F);
+	mappy.y.create(mCropped,cam.n,CV_64F);
+	
+	int rOrig; double rFactor, num;	
+
+	// Use the transformation equations we derived to populate the values for each pixel in the cropped region of the image.
+	for (int r = 0; r < mCropped; r++)
+	{    
+		// We need to calculate things based on r in the original image and stuff them into the output matrices in the loop index positions.
+		rOrig = r + rHorizon;
+    		rFactor = (1 - 2*(rOrig-1) / (cam.m-1)) * tan(alpha_v);
+		num = 1 + rFactor * tan(cam.theta);
+		den = tan(cam.theta) - rFactor;
+		mappy.x.row(r) = cam.h * (num/den);
+	        for (int c = 0; c < cam.n; c++)
+		{
+		        num = (1 - 2*c / (cam.n - 1)) * tan(alpha_u);
+		        den = sin(cam.theta) - rFactor*cos(cam.theta);
+		        mappy.y.at<double>(r,c) = cam.h * (num/den);
+		}   
+	}
+	return mappy;
+}
+
+iMapper getInterpMap(mapper mappy, camera cam, parameter param)
+{	
+	int mCropped = mappy.x.size.p[0];
+	int n = mappy.x.size.p[1];
+	iMapper iMappy;	
+	iMappy.grid.x.create(1, int((param.xRange[1] - param.xRange[0])/param.step), CV_64F);
+	iMappy.grid.y.create(1, int((param.yRange[1] - param.yRange[0])/param.step), CV_64F);
+
+	int pos = 0;	
+	for(double x = param.xRange[0]; x <= param.xRange[1]; x += param.step)
+	{
+		iMappy.grid.x.at<double>(pos) = x;
+		pos++;
+	}
+	//cout<<endl<<pos<<endl;
+	pos = 0;
+	for(double y = param.yRange[1]; y >= param.yRange[0]; y -= param.step)
+	{
+		iMappy.grid.y.at<double>(pos) = y;
+		pos++;
+	}	
+	//cout<<"\nxGrid\n"<<xGrid<<"\nyGrid\n"<<yGrid<<"\nSize: "<<pos<<endl;
+
+	int nRows = iMappy.grid.y.size.p[1];
+	int nCols = iMappy.grid.x.size.p[1];
+
+	for(int i = 0; i < 4; i++)
+		iMappy.pixel[i].ones(nRows, nCols, CV_64F);
+	
+	for(int i = 0; i < 4; i++)
+		iMappy.weight[i].zeros(nRows, nCols, CV_64F);
+	
+	cv::Mat xVec = mappy.x.col(0);
+	double xMinVis = xVec.at<double>(xVec.size.p[0]-1);
+	double x, y, xRow, wVec[4];
+	int r12, r34, rVec[4], cVec[4], iVec[4];
+	for (int c = 0; c < nCols; c++)
+	{
+		x = iMappy.grid.x.at<double>(c);
+		// Check if this x coordinate is visible in the original image.
+		
+		// xRow = sum( (xVec >= x).*(x >= xMinVis) );
+		xRow = 0;		
+		for (int i = 0; i < xVec.size.p[0]; i++)
+			if (xVec.at<double>(i) >= x && x >= xMinVis)
+				xRow = xRow + xVec.at<double>(i) * x;
+		
+		if (xRow > 0) // Then there's a chance we can see it. Get the rows that bound the point.
+		{	       	
+			//[r12, r34] = getRowBounds(xRow,mCropped);
+			getRowBounds(xRow, mCropped, r12, r34);
+			// Now fill in any y coordinates which are visible at this x location.
+		        for (int r = 0; r < nRows; r++)
+        	    	{
+				y = iMappy.grid.y.at<double>(r);
+        	    		//cVec = getColBounds(y,yMap,r12,r34);
+				getColBounds(y, mappy.y, r12, r34, cVec);
+				//cout<<"Hola!"<<r<<" | "<< cVec[0];
+        	    		if (cVec[0] > 0) // Then it is visible
+        	        	{
+					// Convert the row, column locations we have found in the xMap, yMap matrices into equivalent linear indices in the original image.
+					cout<<"\nVisible!\n";
+					rVec[0] = r12; rVec[1] = r12; rVec[2] = r34; rVec[3] = r34;
+        		        	getIndices(cam.m, mCropped, rVec, cVec, iVec);
+        		        
+			                // Now get the weights associated with each pixel.
+			                getWeights(x, y, rVec, cVec, mappy, wVec);
+        		        
+        		        	// Stick these into the 3d arrays in the right places and we are done with this round.
+					for (int i = 0; i < 4; i++)	                
+					{
+						iMappy.pixel[i].at<double>(r, c) = iVec[i];
+        		        		iMappy.weight[i].at<double>(r, c) = wVec[i];
+					}
+				}
+			}
+		}            
+	}
+	cout<<"Tada!";
+	return iMappy;
+}
+
+cv::Mat getWorldImage(cv::Mat I, iMapper iMappy)
+{
+	// First get the color version.
+	//[nRows, nCols, dummy] = size(interpMap.pixels);
+	int nRows = iMappy.pixel[0].size.p[0];
+	int nCols = iMappy.pixel[0].size.p[1];
+/*	
+	cv::Mat wImage = zeros(nRows, nCols, 3, 'double');
+	for (int c = 1; c < 3; c++)
+	{
+		Id = double(I(:,:,c))/255;
+    		Wc(:,:,c) = sum(Id(interpMap.pixels).*interpMap.weights, 3);
+	}
+
+% A little confusing debugging revealed that roundoff error can cause very
+% bright elements of Wc to exceed 1 by around 1e-16 which, sadly enough,
+% causes errors when you try to display the image.  So, go ahead and make
+% sure the elements of Wc are clipped to EXACTLY 0 and 1.
+Wc = min(Wc, 1.0000);
+Wc = max(Wc, 0.0000);
+
+% Now average the intensities in the channels to get the grayscale version.
+% (I compared the result of this simple operation with the output of the
+% rgb2gray function - which is significantly more complex - and didn't
+% notice any appreciable difference, so let's keep it simple.)
+Wg = mean(Wc, 3);
+*/
+	cout<<"Har Har Mahadev!";
+	return I;
+}
+
+int main(int argc, char** argv)
+{
+
+        camera cam;
+        cam.m = 240; //image height
+        cam.n = 320; //image width
+        cam.h = 0.43; //height of camera above ground
+        cam.alpha = 41.8087*pi/180;
+        cam.theta = 20.0*pi/180;
+	cout<<"Alpha: "<<cam.alpha<<endl;
+	mapper mappy;
+        mappy = pixelsToWorld(cam);
+	
+	cout<<"\nMappy Size: "<<mappy.x.size.p[0]<<" x "<<mappy.x.size.p[1]<<endl;
+//	cout<<mappy.x.col(0);
+//	for( int 	ii = 0; ii < mappy.x.size.p[0]; ii++)	
+//		cout<<mappy.x.at<double>(ii,ii)<<endl;	
+
+	cout<<"\nHello Wrorld\n";
+
+// 	Min is: -2.98059; 0.384122
+	parameter param;
+
+	minMaxLoc(mappy.x.col(0), &param.xRange[0]);
+	cout<<"\nPMin: "<<param.xRange[0]<<endl;
+	param.xRange[1] = 4;
+	param.yRange[0] = -2;
+	param.yRange[1] = 2;
+	param.mIPM = 320;
+	param.step = (param.yRange[1] - param.yRange[0]) / (param.mIPM - 1);
+//	cout<<"\nStep: "<<param.step;
+	iMapper iMappy;
+	iMappy = getInterpMap(mappy, cam, param);
+	
+	cv::Mat I;
+	for (int fnum = 0; fnum < 1; fnum++)
+	{
+		cout<<"Processing Image : "<<fnum<<endl;	
+		I = cv::imread(argv[1],1);
+		//cout<<"\nImage : "<<image.at<double>(33,33,2);		
+		//cv::namedWindow( "Displayer", 1 );// Create a window for display.
+		//cv::waitKey(3000);				
+		//cv::imshow("Displayer", image);	
+		//cout<<"\nLook at the image!\n";
+		//cv::imwrite( "outer.png", image ); 
+		//cv::waitKey(0);
+		cout<<I.at<Vec3b>(34,43)<<endl;	
+
+	    	//for i = 1:10
+	        //cv::Mat wImage = getWorldImage(I, iMappy);
+        	//SWc = SWc + Wc;
+		//end
+    		//SWc = SWc/10;
+    		//SWc = imrotate(SWc,90);
+		
+	}																																																									
+	
+	cout<<"\nEnde\n";
+	
+	
+	return 0;
+}

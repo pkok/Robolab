@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 2.8)
+project(InversePerspectiveMapper)
+find_package(OpenCV REQUIRED)
+add_executable(InversePerspectiveMapper InversePerspectiveMapper.cpp)
+target_link_libraries(InversePerspectiveMapper ${OpenCV_LIBS})
