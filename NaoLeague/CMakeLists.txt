@@ -13,8 +13,8 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/Vision)
 qi_create_bin(soul "soul.cpp")
 #qi_create_bin(ImageGrabberTest "imageGrabberTest.cpp" imageGrabber.cpp imageGrabber.h)
 
-qi_create_lib(FeatureDistance Vision/FeatureDistance.h Vision/FeatureDistance.cpp)
-qi_use_lib(FeatureDistance ALPROXIES)
+qi_create_bin(FeatureDistanceTest Vision/FeatureDistanceTest.cpp Vision/FeatureDistance.h Vision/FeatureDistance.cpp)
+qi_use_lib(FeatureDistanceTest ALPROXIES)
 
 qi_create_bin(ImageGrabberTest Vision/imageGrabberTest.cpp Vision/imageGrabber.cpp Vision/imageGrabber.h CommonSource/Macros.h)
 qi_use_lib(ImageGrabberTest ALCOMMON ALVISION OPENCV2_CORE OPENCV2_HIGHGUI)
