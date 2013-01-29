@@ -8,6 +8,7 @@
 
 #include <string>
 
+#include <alproxies/almemoryproxy.h>
 #include <alvision/alvisiondefinitions.h>
 #include <opencv2/core/core.hpp>
 
@@ -15,7 +16,8 @@ class VisualHorizon {
   public:
     VisualHorizon(std::string robotIP, int camera = AL::kTopCamera);
     ~VisualHorizon();
-    Vec2f getHorizon();
+    cv::Vec3f getHorizon(); // normal vector to the horizon's plane in the selected camera's image
+    cv::Vec<cv::Point2f, 2> getHorizonLine();
 
   private:
     void createProxies();
@@ -24,6 +26,7 @@ class VisualHorizon {
     std::string robotIP;
     int camera; // which camera to use - AL::kTopCamera is default
     AL::ALMemoryProxy *memoryProxy;
+    RobotConfiguration *config;
 };
 
 #endif
