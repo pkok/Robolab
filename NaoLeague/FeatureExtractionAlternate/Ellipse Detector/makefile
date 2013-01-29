@@ -16,10 +16,11 @@
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 
+INC_PATH=/home/amogh/Downloads/CLAPACK-3.2.1/INCLUDE
 LIB_PATHS= -L/usr/lib
-LIBS= -llapack_LINUX -lblas_LINUX -llibf2c -lm 
+LIBS= -llapack -lblas -lf2c -lm 
 CFLAGS= -O0 -Wall -Wextra
-CC=g++
+CC=g++ -I$(INC_PATH)
 EXEC = elsd
 
 all: $(EXEC)
