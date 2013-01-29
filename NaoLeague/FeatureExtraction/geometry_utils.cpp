@@ -54,6 +54,28 @@ Point* intersection(Vec4i line1, Vec4i line2, Mat image)
 	return ret;
 }
 
+Point* intersection_full(Vec4i line1, Vec4i line2)
+{
+	double x1 = line1[0], x2 = line1[2];
+	double y1 = line1[1], y2 = line1[3];
+	double x3 = line2[0], x4 = line2[2];
+	double y3 = line2[1], y4 = line2[3];
+
+	double d = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+
+	if (d == 0)
+		return NULL;
+
+	double pre = (x1*y2 - y1*x2), post = (x3*y4 - y3*x4);
+	double x = ( pre * (x3 - x4) - (x1 - x2) * post ) / d;
+	double y = ( pre * (y3 - y4) - (y1 - y2) * post ) / d;
+
+	Point* ret = new Point();
+	ret->x = floor(x);
+	ret->y = floor(y);
+	return ret;
+}
+
 void line_error(vector<Point> line, Point start, Point best_candidate, double &error)
 {
 	error = 0;
@@ -83,6 +105,13 @@ double points_distance(Point point1, Point point2)
 {
 	double dx = point2.x - point1.x;
 	double dy = point2.y - point1.y;
+	double distance = sqrt(dx*dx + dy*dy);
+	return distance;
+}
+double line_length(Vec4i line)
+{
+	double dx = line[2] - line[0];
+	double dy = line[3] - line[1];
 	double distance = sqrt(dx*dx + dy*dy);
 	return distance;
 }
@@ -116,7 +145,7 @@ double points_angle_360(Point point1, Point point2)
 
 double line_angle(Vec4i line)
 {
-	double angle = atan2(line[2]-line[0],line[3]-line[0]);
+	double angle = atan2(line[2]-line[0],line[3]-line[1]);
 	angle = angle * (180 / CV_PI);
 	if( angle < 0 )
 		angle += 180;

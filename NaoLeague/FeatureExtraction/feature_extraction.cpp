@@ -25,11 +25,12 @@ int main(int argc, char** argv)
 
 	vector<Point> goalRoots;
 	double hor_hist[img_hsv.cols];
-	remove_background(img_hsv, img_lines_binary, img_posts_binary, img_ball_binary, goalRoots, hor_hist);
+	int ver_hist[img_hsv.rows];
+	remove_background(img_hsv, img_lines_binary, img_posts_binary, img_ball_binary, goalRoots, hor_hist, ver_hist);
 
 	vector<Vec4i> lines;
 
-	line_extraction(img_lines_binary, lines);
+	line_extraction(img_lines_binary, lines, 5, 5);
 #if 0
 	detect_ellipse(img_lines_binary, lines);
 #endif
@@ -48,7 +49,7 @@ int main(int argc, char** argv)
 	line_most_prob_features(img_lines_binary, lines, result_intersections);
 #endif
 
-	goalPostDetection(img_posts_binary, goalRoots, hor_hist);
+	goalPostDetection(img_posts_binary, goalRoots, hor_hist, ver_hist);
 	waitKey(0);
 	return 0;
 }
