@@ -10,19 +10,6 @@
 using namespace cv;
 using namespace std;
 
-double unifRand()
-{
-	return rand() / double(RAND_MAX);
-}
-double unifRand(double a, double b)
-{
-	return (b-a)*unifRand() + a;
-}
-
-void seed()
-{
-	srand(time(0));
-}
 
 void l_measure(Point* inters, Mat image, Vec4i line_i, Vec4i line_j, double &l_confidence, double* l_orientation)
 {
