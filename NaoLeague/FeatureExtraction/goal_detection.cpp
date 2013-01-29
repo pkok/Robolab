@@ -15,6 +15,7 @@ int horizontal_post(Mat image, vector<Vec4i> lines_hor, vector<posts_lines> best
 {
 	if(best_candidate_lines.size() == 0)
 	{
+		if( lines_hor.size() == 0) return -1;
 		double best_measure = DBL_MAX;
 		int best_hor_match = 0;
 		for (int i = 0; i < lines_hor.size(); ++i)
@@ -34,6 +35,7 @@ int horizontal_post(Mat image, vector<Vec4i> lines_hor, vector<posts_lines> best
 	}
 	else
 	{
+		if( lines_hor.size() == 0) return -1;
 		double best_measure = DBL_MAX;
 		int best_hor_match = 0;
 		for (int i = 0; i < lines_hor.size(); ++i)
@@ -128,8 +130,6 @@ void vertical_posts(Mat image, int x_offset, vector<Vec4i> lines_ver, vector<int
 
 void extend_line(Mat image, Vec4i &line)
 {
-	Mat temp;
-	image.copyTo(temp);
 	Point left, right;
 	left = Point(line[0], line[1]);
 	right = Point(line[2], line[3]);
@@ -258,13 +258,14 @@ void goalPostDetection(Mat image, vector<Point> goalRoots, double* hor_hist, int
 	double last_maximum = 0.0;
 	int last_candidate = 0;
 
+	// gain multiplication of the horizontal histogram...
 	imshow("original binary", image);
 	for( int i = 0; i < goalRoots.size(); i++ )
 	{
 		hor_hist[goalRoots[i].y] *= ROOT_GAIN;
 	}
 
-
+	// find local maxima in the histogram...
 	for( int i = 0; i < image.cols; i++ )
 	{
 		if(inTransition)
@@ -297,29 +298,77 @@ void goalPostDetection(Mat image, vector<Point> goalRoots, double* hor_hist, int
 
 	}
 
+	// crop the image leaving only the interesting part of it...
 	Rect roi = crop_region_interest(image, hor_hist, ver_hist, candidate_cols);
 	Mat cropped;
 	image.copyTo(cropped);
 	cropped = cropped(roi);
 
+	// find lines sampling the images only for vertical lines..
 	vector<Vec4i> lines_ver;
 	line_extraction(cropped, lines_ver, SAMPLING_VER, 0);
 
+	// find lines from the produced which present goalposts
+	// near local maxima positions...
 	vector<posts_lines> best_candidate_lines;
 	vertical_posts(image, roi.x, lines_ver, candidate_cols, best_candidate_lines);
+	// extend these lines until to find black...
 	for (int i = 0; i < best_candidate_lines.size(); ++i)
 	{
 		extend_line(cropped, best_candidate_lines[i].line);
 	}
 
+	// find lines now only sampling for horizontal lines...
 	vector<Vec4i> lines_hor;
 	Vec4i line_hor_pass;
 	line_extraction(cropped, lines_hor, 0, SAMPLING_HOR);
-	int find_horizontal = horizontal_post(image, lines_hor, best_candidate_lines, line_hor_pass);
-	if(find_horizontal == 2)
+	// based on the vertical lines find the best line which is the horizontal post
+	// returns 2 if the lined found is actual very close to be considered a horizontal post
+	// returns 0 if its probably not an horizontal post
+	// returns 1 if there were no vertical posts to back our decision, the longest horizontal line
+	// is returned...
+	// returns -1 if there is no candidate to be vertical post
+ 	int find_horizontal = horizontal_post(image, lines_hor, best_candidate_lines, line_hor_pass);
+	if(find_horizontal == 2 || find_horizontal == 1)
 	{
 		extend_line(cropped, line_hor_pass);
 	}
+
+	// we see two vertical posts and one horizontal the whole goal...
+	for (int i = 0; i < best_candidate_lines.size(); ++i)
+	{
+		Point middle_point = line_middle_point(best_candidate_lines[i].line);
+		Point left, right;
+		left = Point(best_candidate_lines[i].line[0], best_candidate_lines[i].line[1]);
+		right = Point(best_candidate_lines[i].line[2], best_candidate_lines[i].line[3]);
+		double angle_top_bottom = points_angle_360(left, right);
+		bool end = false;
+		Point newPoint;
+		int counter = 0;
+		int len = 0;
+		do
+		{
+			cout << counter << endl;
+			newPoint.y = middle_point.y + len;	
+			circle(cropped, Point(newPoint.y, newPoint.x), 2, Scalar(0,255,0), 2, 8, 0);
+			if(newPoint.x < 0 || newPoint.y < 0 || newPoint.x >= cropped.rows || newPoint.y >= cropped.cols ||
+			        (int)cropped.at<Vec3b>(newPoint.x,newPoint.y)[0] == 0)
+			{
+				cout << (int)cropped.at<Vec3b>(newPoint.x,newPoint.y)[0] << endl;
+				end = true;
+			}
+			else
+			{
+				counter ++;
+			}
+			len++;
+		}
+		while(!end);
+	}
+
+
+
+
 
 	for (int i = 0; i < best_candidate_lines.size(); ++i)
 	{
