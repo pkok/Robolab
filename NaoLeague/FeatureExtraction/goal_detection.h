@@ -8,8 +8,9 @@
 #include <highgui.h>
 
 #define R_POST 0
-#define L_POST 0
-#define O_POST 0
+#define L_POST 1
+#define V_POST 2
+#define O_POST 3
 
 #define HIST_THRESHOLD 0.3
 #define ROOT_GAIN 1.5
@@ -22,10 +23,11 @@ using namespace cv;
 
 struct goalposts{
 	int type;
+	Vec4i line;
 	Point root_position;
-	double root_confidence;
 	Point top_position;
 	double width;
+	double root_confidence;
 };
 
 struct posts_lines{
