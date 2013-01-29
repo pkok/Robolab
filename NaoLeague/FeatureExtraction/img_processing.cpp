@@ -8,30 +8,6 @@
 using namespace cv;
 using namespace std;
 
-#define BACK_THRESHOLD 1
-
-#define YEL_HUE_MIN 20
-#define YEL_HUE_MAX  38
-#define YEL_SAT_MIN  100
-#define YEL_SAT_MAX  255
-#define YEL_VAL_MIN  100
-#define YEL_VAL_MAX  255
-
-#define GR_HUE_MIN  38
-#define GR_HUE_MAX  75
-#define GR_SAT_MIN  50
-#define GR_SAT_MAX  255
-#define GR_VAL_MIN  50
-#define GR_VAL_MAX  255
-
-#define WH_HUE_MIN  0
-#define WH_HUE_MAX  255
-#define WH_SAT_MIN  0
-#define WH_SAT_MAX  60
-#define WH_VAL_MIN  200
-#define WH_VAL_MAX  255
-
-
 double compute_white_ratio(Mat image, Point point1, Point point2)
 {
 	int white_counter = 0;
@@ -121,7 +97,7 @@ void ass_val_pixel2pixel(Vec3b &src, Vec3b &dst)
 	src[2] = dst[2];
 }
 
-void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball)
+void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball, vector<Point> &goalRoot, double* hor_hist, int* ver_hist)
 {
 
 	lines = Mat::zeros(image.rows, image.cols, CV_8UC3);
@@ -137,6 +113,7 @@ void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball)
 	int counter;
 	for(int j = 0; j < image.cols; j++)
 	{
+		hor_hist[j] = 0;
 		background = true;
 		counter = 0;
 		for(int i = 0; i < image.rows; i++)
@@ -145,8 +122,17 @@ void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball)
 			// in order to find the posts later...
 			if(hsv_range(image.at<Vec3b>(i,j), YEL_HUE_MIN, YEL_HUE_MAX, YEL_SAT_MIN, YEL_SAT_MAX, YEL_VAL_MIN, YEL_VAL_MAX))
 			{
+				hor_hist[j]++;
+				ver_hist[i]++;
 				ass_val_pixel(posts.at<Vec3b>(i,j), 255, 255, 255);
 				ass_val_pixel2pixel(field.at<Vec3b>(i,j), image.at<Vec3b>(i,j));
+				if(i < image.cols-1)
+				{
+					if(hsv_range(image.at<Vec3b>(i+1,j), GR_HUE_MIN, GR_HUE_MAX, GR_SAT_MIN, GR_SAT_MAX, GR_VAL_MIN, GR_VAL_MAX))
+					{
+						goalRoot.push_back(Point(i,j));
+					}
+				}
 			}
 
 			// check for the horizontal start of the field
@@ -191,5 +177,6 @@ void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball)
 				ass_val_pixel2pixel(field.at<Vec3b>(i,j), image.at<Vec3b>(i,j));
 			}
 		}
+		hor_hist[j] /= image.rows;
 	}
 }

@@ -5,64 +5,67 @@
 #include <highgui.h>
 #include "geometry_utils.h"
 #include "img_processing.h"
+#include "line_detection.h"
 
 using namespace cv;
 using namespace std;
 
-struct point_dis
+void mark_lines(Mat image, vector<Point> &points, int hor_step, int ver_step)
 {
-	Point pnt;
-	double distance;
-};
-
-void mark_lines(Mat image, vector<Point> &points)
-{
-	for(int i = 0; i < image.rows; i += 5)
+	if(hor_step > 0)
 	{
-		bool pass = false;
-		int col = 0;
-		for(int j = 0; j < image.cols; j++)
+		for(int i = 0; i < image.rows; i += hor_step)
 		{
-			if(pass)
+			bool pass = false;
+			int col = 0;
+			if((int)image.at<Vec3b>(i,0)[0] > 0) pass = true;
+			for(int j = 0; j < image.cols; j++)
 			{
-				if(image.at<Vec3b>(i,j)[0] == 0)
+				if(pass)
 				{
-					pass = false;
-					int pixel = floor((col + j)/2);
-					points.push_back(Point(i ,pixel));
+					if(image.at<Vec3b>(i,j)[0] == 0 || i == (image.cols - 1))
+					{
+						pass = false;
+						int pixel = floor((col + j)/2);
+						points.push_back(Point(i ,pixel));
+					}
 				}
-			}
-			else
-			{
-				if(image.at<Vec3b>(i,j)[0] > 0)
+				else
 				{
-					pass = true;
-					col = j;
+					if(image.at<Vec3b>(i,j)[0] > 0)
+					{
+						pass = true;
+						col = j;
+					}
 				}
 			}
 		}
 	}
-	for(int j = 0; j < image.cols; j += 5)
+	if(ver_step > 0)
 	{
-		bool pass = false;
-		int row = 0;
-		for(int i = 0; i < image.rows; i++)
+		for(int j = 0; j < image.cols; j += ver_step)
 		{
-			if(pass)
+			bool pass = false;
+			int row = 0;
+			if((int)image.at<Vec3b>(0,j)[0] > 0) pass = true;
+			for(int i = 0; i < image.rows; i++)
 			{
-				if(image.at<Vec3b>(i,j)[0] == 0)
+				if(pass)
 				{
-					pass = false;
-					int pixel = floor((row + i)/2);
-					points.push_back(Point(pixel,j));
+					if(image.at<Vec3b>(i,j)[0] == 0 || i == (image.rows - 1))
+					{
+						pass = false;
+						int pixel = floor((row + i)/2);
+						points.push_back(Point(pixel,j));
+					}
 				}
-			}
-			else
-			{
-				if(image.at<Vec3b>(i,j)[0] > 0)
+				else
 				{
-					pass = true;
-					row = i;
+					if(image.at<Vec3b>(i,j)[0] > 0)
+					{
+						pass = true;
+						row = i;
+					}
 				}
 			}
 		}
@@ -163,7 +166,6 @@ void store_line(Mat image, vector< vector<Point> > &lines, vector<Point> line)
 	}
 	else
 	{
-
 		Point current[2];
 		double temp_distance_current;
 		double max_distance_current = 0;
@@ -239,11 +241,11 @@ void store_line(Mat image, vector< vector<Point> > &lines, vector<Point> line)
 					}
 				}
 				line_error(lines[i], line, start_new, end_new, temp_match_error);
+				temp_match_error /= lines[i].size() + line.size();
 				if(compute_white_ratio(image, close_new, close_stored) < 0.4)
 				{
 					temp_match_error += 2000;
 				}
-				temp_match_error /= lines[i].size() + line.size();
 
 			}
 			else
@@ -257,7 +259,8 @@ void store_line(Mat image, vector< vector<Point> > &lines, vector<Point> line)
 				best_match_line = i;
 			}
 		}
-		if(best_match_error < 10)
+		double threshold_error = lines[best_match_line].size() * 20;
+		if(best_match_error < threshold_error)
 		{
 			for(int i=0; i<line.size(); i++)
 			{
@@ -272,12 +275,11 @@ void store_line(Mat image, vector< vector<Point> > &lines, vector<Point> line)
 	return;
 }
 
-void line_extraction(Mat image, vector<Vec4i> &produced_lines)
+void line_extraction(Mat image, vector<Vec4i> &produced_lines, int hor_step, int ver_step)
 {
 	vector<Point> points;
 	vector< vector<Point> > lines;
-	mark_lines(image, points);
-
+	mark_lines(image, points, hor_step, ver_step);
 	while(points.size() != 0)
 	{
 		vector<Point> line;
@@ -358,6 +360,6 @@ void line_extraction(Mat image, vector<Vec4i> &produced_lines)
 				}
 			}
 		}
-		produced_lines.push_back(Vec4i(point1.y, point1.x, point2.y, point2.x));
+		produced_lines.push_back(Vec4i(point1.x, point1.y, point2.x, point2.y));
 	}
 }

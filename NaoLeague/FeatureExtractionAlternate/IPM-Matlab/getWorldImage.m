@@ -20,17 +20,6 @@ function [Wc, Wg] = getWorldImage(I, data)
 %      over the x and y range defined by the parameters provided at the
 %      time the interpMap structure was created.
 % Wg = Ny x Nx double grayscale version of Wc.
-%
-% Author:
-%----------
-% Eric Johnson
-% University of Utah
-% CS 6320 - Computer Vision 
-% April 14, 2007
-%
-% Custom functions used:
-%------------------------
-% none
 
 % Extract the interpolation map.
 interpMap = data.interpMap;

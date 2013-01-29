@@ -1,4 +1,81 @@
 clear; clc;
+% params = The structure created by one of the camera initialization 
+%          scripts containing the tunable parameter values for the various 
+%          processing functions set appropriately for a specific camera.
+%          The fields of the structure are: (See the initialization scripts
+%          for more detailed descriptions of each field and their role in
+%          the process.)
+%
+%   .xRange = Forward distance viewing range (in meters) for the IPM image.
+%
+%   .yRange = Side-to-side distance viewing range (in meters) for the IPM image.
+%
+%   .mIPM = Number of rows in the IPM image.
+%
+%   .step = The physical distance between pixels in the IPM image (in meters).
+%
+%   .stripeWidth = The physical width (in meters) of the stripes the
+%                  functions are trying to find.
+%
+%   .filterSizeMultiplier = Factor determining the size of the smoothing
+%                           derivative kernels relative to the stripe size.
+%
+%   .LnegThreshMultiplier = Factor determining the cutoff level for
+%                           deciding which pixels have a significantly-
+%                           negative Laplacian value.
+%
+%   .extendLength = Total number of times the stripe width along which to 
+%                   search for zero crossings in the gradient.
+%
+%   .signChangeMultiplier = Factor determining the cutoff level for
+%                           deciding which pixels have a significantly-
+%                           strong zero crossing.
+%
+%   .minFitLength = Minimum length of lines to be fit.
+%
+%   .maxFitFailures = Maximum number of fruitless iterations before the
+%                     line fitting algorithm gives up.
+%
+%   .nRandomPoints = Number of random points used in fitting each candidate
+%                    line.
+%
+%   .nLinesEachLoop = Number of candidate lines generated for comparison
+%                     with each loop of the line fitting algorithm.
+%
+%   .polyOrder = Order of the polynomials fit to the lines.
+%
+%   .fitDistThresh = Distance threshold for determining if points belong to
+%                    a fitted line.
+%
+%   .thetaThresh = Orientation threshold for determining if points belong to
+%                  a fitted line.
+%
+% data = The structure created by one of the camera initialization scripts 
+%        containing the static data elements needed to process incoming
+%        images for a specific camera and stripe size.  The fields of the
+%        structure are:
+%
+%   .xGrid = a 1 x Nx vector giving the x values corresponding to the  
+%            columns of the inverse-perspective-mapped image.  xGrid(1)
+%            gives the x coordinate corresponding to the first column and
+%            these increase towards the right side of the image as the
+%            column numbers increase.
+%
+%   .yGrid = a 1 x Ny vector giving the y values corresponding the rows of
+%            the inverse-perspective-mapped image.  yGrid(1) gives the y
+%            coordinate corresponding to the first row and these DECREASE
+%            towards the bottom of the image as the row numbers INCREASE.
+%
+%   .interpMap = the interpolation map for the camera as returned by the
+%                function getInterpMap.
+%
+%   .kernels = the filter kernels returned by the function getFilterKernels. 
+%   
+% showPlots = optional argument which turns on diagnostic plots.  All of 
+%             the plots along the way are shown for showPlots == 'y'.  Only
+%             the final results plot is shown for showPlots == 'f'.  All
+%             other values suppress the plots.
+
 %------------------
 %% pixelsToWorld.m
 %------------------
