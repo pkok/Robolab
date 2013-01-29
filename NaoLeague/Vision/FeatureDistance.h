@@ -13,7 +13,7 @@ class FeatureDistance {
   public:
     FeatureDistance(std::string robotIP, int camera);
     ~FeatureDistance();
-    std::vector<float> getFeaturePositionFromImagePosition(const std::vector<float>& imagePosition, const int& space);
+    std::vector<float> getFeaturePositionFromImagePosition(const std::vector<float>& imagePosition);
 
   private:
     void createProxies();

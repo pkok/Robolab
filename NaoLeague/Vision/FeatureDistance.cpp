@@ -31,9 +31,9 @@ void FeatureDistance::destroyProxies() {
   // destroy this->videoProxy
 }
 
-std::vector<float> FeatureDistance::getFeaturePositionFromImagePosition(const std::vector<float>& imagePosition, const int& space) {
+std::vector<float> FeatureDistance::getFeaturePositionFromImagePosition(const std::vector<float>& imagePosition) {
   const std::string cameraName = (this->camera == AL::kTopCamera) ? "CameraTop" : "CameraBottom";
-  std::vector<float> cameraPosition = this->motionProxy->getPosition(cameraName, space, true);
+  std::vector<float> cameraPosition = this->motionProxy->getPosition(cameraName, 2 /* FRAME_TORSO */, true);
   std::vector<float> featureAngle = this->videoProxy->getAngularPositionFromImagePosition(this->camera, imagePosition);
 
   const float cx = cos(cameraPosition[3]);
