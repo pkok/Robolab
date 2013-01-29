@@ -15,12 +15,15 @@
 #define ROOT_GAIN 1.5
 #define CONTROL_MAX 0.2
 #define CROP_THRESHOLD 5
+#define SAMPLING_VER 5
+#define SAMPLING_HOR 5
 
 using namespace cv;
 
 struct goalposts{
 	int type;
 	Point root_position;
+	double root_confidence;
 	Point top_position;
 	double width;
 };
