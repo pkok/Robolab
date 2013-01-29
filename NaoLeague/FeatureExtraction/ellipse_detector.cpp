@@ -15,11 +15,13 @@ void detect_ellipse(Mat image, vector<Vec4i> lines)
 	vector< vector<Vec4i> > ellipse_lines;
 
 	bool added;
-	while(lines.size() != 0){
+	while(lines.size() != 0)
+	{
 		vector<Vec4i> temp;
 		temp.push_back(lines[0]);
 		lines.erase(lines.begin() + 0);
-		do{
+		do
+		{
 			added = false;
 			double min_angle = DBL_MAX;
 			double min_dis = DBL_MAX;
@@ -82,7 +84,8 @@ void detect_ellipse(Mat image, vector<Vec4i> lines)
 				temp.push_back(lines[best_line]);
 				lines.erase(lines.begin() + best_line);
 			}
-		}while(added);
+		}
+		while(added);
 		ellipse_lines.push_back(temp);
 		temp.clear();
 	}
@@ -100,14 +103,14 @@ void detect_ellipse(Mat image, vector<Vec4i> lines)
 			circle(temp, line_middle_point(Vec4i(ellipse_lines[i][j][1], ellipse_lines[i][j][0],ellipse_lines[i][j][3], ellipse_lines[i][j][2])), 2, Scalar(0,0,255), 2, 8, 0);
 
 			// line( temp, Point(ellipse_lines[i][j][1], ellipse_lines[i][j][0]),
-		 //      Point(ellipse_lines[i][j][3],ellipse_lines[i][j][2]), Scalar(0,0,255), 1, 8 );
+			//      Point(ellipse_lines[i][j][3],ellipse_lines[i][j][2]), Scalar(0,0,255), 1, 8 );
 		}
-		
+
 		stringstream ss;
 		ss << cluster;
 
 		imshow("cluster"+ss.str(), temp);
-		
+
 	}
 
 	return;

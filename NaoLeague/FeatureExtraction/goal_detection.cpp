@@ -51,14 +51,14 @@ int horizontal_post(Mat image, vector<Vec4i> lines_hor, vector<posts_lines> best
 				{
 					if(best_candidate_lines[j].line[0] < best_candidate_lines[j].line[2])
 					{
-						crossing_measure += points_distance(Point(best_candidate_lines[j].line[0], 
-							best_candidate_lines[j].line[1]), Point(intersect->x, intersect->y));
+						crossing_measure += points_distance(Point(best_candidate_lines[j].line[0],
+						                                    best_candidate_lines[j].line[1]), Point(intersect->x, intersect->y));
 						position_measure += abs(middle_point.x - best_candidate_lines[j].line[0]);
 					}
 					else
 					{
 						crossing_measure += points_distance(Point(best_candidate_lines[j].line[2],
-							best_candidate_lines[j].line[3]), Point(intersect->x, intersect->y));
+						                                    best_candidate_lines[j].line[3]), Point(intersect->x, intersect->y));
 						position_measure += abs(middle_point.x - best_candidate_lines[j].line[2]);
 
 					}
@@ -152,7 +152,8 @@ void extend_line(Mat image, Vec4i &line)
 			line[1] = newPoint.y;
 		}
 		len++;
-	}while(!end);
+	}
+	while(!end);
 
 	end = false;
 	len = 0;
@@ -303,7 +304,7 @@ void goalPostDetection(Mat image, vector<Point> goalRoots, double* hor_hist, int
 
 	vector<Vec4i> lines_ver;
 	line_extraction(cropped, lines_ver, SAMPLING_VER, 0);
-	
+
 	vector<posts_lines> best_candidate_lines;
 	vertical_posts(image, roi.x, lines_ver, candidate_cols, best_candidate_lines);
 	for (int i = 0; i < best_candidate_lines.size(); ++i)
@@ -327,8 +328,8 @@ void goalPostDetection(Mat image, vector<Point> goalRoots, double* hor_hist, int
 	}
 
 	line( cropped, Point(line_hor_pass[1], line_hor_pass[0]),
-		     Point(line_hor_pass[3],line_hor_pass[2]), Scalar(255,0,0), 2, 8 );
-	
+	      Point(line_hor_pass[3],line_hor_pass[2]), Scalar(255,0,0), 2, 8 );
+
 	imshow("post_cropped", cropped);
 	return;
 }
