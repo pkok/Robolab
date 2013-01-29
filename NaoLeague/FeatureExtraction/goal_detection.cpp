@@ -128,18 +128,11 @@ void vertical_posts(Mat image, int x_offset, vector<Vec4i> lines_ver, vector<int
 
 void extend_line(Mat image, Vec4i &line)
 {
+	Mat temp;
+	image.copyTo(temp);
 	Point left, right;
-	if(line[0] > line[2])
-	{
-		left = Point(line[0], line[1]);
-		right = Point(line[2], line[3]);
-	}
-	else
-	{
-		left = Point(line[2], line[3]);
-		right = Point(line[0], line[1]);
-	}
-
+	left = Point(line[0], line[1]);
+	right = Point(line[2], line[3]);
 	double angle_top_bottom = points_angle_360(left, right);
 	bool end = false;
 	Point newPoint;
@@ -159,8 +152,7 @@ void extend_line(Mat image, Vec4i &line)
 			line[1] = newPoint.y;
 		}
 		len++;
-	}
-	while(!end);
+	}while(!end);
 
 	end = false;
 	len = 0;
@@ -309,12 +301,9 @@ void goalPostDetection(Mat image, vector<Point> goalRoots, double* hor_hist, int
 	image.copyTo(cropped);
 	cropped = cropped(roi);
 
-	// resize(post_image, dst, dst.size(), 0, 0, 0);
 	vector<Vec4i> lines_ver;
 	line_extraction(cropped, lines_ver, SAMPLING_VER, 0);
 	
-	// from the produced lines find for each candidate to be a goalpost
-	// the best line representing it...
 	vector<posts_lines> best_candidate_lines;
 	vertical_posts(image, roi.x, lines_ver, candidate_cols, best_candidate_lines);
 	for (int i = 0; i < best_candidate_lines.size(); ++i)
