@@ -25,6 +25,8 @@ double points_angle(Point point1, Point point2);
 
 Point* intersection(Vec4i line1, Vec4i line2, Mat image);
 
+Point* intersection_full(Vec4i line1, Vec4i line2);
+
 double line_angle(Vec4i line);
 
 double points_angle_360(Point point1, Point point2);
@@ -32,5 +34,7 @@ double points_angle_360(Point point1, Point point2);
 Point closest_end_point(Point* inters, Vec4i line);
 
 Point closest_point(Point* inters, Vec4i line);
+
+double line_length(Vec4i line);
 
 #endif

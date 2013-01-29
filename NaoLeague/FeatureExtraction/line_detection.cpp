@@ -18,7 +18,7 @@ void mark_lines(Mat image, vector<Point> &points, int hor_step, int ver_step)
 		{
 			bool pass = false;
 			int col = 0;
-			if(image.at<Vec3b>(i,0)[0] > 0) pass = true;
+			if((int)image.at<Vec3b>(i,0)[0] > 0) pass = true;
 			for(int j = 0; j < image.cols; j++)
 			{
 				if(pass)
@@ -47,7 +47,7 @@ void mark_lines(Mat image, vector<Point> &points, int hor_step, int ver_step)
 		{
 			bool pass = false;
 			int row = 0;
-			if(image.at<Vec3b>(0,j)[0] > 0) pass = true;
+			if((int)image.at<Vec3b>(0,j)[0] > 0) pass = true;
 			for(int i = 0; i < image.rows; i++)
 			{
 				if(pass)
@@ -280,13 +280,6 @@ void line_extraction(Mat image, vector<Vec4i> &produced_lines, int hor_step, int
 	vector<Point> points;
 	vector< vector<Point> > lines;
 	mark_lines(image, points, hor_step, ver_step);
-
-	// for(int i = 0; i < points.size(); i++)
-	// {
-	// 	circle(image, Point(points[i].y,points[i].x), 1, Scalar(0,0,255), 1, 8, 0);
-	// }
-
-	// imshow("sdadvg", image);
 	while(points.size() != 0)
 	{
 		vector<Point> line;

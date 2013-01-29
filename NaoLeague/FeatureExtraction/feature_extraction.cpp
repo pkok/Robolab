@@ -36,13 +36,13 @@ int main(int argc, char** argv)
 #endif
 
 #if 1
-	// the next two lines find intersections and return 
-	// a triple X,T,L with the confidence, orientation, position 
+	// the next two lines find intersections and return
+	// a triple X,T,L with the confidence, orientation, position
 	// for each one...
 	vector<field_intersection> result_intersections;
 	line_features(img_lines_binary, lines, result_intersections);
 #else
-	// the next two lines find intersections and return 
+	// the next two lines find intersections and return
 	// only the most probable cross type for each intersectiion
 	// with it confidence, orientation, position
 	vector<field_point> result_intersections;
