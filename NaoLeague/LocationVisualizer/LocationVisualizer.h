@@ -59,6 +59,7 @@ public:
 	void create_window();
 
 	void clear_buffer();
+	void draw_particle(double size,double x, double y, double red, double green, double blue);
 	void draw_particle(Point location, double rotation,double certainty);
 	void draw_particle(vector<Particle> p_vec);
 	
