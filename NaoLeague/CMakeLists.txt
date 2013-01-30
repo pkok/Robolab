@@ -14,7 +14,7 @@ qi_create_bin(soul "soul.cpp")
 #qi_create_bin(ImageGrabberTest "imageGrabberTest.cpp" imageGrabber.cpp imageGrabber.h)
 
 qi_create_bin(FeatureDistanceTest Vision/FeatureDistanceTest.cpp Vision/FeatureDistance.h Vision/FeatureDistance.cpp)
-qi_use_lib(FeatureDistanceTest ALPROXIES)
+qi_use_lib(FeatureDistanceTest ALMATH ALPROXIES)
 
 qi_create_bin(ImageGrabberTest Vision/imageGrabberTest.cpp Vision/imageGrabber.cpp Vision/imageGrabber.h CommonSource/Macros.h)
 qi_use_lib(ImageGrabberTest ALCOMMON ALVISION OPENCV2_CORE OPENCV2_HIGHGUI)
