@@ -177,6 +177,7 @@ void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball, vector<Poin
 				ass_val_pixel2pixel(field.at<Vec3b>(i,j), image.at<Vec3b>(i,j));
 			}
 		}
+		imwrite("back.png", field);
 		hor_hist[j] /= image.rows;
 	}
 }

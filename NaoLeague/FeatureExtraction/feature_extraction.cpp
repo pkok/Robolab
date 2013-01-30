@@ -18,12 +18,15 @@ void extract_features(Mat img_rgb, vector<field_point> &result_intersections, ve
 	Mat img_lines_binary, img_posts_binary, img_ball_binary;
 
 	cvtColor(img_rgb,img_hsv,CV_BGR2HSV);
+	imwrite("hsv.png", img_hsv);
 
 	vector<Point> goalRoots;
 	double hor_hist[img_hsv.cols];
 	int ver_hist[img_hsv.rows];
 	remove_background(img_hsv, img_lines_binary, img_posts_binary, img_ball_binary, goalRoots, hor_hist, ver_hist);
 
+	imwrite("bin_lines.png", img_lines_binary);
+	imwrite("bin_posts.png", img_posts_binary);
 	vector<Vec4i> lines;
 
 	line_extraction(img_lines_binary, lines, 5, 5);
@@ -33,7 +36,7 @@ void extract_features(Mat img_rgb, vector<field_point> &result_intersections, ve
 
 	line_most_prob_features(img_lines_binary, lines, ellipse_prob_lines, result_intersections);
 
-	goalPostDetection(img_posts_binary, goalRoots, hor_hist, ver_hist, goalPosts);
+	//goalPostDetection(img_posts_binary, goalRoots, hor_hist, ver_hist, goalPosts);
 	
 	return;
 }

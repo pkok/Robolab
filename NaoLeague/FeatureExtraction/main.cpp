@@ -18,41 +18,17 @@ using namespace std;
 int main(int argc, char** argv)
 {
 	Mat img_rgb;
-	ofstream myfile;
-  	myfile.open ("example.txt");
-	for (int i = 10; i < 39; ++i)
-	{
-		stringstream ss;
-		ss << i;
-		img_rgb=imread("../dataset_triwalk/0000"+ss.str()+".png", 1);
-		myfile << "0000"+ss.str() << " ";
+	if( argc != 2 || !(img_rgb=imread(argv[1], 1)).data)
+		return -1;
 
-		vector<field_point> result_intersections;
+	imwrite("rgb.png", img_rgb);
 
-		vector<goalposts> goalPosts;
+	vector<field_point> result_intersections;
 
-		extract_features(img_rgb, result_intersections, goalPosts);
+	vector<goalposts> goalPosts;
 
-		
-		for (int i = 0; i < result_intersections.size(); ++i)
-		{
-			myfile << " f ";
-			Point newpoint = result_intersections[i].position;
-			myfile <<result_intersections[i].type << " ";
-			myfile << (float)newpoint.x/img_rgb.rows << " " << (float)newpoint.y/img_rgb.cols << " ";
-		}
-
-		
-		for (int i = 0; i < goalPosts.size(); ++i)
-		{
-			myfile << " g ";
-			Point newpoint = goalPosts[i].root_position;
-			myfile << goalPosts[i].type << " ";
-			myfile << (float)newpoint.x/img_rgb.rows << " " << (float)newpoint.y/img_rgb.cols  << " "	;
-		}
-		myfile << endl;	
-	}
-	myfile.close();
+	extract_features(img_rgb, result_intersections, goalPosts);
+	waitKey(0);
 	return 0;
 }
 
