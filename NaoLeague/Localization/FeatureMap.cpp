@@ -24,6 +24,39 @@ LandMark::LandMark(){
 
 FeatureMap::FeatureMap(){
 		//add landmark to vector: 8
+
+	this->land_marks.push_back(LandMark(300, 200, l_crossing));
+	this->land_marks.push_back(LandMark(300, -200, l_crossing));
+	this->land_marks.push_back(LandMark(240, 110, l_crossing));
+	this->land_marks.push_back(LandMark(240, -110, l_crossing));
+	this->land_marks.push_back(LandMark(-240, 110, l_crossing));
+	this->land_marks.push_back(LandMark(-240, -110, l_crossing));
+	this->land_marks.push_back(LandMark(-300, 200, l_crossing));
+	this->land_marks.push_back(LandMark(-300, -200, l_crossing));
+
+	//6
+	this->land_marks.push_back(LandMark(300,110, t_crossing));
+	this->land_marks.push_back(LandMark(300,-110, t_crossing));
+	this->land_marks.push_back(LandMark(0,200, t_crossing));
+	this->land_marks.push_back(LandMark(0,-200, t_crossing));
+	this->land_marks.push_back(LandMark(-300,110, t_crossing));
+	this->land_marks.push_back(LandMark(-300,-110, t_crossing));
+
+	//5
+	//this->land_marks.push_back(LandMark(120, 0, x_crossing));
+	this->land_marks.push_back(LandMark(0, 60, x_crossing));
+	this->land_marks.push_back(LandMark(0, 0, x_crossing));
+	this->land_marks.push_back(LandMark(0, -60, x_crossing));
+	//this->land_marks.push_back(LandMark(-120,0, x_crossing));
+
+	//4
+	this->land_marks.push_back(LandMark(300,70, goal_post));
+	this->land_marks.push_back(LandMark(300,-70, goal_post));
+	this->land_marks.push_back(LandMark(-300,70, goal_post));
+	this->land_marks.push_back(LandMark(-300,-70, goal_post));
+
+
+	/* OLD FEATURE MAP
 	this->land_marks.push_back(LandMark(300, 200, l_crossing));
 	this->land_marks.push_back(LandMark(300, -200, l_crossing));
 	this->land_marks.push_back(LandMark(240, 110, l_crossing));
@@ -52,7 +85,7 @@ FeatureMap::FeatureMap(){
 	this->land_marks.push_back(LandMark(300,70, goal_post));
 	this->land_marks.push_back(LandMark(300,-70, goal_post));
 	this->land_marks.push_back(LandMark(-300,70, goal_post));
-	this->land_marks.push_back(LandMark(-300,-70, goal_post));
+	this->land_marks.push_back(LandMark(-300,-70, goal_post));*/
 
 /*
 		//chance to observe this object 1/5
@@ -91,14 +124,14 @@ FeatureMap::FeatureMap(){
 vector<LandMark> FeatureMap::get_features(FeatureType ft){
 	//TODO:can be made faster:
 	vector<LandMark> ret;
-	for (int i = 0; i<this->land_marks.size();i++){
+	for (int i = 0; i < this->land_marks.size();i++){
 		if(land_marks[i].type == ft){
-			LandMark lm_ptr = land_marks[i];
-			ret.push_back(lm_ptr);
-			if(lm_ptr.type > 4){
+			LandMark lm = land_marks[i];
+			ret.push_back(lm);
+			if(lm.type > 4){
 				cout<<"fuck you get_features!"<<endl;
 			}
-		assert(lm_ptr.type < 4);
+		assert(lm.type < 4);
 		}
 	}
 
