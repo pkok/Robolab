@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
       pix[1] /= 240.0f;
       std::cout << "Input transformed to: " << pix << std::endl;
     }
-    std::vector<float> pos = fd.getFeaturePositionFromImagePosition(pix);
+    std::vector<float> pos = fd.getPositionFromImagePosition(pix);
     for (std::vector<float>::iterator iter = pos.begin(); iter != pos.end(); ++iter) {
       std::cout << *iter << " ";
     }

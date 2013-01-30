@@ -44,6 +44,34 @@ ParticleFilter::ParticleFilter(){
 }
 void ParticleFilter::set_params(){
 
+/*
+
+	//type of MCL:
+	this->augmented = true;
+
+	//error parameters motion model
+	this->error_range = 0.1;//0.1;
+	this->error_bearing = 0.2;//0.2;
+
+	//added error while resampling
+	this->resample_variance_pos = 0; //20
+	this->resample_variance_rot = 0;//1;
+
+	this->measurement_factor = 1;
+
+
+	//for visual features
+	this->variance_range = 10;//200;//2000
+	this->variance_bearing = 0.1;//200;
+
+
+	//augmented pf parameters
+	////0<=alpha_slow<<alpha_fast;
+	//value taken from python code
+	this->alpha_slow = 0.05;//0.05;
+	this->alpha_fast = 0.3;//0.3;
+*/
+
 	//type of MCL:
 	this->augmented = true;
 
@@ -56,6 +84,8 @@ void ParticleFilter::set_params(){
 
 	this->measurement_factor = 1;
 
+
+
 	this->variance_range = 10000;//200;//2000
 	this->variance_bearing = 200;//200;
 
@@ -64,13 +94,15 @@ void ParticleFilter::set_params(){
 	////0<=alpha_slow<<alpha_fast;
 	//value taken from python code
 	this->alpha_slow = 0.05;//0.05;
-	this->alpha_fast = 0.5;//0.3;
+	this->alpha_fast = 0.3;//0.3;
+
 
 	this->w_slow = 0;
 	this->w_fast = 0;
 
 	this->x_dim = 740;
 	this->y_dim = 540;
+
 }
 
 
