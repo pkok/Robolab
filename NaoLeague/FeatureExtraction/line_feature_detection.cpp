@@ -322,8 +322,10 @@ bool ellipse_intersection(vector<Vec4i> ellipse_prob_lines, Vec4i line_i, Vec4i 
 	bool line_j_inter = false;
 	for (int i = 0; i < ellipse_prob_lines.size(); ++i)
 	{
-		if(!line_equality(ellipse_prob_lines[i], line_i)) line_i_inter = true;
-		if(!line_equality(ellipse_prob_lines[i], line_j)) line_j_inter = true;
+		if(line_equality(ellipse_prob_lines[i], line_i))
+			line_i_inter = true;
+		if(line_equality(ellipse_prob_lines[i], line_j))
+			line_j_inter = true;
 	}
 	return (line_i_inter && line_j_inter);
 }
@@ -400,22 +402,20 @@ void line_features(Mat image, vector<Vec4i> lines, vector<Vec4i> ellipse_prob_li
 void line_most_prob_features(Mat image, vector<Vec4i> lines, vector<Vec4i> ellipse_prob_lines, vector<field_point> &result_intersections)
 {
 	vector<field_intersection> all_type_intersections;
-	line_features(image, lines, ellipse_prob_lines, all_type_intersections);	
+	line_features(image, lines, ellipse_prob_lines, all_type_intersections);
+	// for (int i = 0; i < all_type_intersections.size(); ++i)
+	// {
+	// 	Mat sth;
+	// 	image.copyTo(sth);
+	// 	circle(sth, Point(all_type_intersections[i].position.x, all_type_intersections[i].position.y), 3, Scalar(0,0,255), 3, 8, 0);
+	// 	cout << "inter " << all_type_intersections[i].position.x << "," << all_type_intersections[i].position.y << " " << " L: " << all_type_intersections[i].l.confidence << " T: " << all_type_intersections[i].t.confidence << " X: " << all_type_intersections[i].x.confidence << endl;
+	// 	stringstream ss;
+	// 	ss << i;
+	// 	imshow("feature_points"+ss.str(), sth);
+	// 	field_point most_prob = decide_type(all_type_intersections[i]);
+	// 	result_intersections.push_back(most_prob);
+	// 	cout << most_prob.type << endl;
+	// }
 	all_type_intersections.clear();
 	return;
 }
-
-
-// for (int i = 0; i < all_type_intersections.size(); ++i)
-// 	{
-// 		Mat sth;
-// 		image.copyTo(sth);
-// 		circle(sth, Point(all_type_intersections[i].position.x, all_type_intersections[i].position.y), 3, Scalar(0,0,255), 3, 8, 0);
-// 		cout << "inter " << all_type_intersections[i].position.x << "," << all_type_intersections[i].position.y << " " << " L: " << all_type_intersections[i].l.confidence << " T: " << all_type_intersections[i].t.confidence << " X: " << all_type_intersections[i].x.confidence << endl;
-// 		stringstream ss;
-// 		ss << i;
-// 		imshow("feature_points"+ss.str(), sth);
-// 		field_point most_prob = decide_type(all_type_intersections[i]);
-// 		result_intersections.push_back(most_prob);
-// 		cout << most_prob.type << endl;
-// 	}

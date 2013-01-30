@@ -97,6 +97,7 @@ void detect_ellipse(Mat image, vector<Vec4i> lines, vector<Vec4i> &ellipse_prob_
 		if (ellipse_lines[i].size() > max_cluster_size)
 		{
 			max_cluster_size = ellipse_lines[i].size();
+			cluster = i;
 		}
 	}
 	if(max_cluster_size > 7)

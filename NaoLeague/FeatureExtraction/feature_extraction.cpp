@@ -34,7 +34,6 @@ int main(int argc, char** argv)
 	vector<Vec4i> ellipse_prob_lines;
 	detect_ellipse(img_lines_binary, lines, ellipse_prob_lines);
 
-
 	vector<field_point> result_intersections;
 	line_most_prob_features(img_lines_binary, lines, ellipse_prob_lines, result_intersections);
 
