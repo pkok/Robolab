@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
-project(feature_extraction)
+project(main)
 find_package(OpenCV REQUIRED)
-add_executable(feature_extraction
+add_executable(main
 line_detection.h
 line_detection.cpp
 hough_line_detection.h
@@ -16,6 +16,8 @@ ellipse_detector.h
 ellipse_detector.cpp
 goal_detection.h
 goal_detection.cpp
-feature_extraction.cpp)
+feature_extraction.h
+feature_extraction.cpp
+main.cpp)
 
-target_link_libraries(feature_extraction ${OpenCV_LIBS})
+target_link_libraries(main ${OpenCV_LIBS})
