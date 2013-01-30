@@ -566,33 +566,7 @@ void goalPostDetection(Mat image, vector<Point> goalRoots, double* hor_hist, int
 // 	circle(root, Point(goalRoots[j].y  , goalRoots[j].x), 2, Scalar(255,0,0), 2, 8, 0);
 // }
 // imshow("original binary", root);
-// for (int i = 0; i < goalPosts.size(); ++i)
-// {
-// 	if(goalPosts[i].type == R_POST)
-// 	{
-// 		line( result, Point(goalPosts[i].line[1], goalPosts[i].line[0]),
-// 		      Point(goalPosts[i].line[3],goalPosts[i].line[2]), Scalar(0,0,255), 2, 8 );
-// 		//cout << "r " << goalPosts[i].width << " " << goalPosts[i].root_confidence << endl;
-// 	}
-// 	if(goalPosts[i].type == L_POST)
-// 	{
-// 		line( result, Point(goalPosts[i].line[1], goalPosts[i].line[0]),
-// 		      Point(goalPosts[i].line[3],goalPosts[i].line[2]), Scalar(255,0,0), 2, 8 );
-// 		//cout << "l " << goalPosts[i].width << " " << goalPosts[i].root_confidence << endl;
-// 	}
-// 	if(goalPosts[i].type == O_POST)
-// 	{
-// 		line( result, Point(goalPosts[i].line[1], goalPosts[i].line[0]),
-// 		      Point(goalPosts[i].line[3],goalPosts[i].line[2]), Scalar(80,255,80), 2, 8 );
-// 		//cout << "o " << goalPosts[i].width << " " << goalPosts[i].root_confidence << endl;
-// 	}
-// 	if(goalPosts[i].type == V_POST)
-// 	{
-// 		line( result, Point(goalPosts[i].line[1], goalPosts[i].line[0]),
-// 		      Point(goalPosts[i].line[3],goalPosts[i].line[2]), Scalar(0,255,255), 2, 8 );
-// 		//cout << "v " << goalPosts[i].width << " " << goalPosts[i].root_confidence << endl;
-// 	}
-// }
+
 // we see two vertical posts and one horizontal the whole goal...
 // seed();
 // for (int i = 0; i < best_candidate_lines.size(); ++i)

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <math.h>
 #include <time.h>
 #include <cv.h>
@@ -9,6 +10,7 @@
 #include "ellipse_detector.h"
 #include "goal_detection.h"
 #include "feature_extraction.h"
+#include "geometry_utils.h"
 
 using namespace cv;
 using namespace std;
@@ -16,15 +18,41 @@ using namespace std;
 int main(int argc, char** argv)
 {
 	Mat img_rgb;
-	if( argc != 2 || !(img_rgb=imread(argv[1], 1)).data)
-		return -1;
+	ofstream myfile;
+  	myfile.open ("example.txt");
+	for (int i = 10; i < 39; ++i)
+	{
+		stringstream ss;
+		ss << i;
+		img_rgb=imread("../dataset_triwalk/0000"+ss.str()+".png", 1);
+		myfile << "0000"+ss.str() << " ";
 
-	vector<field_point> result_intersections;
+		vector<field_point> result_intersections;
 
-	vector<goalposts> goalPosts;
+		vector<goalposts> goalPosts;
 
-	extract_features(img_rgb, result_intersections, goalPosts);
+		extract_features(img_rgb, result_intersections, goalPosts);
 
+		
+		for (int i = 0; i < result_intersections.size(); ++i)
+		{
+			myfile << " f ";
+			Point newpoint = result_intersections[i].position;
+			myfile <<result_intersections[i].type << " ";
+			myfile << (float)newpoint.x/img_rgb.rows << " " << (float)newpoint.y/img_rgb.cols << " ";
+		}
+
+		
+		for (int i = 0; i < goalPosts.size(); ++i)
+		{
+			myfile << " g ";
+			Point newpoint = goalPosts[i].root_position;
+			myfile << goalPosts[i].type << " ";
+			myfile << (float)newpoint.x/img_rgb.rows << " " << (float)newpoint.y/img_rgb.cols  << " "	;
+		}
+		myfile << endl;	
+	}
+	myfile.close();
 	return 0;
 }
 

@@ -34,5 +34,6 @@ void extract_features(Mat img_rgb, vector<field_point> &result_intersections, ve
 	line_most_prob_features(img_lines_binary, lines, ellipse_prob_lines, result_intersections);
 
 	goalPostDetection(img_posts_binary, goalRoots, hor_hist, ver_hist, goalPosts);
-
+	
+	return;
 }

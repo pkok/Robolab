@@ -403,6 +403,15 @@ void line_most_prob_features(Mat image, vector<Vec4i> lines, vector<Vec4i> ellip
 {
 	vector<field_intersection> all_type_intersections;
 	line_features(image, lines, ellipse_prob_lines, all_type_intersections);
+	for (int i = 0; i < all_type_intersections.size(); ++i)
+	{
+		field_point most_prob = decide_type(all_type_intersections[i]);
+		result_intersections.push_back(most_prob);
+	}
+	all_type_intersections.clear();
+	return;
+}
+
 	// for (int i = 0; i < all_type_intersections.size(); ++i)
 	// {
 	// 	Mat sth;
@@ -416,6 +425,3 @@ void line_most_prob_features(Mat image, vector<Vec4i> lines, vector<Vec4i> ellip
 	// 	result_intersections.push_back(most_prob);
 	// 	cout << most_prob.type << endl;
 	// }
-	all_type_intersections.clear();
-	return;
-}
