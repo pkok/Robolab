@@ -10,6 +10,7 @@
 #include "InputGenerator.h"
 
 #include <cmath>
+#include <assert.h>
 
 using namespace std;
 
@@ -69,6 +70,8 @@ int InputGenerator::generate_features(double x,double y, double rot,FeatureMap f
 		//add random noise
 		vis_feat_all[i].bearing +=random_gaussian() * 0.1;
 		vis_feat_all[i].range += random_gaussian() * 2;
+		assert(vis_feat_all[i].range < 10000);
+
 		if((  vis_feat_all[i].bearing > camera_right && vis_feat_all[i].bearing < camera_left  )){
 			vis_feat->push_back(vis_feat_all[i]);
 		}
@@ -116,7 +119,7 @@ int InputGenerator::calculate_range_bearing(FeatureMap fm,double x, double y, do
 	//iterate t_cross
 	vector<LandMark> lm_t;
 	lm_t = fm.get_features(t_crossing);
-	for(int i = 0; i<6 ; i++){
+	for(int i = 0; i<lm_t.size() ; i++){
 		double delta_x = lm_t[i].pos.x - x ;
 		double delta_y = lm_t[i].pos.y - y;
 
@@ -145,7 +148,7 @@ int InputGenerator::calculate_range_bearing(FeatureMap fm,double x, double y, do
 	//iterate x_cross
 	vector<LandMark> lm_x;
 	lm_x = fm.get_features(x_crossing);
-	for(int i = 0; i<5 ; i++){
+	for(int i = 0; i<lm_x.size() ; i++){
 		double delta_x =  lm_x[i].pos.x -x ;
 		double delta_y = lm_x[i].pos.y  -y;
 
