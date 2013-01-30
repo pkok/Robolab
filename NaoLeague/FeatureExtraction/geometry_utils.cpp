@@ -5,6 +5,20 @@
 
 using namespace cv;
 
+
+bool line_equality(Vec4i line1, Vec4i line2)
+{
+	bool isSame = true;
+	for (int i = 0; i < 4; ++i)
+	{
+		if(line1[i] != line2[i])
+		{
+			return false;
+		}
+	}
+	return isSame;
+}
+
 Point line_middle_point(Vec4i line)
 {
 	double x1 = line[0], x2 = line[2];

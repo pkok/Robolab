@@ -36,7 +36,7 @@ int main(int argc, char** argv)
 
 
 	vector<field_point> result_intersections;
-	line_most_prob_features(img_lines_binary, lines, result_intersections);
+	line_most_prob_features(img_lines_binary, lines, ellipse_prob_lines, result_intersections);
 
 	vector<goalposts> goalPosts;
 	goalPostDetection(img_posts_binary, goalRoots, hor_hist, ver_hist, goalPosts);

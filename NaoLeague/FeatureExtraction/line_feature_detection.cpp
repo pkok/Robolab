@@ -316,8 +316,20 @@ void store_intersection(field_intersection current, vector<field_intersection> &
 	}
 }
 
+bool ellipse_intersection(vector<Vec4i> ellipse_prob_lines, Vec4i line_i, Vec4i line_j)
+{
+	bool line_i_inter = false;
+	bool line_j_inter = false;
+	for (int i = 0; i < ellipse_prob_lines.size(); ++i)
+	{
+		if(!line_equality(ellipse_prob_lines[i], line_i)) line_i_inter = true;
+		if(!line_equality(ellipse_prob_lines[i], line_j)) line_j_inter = true;
+	}
+	return (line_i_inter && line_j_inter);
+}
 
-void line_features(Mat image, vector<Vec4i> lines, vector<field_intersection> &result_intersections/*, vector<field_point> result_intersections*/)
+
+void line_features(Mat image, vector<Vec4i> lines, vector<Vec4i> ellipse_prob_lines, vector<field_intersection> &result_intersections/*, vector<field_point> result_intersections*/)
 {
 	//visualization stuff
 
@@ -343,7 +355,7 @@ void line_features(Mat image, vector<Vec4i> lines, vector<field_intersection> &r
 	{
 		for(int j = i+1; j < lines.size(); j++)
 		{
-			if(i != j)
+			if(i != j && !ellipse_intersection(ellipse_prob_lines, lines[i], lines[j]))
 			{
 				angle_i = points_angle(Point(lines[i][1], lines[i][0]), Point(lines[i][3], lines[i][2]));
 				angle_j = points_angle(Point(lines[j][1], lines[j][0]), Point(lines[j][3], lines[j][2]));
@@ -385,10 +397,10 @@ void line_features(Mat image, vector<Vec4i> lines, vector<field_intersection> &r
 	return;
 }
 
-void line_most_prob_features(Mat image, vector<Vec4i> lines, vector<field_point> &result_intersections)
+void line_most_prob_features(Mat image, vector<Vec4i> lines, vector<Vec4i> ellipse_prob_lines, vector<field_point> &result_intersections)
 {
 	vector<field_intersection> all_type_intersections;
-	line_features(image, lines, all_type_intersections);	
+	line_features(image, lines, ellipse_prob_lines, all_type_intersections);	
 	all_type_intersections.clear();
 	return;
 }
