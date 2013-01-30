@@ -11,9 +11,9 @@
 #define X_CROSS 3
 #define UNKNOWN 4
 
-#define L_THRESHOLD 0.5
-#define T_THRESHOLD 0.5
-#define X_THRESHOLD 0.5
+#define L_THRESHOLD 0.15
+#define T_THRESHOLD 0.15
+#define X_THRESHOLD 0.15
 
 #define DIFF_THRESHOLD_L 0.3
 #define DIFF_THRESHOLD_T 0.3

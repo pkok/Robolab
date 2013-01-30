@@ -382,40 +382,28 @@ void line_features(Mat image, vector<Vec4i> lines, vector<field_intersection> &r
 			}
 		}
 	}
-
-	// only of visualization of the intersections points
-	// with the confidence for each one...
-
-	/*int intersection_num = 0;
-	for (int i = 0; i < result_intersections.size(); i++)
-	{
-		intersection_num ++;
-		Mat temp;
-		black.copyTo(temp);
-
-
-		cout << "inter " << result_intersections[i].position.x << "," << result_intersections[i].position.y << " "  << intersection_num << " L: " << result_intersections[i].l.confidence << " T: " << result_intersections[i].t.confidence << " X: " << result_intersections[i].x.confidence << endl;
-
-		stringstream ss;
-		ss << intersection_num;
-		circle(temp, Point(result_intersections[i].position.x, result_intersections[i].position.y), 2, Scalar(0,0,255), 2, 8, 0);
-		imshow("intersection"+ss.str(),temp);
-	}*/
-	// end of visualization...
-
 	return;
 }
 
 void line_most_prob_features(Mat image, vector<Vec4i> lines, vector<field_point> &result_intersections)
 {
 	vector<field_intersection> all_type_intersections;
-	line_features(image, lines, all_type_intersections);
-
-	for (int i = 0; i < all_type_intersections.size(); ++i)
-	{
-		field_point most_prob = decide_type(all_type_intersections[i]);
-		result_intersections.push_back(most_prob);
-	}
+	line_features(image, lines, all_type_intersections);	
 	all_type_intersections.clear();
 	return;
 }
+
+
+// for (int i = 0; i < all_type_intersections.size(); ++i)
+// 	{
+// 		Mat sth;
+// 		image.copyTo(sth);
+// 		circle(sth, Point(all_type_intersections[i].position.x, all_type_intersections[i].position.y), 3, Scalar(0,0,255), 3, 8, 0);
+// 		cout << "inter " << all_type_intersections[i].position.x << "," << all_type_intersections[i].position.y << " " << " L: " << all_type_intersections[i].l.confidence << " T: " << all_type_intersections[i].t.confidence << " X: " << all_type_intersections[i].x.confidence << endl;
+// 		stringstream ss;
+// 		ss << i;
+// 		imshow("feature_points"+ss.str(), sth);
+// 		field_point most_prob = decide_type(all_type_intersections[i]);
+// 		result_intersections.push_back(most_prob);
+// 		cout << most_prob.type << endl;
+// 	}
