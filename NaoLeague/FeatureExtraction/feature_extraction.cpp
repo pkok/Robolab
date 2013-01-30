@@ -60,7 +60,8 @@ int main(int argc, char** argv)
 // #endif
 
 #if 1
-	goalPostDetection(img_posts_binary, goalRoots, hor_hist, ver_hist);
+	vector<goalposts> goalPosts;
+	goalPostDetection(img_posts_binary, goalRoots, hor_hist, ver_hist, goalPosts);
 #endif
 	waitKey(0);
 	return 0;

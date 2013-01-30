@@ -69,6 +69,7 @@ Point translate_output(Mat image, Point point)
 	Point output;
 	output.x = point.x / image.rows;
 	output.y = point.y / image.cols;
+	return output;
 }
 
 bool hsv_range(Vec3b pixel, int h_min, int h_max, int s_min, int s_max, int v_min, int v_max)

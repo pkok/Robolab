@@ -18,6 +18,8 @@
 #define CROP_THRESHOLD 5
 #define SAMPLING_VER 5
 #define SAMPLING_HOR 5
+#define ROOT_OFFSET_Y 10
+#define ROOT_OFFSET_X 10
 
 using namespace cv;
 
@@ -35,6 +37,6 @@ struct posts_lines{
 	Vec4i line;
 };
 
-void goalPostDetection(Mat yellow, vector<Point> goalRoots, double* hor_hist, int* ver_hist);
+void goalPostDetection(Mat image, vector<Point> goalRoots, double* hor_hist, int* ver_hist, vector<goalposts> &goalPosts);
 
 #endif
