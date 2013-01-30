@@ -33,8 +33,6 @@
 using namespace cv;
 using namespace std;
 
-Point translate_output(Mat image, Point point);
-
 bool hsv_range(Vec3b pixel, int h_min, int h_max, int s_min, int s_max, int v_min, int v_max);
 
 void ass_val_pixel(Vec3b &pixel, int h, int s, int v);

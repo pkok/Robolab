@@ -428,13 +428,6 @@ void goalPostDetection(Mat image, vector<Point> goalRoots, double* hor_hist, int
 
 	Mat root;
 	image.copyTo(root);
-	for (int j = 0; j < goalRoots.size(); ++j)
-	{
-		cout << goalRoots[j] << endl;
-		circle(root, Point(goalRoots[j].y  , goalRoots[j].x), 2, Scalar(255,0,0), 2, 8, 0);
-	}
-
-	imshow("original binary", root);
 	for( int i = 0; i < goalRoots.size(); i++ )
 	{
 		hor_hist[goalRoots[i].y] *= ROOT_GAIN;
@@ -564,51 +557,28 @@ void goalPostDetection(Mat image, vector<Point> goalRoots, double* hor_hist, int
 			}
 		}
 		post_final(image, roi.x, goalPosts, goalRoots);
-
-		for (int i = 0; i < goalPosts.size(); ++i)
-		{
-			if(goalPosts[i].type == R_POST)
-			{
-				line( result, Point(goalPosts[i].line[1], goalPosts[i].line[0]),
-				      Point(goalPosts[i].line[3],goalPosts[i].line[2]), Scalar(0,0,255), 2, 8 );
-				cout << "r " << goalPosts[i].width << " " << goalPosts[i].root_confidence << endl;
-			}
-			if(goalPosts[i].type == L_POST)
-			{
-				line( result, Point(goalPosts[i].line[1], goalPosts[i].line[0]),
-				      Point(goalPosts[i].line[3],goalPosts[i].line[2]), Scalar(255,0,0), 2, 8 );
-				cout << "l " << goalPosts[i].width << " " << goalPosts[i].root_confidence << endl;
-			}
-			if(goalPosts[i].type == O_POST)
-			{
-				line( result, Point(goalPosts[i].line[1], goalPosts[i].line[0]),
-				      Point(goalPosts[i].line[3],goalPosts[i].line[2]), Scalar(80,255,80), 2, 8 );
-				cout << "o " << goalPosts[i].width << " " << goalPosts[i].root_confidence << endl;
-			}
-			if(goalPosts[i].type == V_POST)
-			{
-				line( result, Point(goalPosts[i].line[1], goalPosts[i].line[0]),
-				      Point(goalPosts[i].line[3],goalPosts[i].line[2]), Scalar(0,255,255), 2, 8 );
-				cout << "v " << goalPosts[i].width << " " << goalPosts[i].root_confidence << endl;
-			}
-		}
-
-		// we see two vertical posts and one horizontal the whole goal...
-		// seed();
-		// for (int i = 0; i < best_candidate_lines.size(); ++i)
-		// {
-		// 	line( cropped, Point(line_hor_pass[1], line_hor_pass[0] - (floor(temp.width/2))),
-		// 	      Point(line_hor_pass[3],line_hor_pass[2] - (floor(temp.width/2))), Scalar(255,0,0), 2, 8 );
-		// 		line( cropped, Point(line_hor_pass[1], line_hor_pass[0] + (floor(temp.width/2))),
-		// 	      Point(line_hor_pass[3],line_hor_pass[2] + (floor(temp.width/2))), Scalar(255,0,0), 2, 8 );
-		// 	int width = 10;
-		// 	line( cropped, Point(best_candidate_lines[i].line[1]-(floor(width/2)), best_candidate_lines[i].line[0]),
-		// 	      Point(best_candidate_lines[i].line[3]-(ceil(width/2)),best_candidate_lines[i].line[2]), Scalar(0,0,255), 2, 8 );
-		// 	line( cropped, Point(best_candidate_lines[i].line[1]+(ceil(width/2)), best_candidate_lines[i].line[0]),
-		// 	      Point(best_candidate_lines[i].line[3]+(ceil(width/2)),best_candidate_lines[i].line[2]), Scalar(0,0,255), 2, 8 );
-		// }
-
-		imshow("post_cropped", result);
 		return;
 	}
 }
+
+// for (int j = 0; j < goalRoots.size(); ++j)
+// {
+// 	circle(root, Point(goalRoots[j].y  , goalRoots[j].x), 2, Scalar(255,0,0), 2, 8, 0);
+// }
+// imshow("original binary", root);
+
+// we see two vertical posts and one horizontal the whole goal...
+// seed();
+// for (int i = 0; i < best_candidate_lines.size(); ++i)
+// {
+// 	line( cropped, Point(line_hor_pass[1], line_hor_pass[0] - (floor(temp.width/2))),
+// 	      Point(line_hor_pass[3],line_hor_pass[2] - (floor(temp.width/2))), Scalar(255,0,0), 2, 8 );
+// 		line( cropped, Point(line_hor_pass[1], line_hor_pass[0] + (floor(temp.width/2))),
+// 	      Point(line_hor_pass[3],line_hor_pass[2] + (floor(temp.width/2))), Scalar(255,0,0), 2, 8 );
+// 	int width = 10;
+// 	line( cropped, Point(best_candidate_lines[i].line[1]-(floor(width/2)), best_candidate_lines[i].line[0]),
+// 	      Point(best_candidate_lines[i].line[3]-(ceil(width/2)),best_candidate_lines[i].line[2]), Scalar(0,0,255), 2, 8 );
+// 	line( cropped, Point(best_candidate_lines[i].line[1]+(ceil(width/2)), best_candidate_lines[i].line[0]),
+// 	      Point(best_candidate_lines[i].line[3]+(ceil(width/2)),best_candidate_lines[i].line[2]), Scalar(0,0,255), 2, 8 );
+// }
+//imshow("post_cropped", result);

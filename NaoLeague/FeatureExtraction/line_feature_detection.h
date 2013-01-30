@@ -11,9 +11,9 @@
 #define X_CROSS 3
 #define UNKNOWN 4
 
-#define L_THRESHOLD 0.5
-#define T_THRESHOLD 0.5
-#define X_THRESHOLD 0.5
+#define L_THRESHOLD 0.15
+#define T_THRESHOLD 0.15
+#define X_THRESHOLD 0.15
 
 #define DIFF_THRESHOLD_L 0.3
 #define DIFF_THRESHOLD_T 0.3
@@ -44,8 +44,8 @@ struct field_point{
 	double confidence;
 };
 
-void line_features(Mat image, vector<Vec4i> lines, vector<field_intersection> &result_intersections);
+void line_features(Mat image, vector<Vec4i> lines, vector<Vec4i> ellipse_prob_lines, vector<field_intersection> &result_intersections);
 
-void line_most_prob_features(Mat image, vector<Vec4i> lines, vector<field_point> &result_intersections);
+void line_most_prob_features(Mat image, vector<Vec4i> lines, vector<Vec4i> ellipse_prob_lines, vector<field_point> &result_intersections);
 
 #endif

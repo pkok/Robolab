@@ -1,0 +1,97 @@
+#include <iostream>
+#include <math.h>
+#include <time.h>
+#include <cv.h>
+#include <highgui.h>
+
+#define pi 22/7
+
+using namespace cv;
+using namespace std;
+
+Point feature;
+
+void mouseEvent(int evt, int x, int y, int flags, void* param)
+{
+	if(evt==CV_EVENT_LBUTTONDOWN)
+	{	cout<<"Mouse: "<<x<<", "<<y<<endl;
+		feature.x = x;
+		feature.y = y;
+	}
+}
+
+double points_distance(Point point1, Point point2)
+{
+	double dx = point2.x - point1.x;
+	double dy = point2.y - point1.y;
+	double distance = sqrt(dx*dx + dy*dy);
+	return distance;
+}
+
+double bearinger(Point foot1, Point center2, Point feature3)
+{
+	double dx21 = center2.x-foot1.x;
+	double dx31 = feature3.x-foot1.x;
+	double dy21 = center2.y-foot1.y;
+	double dy31 = feature3.y-foot1.y;
+	double m12 = sqrt( dx21*dx21 + dy21*dy21 );
+	double m13 = sqrt( dx31*dx31 + dy31*dy31 );
+	double theta = acos( (dx21*dx31 + dy21*dy31) / (m12 * m13) );	
+	theta = theta * (180 / CV_PI);	
+	if (feature3.x > center2.x) 
+		theta = (-1)*theta;
+	return theta;
+}
+
+int main(int argc, char** argv)
+{
+	Mat I;
+	if( argc != 2 || !(I=imread(argv[1], 1)).data)
+		cout<<"Inputting Erroring!";			
+	string s = string("Superset/") + argv[1];
+	cout<<"Image: "<<I.size.p[1]<<"x"<<I.size.p[0]<<" | "<<s<<endl;
+
+	
+	Point foot;
+	foot.x = I.size.p[1]/2 - 1;
+	foot.y = I.size.p[0] - 1;
+	
+	Point center;
+	center.x = foot.x;
+	center.y = 0;
+
+	namedWindow( "Displayer", 1 );// Create a window for display.
+	imshow("Displayer", I);
+	while(1)
+	{
+	cvSetMouseCallback("Displayer", mouseEvent, 0);		
+	waitKey(0);
+
+	cout<<"\nFeature: "<<feature.x<<", "<<feature.y<<endl;
+	
+	double distance = points_distance(foot, feature);
+	double bearing = bearinger(foot, center, feature);
+	double multiplier = 1;
+
+	if (feature.y <= 0.1557 * I.size.p[0]) multiplier= 2.4691;
+	else if (feature.y <= 0.2024 * I.size.p[0]) multiplier= 2.4691;
+	else if (feature.y <= 0.3339 * I.size.p[0]) multiplier= 2.5;
+	else if (feature.y <= 0.4567 * I.size.p[0]) multiplier= 2.4850;
+	else if (feature.y <= 0.5398 * I.size.p[0]) multiplier= 2.4828;
+	else if (feature.y <= 0.6367 * I.size.p[0]) multiplier= 2.5210;
+	else if (feature.y <= 0.7405 * I.size.p[0]) multiplier= 2.6966;
+	else if (feature.y <= 0.8962 * I.size.p[0]) multiplier= 3.1356;
+	else multiplier= 3.3;
+
+	cout<<" | Multiplier: "<<multiplier;	
+	distance *= multiplier;
+	
+	//distance = points_distance(foot, feature);
+	
+	bearing = bearing * 0.6679;	
+	cout<<"\nDistance: "<<distance;
+	cout<<"\nBearing: "<<bearing<<endl;	
+
+	cout<<"\n---------------\n\n";
+	}
+}

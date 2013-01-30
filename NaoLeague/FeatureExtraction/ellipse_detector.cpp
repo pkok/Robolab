@@ -9,7 +9,7 @@ using namespace std;
 using namespace cv;
 
 
-void detect_ellipse(Mat image, vector<Vec4i> lines)
+void detect_ellipse(Mat image, vector<Vec4i> lines, vector<Vec4i> &ellipse_prob_lines)
 {
 	Mat black = Mat::zeros(image.rows, image.cols, CV_8UC3);
 	vector< vector<Vec4i> > ellipse_lines;
@@ -91,27 +91,37 @@ void detect_ellipse(Mat image, vector<Vec4i> lines)
 	}
 
 	int cluster = 0;
+	int max_cluster_size = 0;
 	for(int i = 0; i < ellipse_lines.size(); i ++)
 	{
-		cluster ++;
-		Mat temp;
-		black.copyTo(temp);
-		for (int j = 0; j < ellipse_lines[i].size(); j++)
+		if (ellipse_lines[i].size() > max_cluster_size)
 		{
-			circle(temp, Point(ellipse_lines[i][j][1], ellipse_lines[i][j][0]), 2, Scalar(0,0,255), 2, 8, 0);
-			circle(temp, Point(ellipse_lines[i][j][3],ellipse_lines[i][j][2]), 2, Scalar(0,0,255), 2, 8, 0);
-			circle(temp, line_middle_point(Vec4i(ellipse_lines[i][j][1], ellipse_lines[i][j][0],ellipse_lines[i][j][3], ellipse_lines[i][j][2])), 2, Scalar(0,0,255), 2, 8, 0);
-
-			// line( temp, Point(ellipse_lines[i][j][1], ellipse_lines[i][j][0]),
-			//      Point(ellipse_lines[i][j][3],ellipse_lines[i][j][2]), Scalar(0,0,255), 1, 8 );
+			max_cluster_size = ellipse_lines[i].size();
+			cluster = i;
 		}
-
-		stringstream ss;
-		ss << cluster;
-
-		imshow("cluster"+ss.str(), temp);
-
 	}
-
+	if(max_cluster_size > 7)
+	{
+		for (int j = 0; j < ellipse_lines[cluster].size(); j++)
+		{
+			ellipse_prob_lines.push_back(ellipse_lines[cluster][j]);
+		}
+	}
 	return;
 }
+
+// cout << "cluster " << i << "  size " << ellipse_lines[i].size() << endl;
+// cluster ++;
+// Mat temp;
+// black.copyTo(temp);
+// for (int j = 0; j < ellipse_lines[i].size(); j++)
+// {
+// 	circle(temp, Point(ellipse_lines[i][j][1], ellipse_lines[i][j][0]), 2, Scalar(0,0,255), 2, 8, 0);
+// 	circle(temp, Point(ellipse_lines[i][j][3],ellipse_lines[i][j][2]), 2, Scalar(0,0,255), 2, 8, 0);
+// 	circle(temp, line_middle_point(Vec4i(ellipse_lines[i][j][1], ellipse_lines[i][j][0],ellipse_lines[i][j][3], ellipse_lines[i][j][2])), 2, Scalar(0,0,255), 2, 8, 0);
+// 	// line( temp, Point(ellipse_lines[i][j][1], ellipse_lines[i][j][0]),
+// 	//      Point(ellipse_lines[i][j][3],ellipse_lines[i][j][2]), Scalar(0,0,255), 1, 8 );
+// }
+// stringstream ss;
+// ss << cluster;
+// imshow("cluster"+ss.str(), temp);

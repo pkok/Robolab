@@ -12,6 +12,6 @@
 
 using namespace cv;
 
-void detect_ellipse(Mat image, vector<Vec4i> lines);
+void detect_ellipse(Mat image, vector<Vec4i> lines, vector<Vec4i> &ellipse_prob_lines);
 
 #endif
