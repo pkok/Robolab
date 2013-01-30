@@ -26,12 +26,13 @@ struct Pos
 	}
 };
 
-enum FeatureType {l_crossing,t_crossing,x_crossing, goal_post};
+enum FeatureType {l_crossing,t_crossing,x_crossing, goal_post,undefined};
 
 struct LandMark{
 	Pos pos;
 	FeatureType type;
 	LandMark(double x, double y, FeatureType ft);
+	LandMark();
 };
 //map of feature positions
 struct FeatureMap{
@@ -49,7 +50,7 @@ struct FeatureMap{
 	Pos g_cross[4]; //goal posts
 */
 	//returns landmarks of only specified FeatureType
-	vector<LandMark*> get_features(FeatureType ft);
+	vector<LandMark> get_features(FeatureType ft);
 
 	//constructor
 	FeatureMap();

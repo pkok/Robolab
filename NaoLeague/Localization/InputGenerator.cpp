@@ -10,6 +10,7 @@
 #include "InputGenerator.h"
 
 #include <cmath>
+#include <assert.h>
 
 using namespace std;
 
@@ -66,6 +67,11 @@ int InputGenerator::generate_features(double x,double y, double rot,FeatureMap f
 
 	//discard features that are not vissible
 	for(int i = 0; i< vis_feat_all.size(); i++){
+		//add random noise
+		vis_feat_all[i].bearing +=random_gaussian() * 0.1;
+		vis_feat_all[i].range += random_gaussian() * 2;
+		assert(vis_feat_all[i].range < 10000);
+
 		if((  vis_feat_all[i].bearing > camera_right && vis_feat_all[i].bearing < camera_left  )){
 			vis_feat->push_back(vis_feat_all[i]);
 		}
@@ -82,19 +88,19 @@ int InputGenerator::generate_features(double x,double y, double rot,FeatureMap f
 int InputGenerator::calculate_range_bearing(FeatureMap fm,double x, double y, double rot, vector<VisualFeature>* poss_feat){
 
 	//iterate l_cross
-	vector<LandMark*> lm_l;
+	vector<LandMark> lm_l;
 	lm_l = fm.get_features(l_crossing);
 	for(int i = 0; i<lm_l.size() ; i++){
 
-		double delta_x =  lm_l[i]->pos.x -x ;
-		double delta_y = lm_l[i]->pos.y - y ;
+		double delta_x =  lm_l[i].pos.x -x ;
+		double delta_y = lm_l[i].pos.y - y ;
 
 		//position of unity vector with rotation:
 		double x_unity =cos(rot);
 		double y_unity = sin(rot);
 
 
-		double r = sqrt((x - lm_l[i]->pos.x) * (x - lm_l[i]->pos.x) + (y - lm_l[i]->pos.y) * (y - lm_l[i]->pos.y));
+		double r = sqrt((x - lm_l[i].pos.x) * (x - lm_l[i].pos.x) + (y - lm_l[i].pos.y) * (y - lm_l[i].pos.y));
 
 		//check if "behind" robot:
 		//project vector:
@@ -111,18 +117,18 @@ int InputGenerator::calculate_range_bearing(FeatureMap fm,double x, double y, do
 		poss_feat->push_back(f);
 	}
 	//iterate t_cross
-	vector<LandMark*> lm_t;
+	vector<LandMark> lm_t;
 	lm_t = fm.get_features(t_crossing);
-	for(int i = 0; i<6 ; i++){
-		double delta_x = lm_t[i]->pos.x - x ;
-		double delta_y = lm_t[i]->pos.y - y;
+	for(int i = 0; i<lm_t.size() ; i++){
+		double delta_x = lm_t[i].pos.x - x ;
+		double delta_y = lm_t[i].pos.y - y;
 
 		//position of unity vector with rotation:
 		double x_unity = cos(rot);
 		double y_unity = sin(rot);
 
 
-		double r = sqrt((x - lm_t[i]->pos.x) * (x - lm_t[i]->pos.x) + (y - lm_t[i]->pos.y) * (y - lm_t[i]->pos.y));
+		double r = sqrt((x - lm_t[i].pos.x) * (x - lm_t[i].pos.x) + (y - lm_t[i].pos.y) * (y - lm_t[i].pos.y));
 
 
 
@@ -140,16 +146,16 @@ int InputGenerator::calculate_range_bearing(FeatureMap fm,double x, double y, do
 		poss_feat->push_back(f);
 	}
 	//iterate x_cross
-	vector<LandMark*> lm_x;
+	vector<LandMark> lm_x;
 	lm_x = fm.get_features(x_crossing);
-	for(int i = 0; i<5 ; i++){
-		double delta_x =  lm_x[i]->pos.x -x ;
-		double delta_y = lm_x[i]->pos.y  -y;
+	for(int i = 0; i<lm_x.size() ; i++){
+		double delta_x =  lm_x[i].pos.x -x ;
+		double delta_y = lm_x[i].pos.y  -y;
 
 		//position of unity vector with rotation:
 		double x_unity = cos(rot);
 		double y_unity = sin(rot);
-		double r = sqrt((x - lm_x[i]->pos.x) * (x - lm_x[i]->pos.x) + (y - lm_x[i]->pos.y) * (y - lm_x[i]->pos.y));
+		double r = sqrt((x - lm_x[i].pos.x) * (x - lm_x[i].pos.x) + (y - lm_x[i].pos.y) * (y - lm_x[i].pos.y));
 
 		//check if "behind" robot:
 		//project vector:
@@ -166,18 +172,18 @@ int InputGenerator::calculate_range_bearing(FeatureMap fm,double x, double y, do
 		poss_feat->push_back(f);
 	}
 	//iterate g_cross
-	vector<LandMark*> lm_g;
+	vector<LandMark> lm_g;
 	lm_g = fm.get_features(goal_post);
 	for(int i = 0; i<4 ; i++){
-		double delta_x =  lm_g[i]->pos.x - x ;
-		double delta_y =   lm_g[i]->pos.y - y;
+		double delta_x =  lm_g[i].pos.x - x ;
+		double delta_y =   lm_g[i].pos.y - y;
 
 		//position of unity vector with rotation:
 		double x_unity = cos(rot);
 		double y_unity = sin(rot);
 
 
-		double r = sqrt((x - lm_g[i]->pos.x) * (x - lm_g[i]->pos.x) + (y - lm_g[i]->pos.y) * (y - lm_g[i]->pos.y));
+		double r = sqrt((x - lm_g[i].pos.x) * (x - lm_g[i].pos.x) + (y - lm_g[i].pos.y) * (y - lm_g[i].pos.y));
 
 
 

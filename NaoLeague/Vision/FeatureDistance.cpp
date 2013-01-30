@@ -100,27 +100,37 @@ std::vector<float> FeatureDistance::getFeaturePositionFromImagePosition(const st
   const std::string cameraName = (this->camera == AL::kTopCamera) ? "CameraTop" : "CameraBottom";
   std::vector<float> cameraPosition = this->motionProxy->getPosition(cameraName, 2 /* FRAME_ROBOT */, true);
   std::vector<float> tmp = this->videoProxy->getAngularPositionFromImagePosition(this->camera, imagePosition);
+  std::cerr << "a" << tmp << std::endl;
 
-  AL::Math::Transform featureAngle = AL::Math::Transform::from3DRotation(0.0f, tmp[1], tmp[0]);
+  AL::Math::Transform featureAngle = AL::Math::Transform::from3DRotation(0.0f, -tmp[1], -tmp[0]);
 
   AL::Math::Rotation3D r(std::vector<float>(cameraPosition.begin()+3, cameraPosition.end()));
-  AL::Math::Transform t = AL::Math::transformFromRotation3D(r);
-  std::cerr << "r: " << r << std::endl;
+  AL::Math::Transform t = AL::Math::transformFromPosition6D(AL::Math::Position6D(cameraPosition));
+  std::cerr << "r" << r << std::endl;
 
   AL::Math::Transform totalTransform;
-  AL::Math::changeReferenceTransform(t, featureAngle, totalTransform);
+  AL::Math::changeReferenceTransform(featureAngle, t, totalTransform);
   r = AL::Math::rotation3DFromTransform(totalTransform);
-  std::cerr << "r: " << r << std::endl;
+  std::cerr << "r" << r << std::endl;
 
   AL::Math::Position3D pluckerLineU(r.toVector());
+  std::cerr << "u" << pluckerLineU << std::endl;
+  pluckerLineU /= pluckerLineU.norm();
+  std::cerr << "u" << pluckerLineU << std::endl;
   AL::Math::Position3D pluckerLineV = pluckerLineU.crossProduct(AL::Math::position3DFromTransform(totalTransform));
+  std::cerr << "v" << pluckerLineV << std::endl;
 
   AL::Math::Position3D pluckerPlane(0.0f, 0.0f, 1.0f);
   float pluckerPlaneWeight = 0.0;
+  std::cerr << "p" << pluckerPlane << std::endl;
 
-  AL::Math::Position3D intersection = pluckerLineV.crossProduct(pluckerPlane) - (pluckerPlaneWeight * pluckerLineU);
+  AL::Math::Position3D intersection = pluckerLineV.crossProduct(pluckerPlane);
+  intersection -= (pluckerPlaneWeight * pluckerLineU);
+  std::cerr << "i" << intersection << std::endl; 
+  std::cerr << "u.p " << pluckerLineU.dotProduct(pluckerPlane) << std::endl;
   intersection /= pluckerLineU.dotProduct(pluckerPlane);
-  std::cerr << intersection << std::endl; 
+  std::cerr << "i" << intersection << std::endl; 
+  intersection.y = sqrt(intersection.y);
 
   return intersection.toVector();
 }

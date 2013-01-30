@@ -8,6 +8,7 @@
 #define PARTICLEFILTER_H_
 #include "Particle.h"
 #include "FeatureMap.h"
+#include "LocationVisualizer.h"
 #include <vector>
 
 using namespace std;
@@ -65,6 +66,7 @@ public:
 	//constructors
 	ParticleFilter();
 	ParticleFilter(int width, int height,int number_of_particles);
+	ParticleFilter(double error_range,double error_bearing,double resample_variance_pos,double resample_variance_rot,double variance_range,double variance_bearing);
 	virtual ~ParticleFilter();
 	//set parameters
 	void set_params();
@@ -74,25 +76,32 @@ public:
 
 	//incorporate new odometry information (move and rotate particle)
 	int sample_motion_model_simple(OdometryInformation odometry_information,Particle* last_pose);
+	//random sample landmark
+	Particle sample_landmark_model(LandMark lm, VisualFeature vf);
 	//weight particles accroding to new sensory information (vision)
 	double measurement_model(vector<VisualFeature> features,Particle* current_pose);
 	//finds most likeli landmark for given feature observation
-	LandMark* find_landmark(VisualFeature feature, Particle* current_pose,double* dist);
+	LandMark find_landmark(VisualFeature feature, Particle* current_pose,double* dist);
 
 	//wander through all particles and update odometry and weight according to visual measurement
 	int dynamic(OdometryInformation odo_inf,vector<VisualFeature> vis_feats);
 	//reassign particle poses according to weight of particles
+	int resample(VisualFeature vf);
 	int resample();
 	//particle interaction
 
 
 	int add_particles(int number,double x, double y, double rot, double weight);
 	int add_particles(int number);
+	int add_particle(double x, double y, double rot, double weight);
 	int delete_particles();
 	int print_particles();
 	double sum_weights();
 	//gets the final weighted avrg of all particles for estimate of psoition
 	int get_position_estimate(double* x_est,double* y_est,double* rot_est);
+	//to check if the sides need to be disambiguated:
+	int kmeans(LocationVisualizer* lv,double* x1,double* y1, double* x2, double* y2);
+
 
 	//gaussian noise
 	//sampling

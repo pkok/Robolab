@@ -348,11 +348,45 @@ void LocationVisualizer::clear_buffer(){
 }
 /**
  * @function draw_particle
+ * @brief draws a particle with given color
+ */
+void LocationVisualizer::draw_particle(double size,double x, double y, double red, double green, double blue){
+	//cout<<"drawing particle"<<endl;
+	//orientation line:
+
+	int my_x = x;
+	int my_y = y;
+	convert_to_image_coordinates(&my_x,&my_y);
+
+	x = my_x;
+	y = my_y;
+	int x_n = 5;
+	int y_n = 0;
+	double angle = 0;
+	//rotate point around 0,0
+	double sn = sin(angle);
+	double cs = cos(angle);
+
+	//cout<<"inv_certainty "<<inv_certainty<<endl;
+	int px = cs*x_n - sn*y_n;
+	int py = sn*x_n + cs*y_n;
+
+
+
+
+	//draw circle
+	circle(this->current_frame,Point(x,y),size,Scalar(red,green,blue),-1,8);
+	//draw direction
+	line(this->current_frame,Point(x,y),Point(x+px,y+py),Scalar(0,0,255),1,8);
+}
+/**
+ * @function draw_particle
  * @brief draws all particles in list given
  */
 void LocationVisualizer::draw_particle(vector<Particle> p_vec){
 
 	//find max
+
 	double max = -100000;
 	for (int i = 0; i< p_vec.size(); i++){
 		if(p_vec[i].weight > max){
@@ -392,7 +426,7 @@ void LocationVisualizer::draw_particle(Point location, double angle, double cert
 {
 	//cout<<"drawing particle"<<endl;
 	//orientation line:
-	int x = 10;
+	int x = 5;
 	int y = 0;
 	//rotate point around 0,0
 	double sn = sin(angle);
@@ -402,8 +436,12 @@ void LocationVisualizer::draw_particle(Point location, double angle, double cert
 	int px = cs*x - sn*y;
 	int py = sn*x + cs*y;
 	
+
+	inv_certainty  = 0;
+
+
 	//draw circle
-	circle(this->current_frame,location,5,Scalar(0,230*inv_certainty,0),-1,8);
+	circle(this->current_frame,location,3,Scalar(0,230*inv_certainty,0),-1,8);
 	//draw direction
 	line(this->current_frame,location,Point(location.x+px,location.y+py),Scalar(0,0,255),1,8);
 }
