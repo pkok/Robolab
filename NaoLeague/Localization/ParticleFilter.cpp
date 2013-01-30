@@ -52,7 +52,7 @@ void ParticleFilter::set_params(){
 	this->error_bearing = 0.2;//0.2;
 
 	this->resample_variance_pos = 10; //20
-	this->resample_variance_rot = 1;
+	this->resample_variance_rot = 0.1;//1;
 
 	this->measurement_factor = 1;
 
@@ -196,7 +196,7 @@ int ParticleFilter::resample(VisualFeature vf) {
 				}
 				//if x crossing
 				if(vf.type == x_crossing){
-					int x = rand() % 5;
+					int x = rand() % 3;
 					vector<LandMark> lm;
 					lm = this->feature_map.get_features(x_crossing);
 					p = this->sample_landmark_model(lm[x],vf);
@@ -314,11 +314,6 @@ int ParticleFilter::dynamic(OdometryInformation odo_inf,vector<VisualFeature> vi
 	//augmented MCL:
 	this->w_slow = this->w_slow + this->alpha_slow * (w_avrg - this->w_slow);
 	this->w_fast = this->w_fast + this->alpha_fast * (w_avrg - this->w_fast );
-	/*
-	int no_particles_weight = 0;
-	for (int k= 0; k< this->particles.size(); k++){
-		if(this->particles[k].weight > 0){no_particles_weight ++;}
-	}*/
 
 }
 
@@ -374,21 +369,23 @@ LandMark ParticleFilter::find_landmark(VisualFeature feature,
 			+ sin(feature.bearing + current_pose->rot) * feature.range;
 
 	//choose feature with smallest distance and then proceed
-	double min_dist = 1000; //10 meter
-
+	double min_dist = 100000; //10 meter
 	for (int i = 0; i < lms.size(); i++) {
 		//calculate distance
 		double delta_x = x_feat - lms[i].pos.x;
 		double delta_y = y_feat - lms[i].pos.y;
 		double dist = sqrt(delta_x * delta_x + delta_y * delta_y);
-
 		if (dist < min_dist) {
+			//cout<<"found min dist for "<<i<<endl;
 			min_dist = dist;
 			lm_on_map = lms[i];
 			if(lm_on_map.type >3){
 				cout<<"PENISPENIS"<<lm_on_map.type<<" | "<<lms[i].type<<endl;
 			}
 		}
+	}
+	if(min_dist ==100000){
+		cout<<"DID NOT FIND MIN DISTANCE !!"<<endl;
 	}
 	if(lm_on_map.type >3){
 		cout<<"PENISPENISPENIS"<<lm_on_map.type<<"|"<<endl;
@@ -517,6 +514,17 @@ double ParticleFilter::measurement_model(vector<VisualFeature> features,
 	return(prod);
 }
 /*
+ * adds single particle with specified parameters.
+ */
+int ParticleFilter::add_particle(double x, double y, double rot, double weight){
+	Particle p;
+	p.x = x;
+	p.y = y;
+	p.rot = rot;
+	p.weight = weight;
+	this->particles.push_back(p);
+}
+/*
  * creates a number of particles with fixed poses:
  */
 int ParticleFilter::add_particles(int number,double x, double y, double rot, double weight){
@@ -590,4 +598,155 @@ int ParticleFilter::get_position_estimate(double* x_est,double* y_est,double* ro
 	*rot_est = rot / sum;
 	*x_est = x / sum;
 	*y_est = y / sum;
+}
+
+int ParticleFilter::kmeans(LocationVisualizer* lv,double* x1,double* y1, double* x2, double* y2){
+	//chek for two clusters
+
+	//take random particles:
+	int rand_part_1 = floor(random_uniform() * this->particles.size());
+	int rand_part_2 = floor(random_uniform() * this->particles.size());
+
+	vector<Particle> cluster1;
+	vector<Particle> cluster2;
+
+	double mean1_x = 1;//this->particles[rand_part_1].x;
+	double mean1_y = 0;//this->particles[rand_part_1].y;
+
+	double mean2_x = -1;//this->particles[rand_part_2].x;
+	double mean2_y = 0;//this->particles[rand_part_2].y;
+
+	double mean1_x_old = 0;
+	double mean1_y_old = 0;
+	double mean2_x_old = 0;
+	double mean2_y_old = 0;
+
+
+
+	double dist_clusters = 1000;
+
+
+
+	double dist_means1 = 100;
+	double dist_means2 = 100;
+	double delta_x = 100;
+	double delta_y = 100;
+	lv->draw_particle(20,mean1_x,mean1_y,0,0,255);
+	lv->draw_particle(20,mean2_x,mean2_y,0,0,255);
+	lv->draw_particle(this->particles);
+
+	lv->create_window();
+	lv->clear_buffer();
+
+	int iter_count = 0;
+	while (dist_means1 > 1 || dist_means2 > 1) {
+
+
+		iter_count++;
+		if (iter_count > 1000) {
+			break;
+		}
+		if (iter_count % 10 == 0 ||iter_count == 1) {
+			cout << dist_means1 << "|" << dist_means2 << endl;
+			cout << iter_count << " : " << mean1_x_old << "," << mean1_y_old
+					<< " " << mean1_x << "," << mean1_y << "|" << mean2_x_old
+					<< "," << mean2_y_old << " " << mean2_x << "," << mean2_y
+					<< endl;
+			cout<<"no of particles 1 : "<<cluster1.size()<<"| 2 : "<<cluster2.size()<<endl;
+			lv->draw_particle(20,mean1_x,mean1_y,0,0,255);
+			lv->draw_particle(20,mean2_x,mean2_y,0,0,255);
+			lv->draw_particle(this->particles);
+
+			lv->create_window();
+			lv->clear_buffer();
+		}
+		//assignemnt: assign each observation to the cluster whose mean is closest to it
+		//calculate distance to mean 1
+		//calculate distance to mean 2
+		//assign to point which is closest
+
+		mean1_x_old = mean1_x;
+		mean1_y_old = mean1_y;
+		mean2_x_old = mean2_x;
+		mean2_y_old = mean2_y;
+		vector<Particle> empty_vec1;
+		vector<Particle> empty_vec2;
+
+		cluster1 = empty_vec1;
+		cluster2 = empty_vec2;
+
+		for (int i = 0; i < this->particles.size(); i++) {
+			double delta_x = mean1_x - this->particles[i].x;
+			double delta_y = mean1_y - this->particles[i].y;
+
+			double dist_1 = sqrt(delta_x * delta_x + delta_y * delta_y);
+
+			delta_x = mean2_x - this->particles[i].x;
+			delta_y = mean2_y - this->particles[i].y;
+			double dist_2 = sqrt(delta_x * delta_x + delta_y * delta_y);
+
+			//decide to which cluster to assign
+			if (dist_2 >= dist_1) {
+				//assign to cluster 1
+				cluster1.push_back(this->particles[i]);
+			} else {
+				//assign to cluster 2
+				cluster2.push_back(this->particles[i]);
+			}
+		}
+
+		//update step: calculate the new means to be the centroid of the observations in the new cluster
+		//iterate through every particle in cluster, take avrg x and y
+		mean1_x = 0;
+		mean1_y = 0;
+		for (int i = 0; i < cluster1.size(); i++) {
+			mean1_x += cluster1[i].x;
+			mean1_y += cluster1[i].y;
+		}
+		mean1_x = mean1_x / (double) cluster1.size();
+		mean1_y = mean1_y / (double) cluster1.size();
+
+		mean2_x = 0;
+		mean2_y = 0;
+		for (int i = 0; i < cluster2.size(); i++) {
+			mean2_x += cluster2[i].x ;
+			mean2_y += cluster2[i].y ;
+		}
+		mean2_x = mean2_x / (double) cluster2.size();
+		mean2_y = mean2_y / (double) cluster2.size();
+
+		//distance of both clusters
+		double delta_x_clusters = mean1_x - mean2_x;
+		double delta_y_clusters = mean1_y - mean2_y;
+		dist_clusters = sqrt(
+				delta_x_clusters * delta_x_clusters
+						+ delta_y_clusters * delta_y_clusters);
+
+
+		//change of means in euclidean distance cluster 1
+		delta_x = mean1_x_old - mean1_x;
+		delta_y = mean1_y_old - mean1_y;
+
+		dist_means1 = sqrt(delta_x * delta_x + delta_y * delta_y);
+
+		//change of means in euclidean distance cluster 2
+		delta_x = mean2_x_old - mean2_x;
+		delta_y = mean2_y_old - mean2_y;
+		dist_means2 = sqrt(delta_x * delta_x + delta_y * delta_y);
+		/*if(mean2_x_old == mean2_x){cout << iter_count << " : " << mean1_x_old << "," << mean1_y_old
+				<< " " << mean1_x << "," << mean1_y << "|" << mean2_x_old
+				<< "," << mean2_y_old << " " << mean2_x << "," << mean2_y
+				<< endl;}*/
+		cout<<dist_means2<<endl;
+	}
+	*x1 = mean1_x;
+	*y1 = mean1_y;
+	*x2 = mean2_x;
+	*y2 = mean2_y;
+	lv->draw_particle(20,mean1_x,mean1_y,0,0,255);
+	lv->draw_particle(20,mean2_x,mean2_y,0,0,255);
+	lv->draw_particle(this->particles);
+
+	lv->create_window();
+	lv->clear_buffer();
 }

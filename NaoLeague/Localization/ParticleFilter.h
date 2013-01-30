@@ -8,6 +8,7 @@
 #define PARTICLEFILTER_H_
 #include "Particle.h"
 #include "FeatureMap.h"
+#include "LocationVisualizer.h"
 #include <vector>
 
 using namespace std;
@@ -92,11 +93,15 @@ public:
 
 	int add_particles(int number,double x, double y, double rot, double weight);
 	int add_particles(int number);
+	int add_particle(double x, double y, double rot, double weight);
 	int delete_particles();
 	int print_particles();
 	double sum_weights();
 	//gets the final weighted avrg of all particles for estimate of psoition
 	int get_position_estimate(double* x_est,double* y_est,double* rot_est);
+	//to check if the sides need to be disambiguated:
+	int kmeans(LocationVisualizer* lv,double* x1,double* y1, double* x2, double* y2);
+
 
 	//gaussian noise
 	//sampling
