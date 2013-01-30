@@ -19,7 +19,6 @@
 #define SAMPLING_VER 5
 #define SAMPLING_HOR 5
 #define ROOT_OFFSET_Y 10
-#define ROOT_OFFSET_X 10
 
 using namespace cv;
 
