@@ -6,6 +6,7 @@
 #include "../CommonSource/Macros.h"
 
 #include <alvision/alvisiondefinitions.h>
+#include <alproxies/almotionproxy.h>
 #include <alproxies/alrobotpostureproxy.h>
 
 int main(int argc, char **argv) {
@@ -14,6 +15,9 @@ int main(int argc, char **argv) {
     std::cout << "Virtual robot!" << std::endl;
     AL::ALRobotPostureProxy *rpp = new AL::ALRobotPostureProxy(argv[1], 9559);
     rpp->goToPosture("StandInit", 1.0f);
+    AL::ALMotionProxy *motion = new AL::ALMotionProxy(argv[1], 9559);
+    motion->setAngles("HeadPitch", -0.538476f, 1.0f);
+    motion->setAngles("HeadYaw", 0.0f, 1.0f);
   }
 
   FeatureDistance fd = FeatureDistance(argv[1], AL::kBottomCamera);
@@ -24,19 +28,21 @@ int main(int argc, char **argv) {
 
   std::vector<float> pix = std::vector<float>(2, 0.0f);
   std::string input;
+  std::cout << "=> ";
   std::getline(std::cin, input);
   while (input.compare("q")) {
     std::stringstream(input) >> pix[0] >> pix[1];
     if (pix[0] > 1.0f || pix[1] > 1.0f) { 
       pix[0] /= 320.0f;
       pix[1] /= 240.0f;
+      std::cout << "Input transformed to: " << pix << std::endl;
     }
     std::vector<float> pos = fd.getFeaturePositionFromImagePosition(pix);
-    std::cout << "-> ";
     for (std::vector<float>::iterator iter = pos.begin(); iter != pos.end(); ++iter) {
       std::cout << *iter << " ";
     }
     std::cout << std::endl;
+    std::cout << "=> ";
     std::getline(std::cin, input);
   }
 
