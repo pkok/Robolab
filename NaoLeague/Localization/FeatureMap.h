@@ -26,7 +26,7 @@ struct Pos
 	}
 };
 
-enum FeatureType {l_crossing,t_crossing,x_crossing, goal_post,undefined};
+enum FeatureType {l_crossing,t_crossing,x_crossing, goal_post, undefined};
 
 struct LandMark{
 	Pos pos;
