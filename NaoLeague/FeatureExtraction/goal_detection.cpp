@@ -423,14 +423,15 @@ void goalPostDetection(Mat image, vector<Point> goalRoots, double* hor_hist, int
 	double last_maximum = 0.0;
 	int last_candidate = 0;
 	Mat result = Mat::zeros(image.rows, image.cols, CV_8UC3);
-
-	// gain multiplication of the horizontal histogram...
+	Mat hist = Mat::zeros(image.rows, image.cols, CV_8UC3);
 
 	Mat root;
 	image.copyTo(root);
+	
 	for( int i = 0; i < goalRoots.size(); i++ )
 	{
 		hor_hist[goalRoots[i].y] *= ROOT_GAIN;
+		
 	}
 
 	// find local maxima in the histogram...
@@ -557,18 +558,14 @@ void goalPostDetection(Mat image, vector<Point> goalRoots, double* hor_hist, int
 			}
 		}
 		post_final(image, roi.x, goalPosts, goalRoots);
+
 		return;
 	}
 }
 
-// for (int j = 0; j < goalRoots.size(); ++j)
-// {
-// 	circle(root, Point(goalRoots[j].y  , goalRoots[j].x), 2, Scalar(255,0,0), 2, 8, 0);
-// }
-// imshow("original binary", root);
+
 
 // we see two vertical posts and one horizontal the whole goal...
-// seed();
 // for (int i = 0; i < best_candidate_lines.size(); ++i)
 // {
 // 	line( cropped, Point(line_hor_pass[1], line_hor_pass[0] - (floor(temp.width/2))),
