@@ -120,11 +120,6 @@
 % The first character should be within \initial{}
 \initial{I}\textbf{n this Project we propose a basic code for the Robo soccer Standard league Platform for the Dutch national team. We focused on the problem of visual feature recognition and the localization of the robot in a tournament setup. This project contains a detailed description of our implementation together with a conclusion and a brief evaluation. Since this report only covers feature detection and Localization we give an outlook on what parts are to be implemented in addition to make the robots play soccer.}
 
-\section{Related Work}
-~\cite{canas2009visual}
-~\cite{ashar2010robocup}
-~\cite{canas2010recognition}
-
 \section{Feature Extraction}
 Visual object recognition is a key ability for autonomous robotic agents especially in dynamic and partially observable environments. A reliable landmark detection process is really crucial for achieving self-localization, which can be easily considered as the stepping stone for having a functional robotic soccer team. In this section, we describe the whole procedure of processing input images from the NAO's camera, outputting features that are informative to be used by the core of our localization scheme.  Using a variety of image processing techniques, we successfully detect field landmarks. In general, we have to deal with noisy images, which not only contain the field region but also background noise and useless information which comes from above the horizon of the field view. Furthermore, we had to deal with lighting conditions which may vary significantly.
 There also real-time constraints which had to be taken into consideration during our algorithmic implementation in order for the whole procedure to be able to execute in real time.
@@ -264,10 +259,20 @@ For this purpose we introduced a confidence measure which is based on geometrica
 These measures are computed in a way that an intersection cannot have same confidence for two types. After the computation of the confidence measure for each intersection, we check if there are intersection types which can be combined in one. For example, two T type intersections can form a X type if they are located near and have opposite orientation. Except from the computation of the intersection position and confidence for each type of intersection, we also compute the orientation of each one of them, in order to be feasible for the localization system to acquire more information about the robot's position.
 
 \section{Goal Detection}
-Last step in the feature extraction process is the detection of the goal. In this section, we are going to present the process of detecting the goal. Both goals in the Robocup SPL field have a distinct yellow color. We have already discussed how the binary image in respect to the goals is created. Integrated in the same scan of the input image, we compute two different histograms for yellow pixels, one horizontal and one vertical. These histograms are going to help us later in goal detection. We also store points of yellow-green transitions on the same image scanning.
+Last step in the feature extraction process is the detection of the goal. Goal detection is critical for the robot in order to take sensible actions, and due to the fact that is the only easily-distinguishable landmark in the field. Both goals in the Robocup SPL field have a distinct yellow color. We have already discussed how the binary image in respect to the goals is created. Integrated in the same scan of the input image, we compute two different histograms for yellow pixels, one horizontal and one vertical. These histograms are going to help us later in goal detection. We also store points of yellow-green transitions on the same image scanning.
 
-Goals consist of two vertical bars and a horizontal attached to the tops of the two vertical bars. So, we can realize that vertical bars are more informative
+Goals consist of two vertical bars and a horizontal attached to the tops of the two vertical bars. So, we can realize that vertical bars are more informative, especially to inform our localization system about the orientation in respect to the goalposts.
 
+The first step in goal detection process is the use of the horizontal histogram of yellow pixels in combination with the y-positions in where we found yellow-green transitions, something declaring the possible position of the goalpost's bottom. Combining this information, we can find the local maxima in the horizontal axis and find the position-s, where goalposts are located. If the maxima of this histogram have values under a certain threshold, the process stops here and we do not continue, as it appears that there is no vertical post. If these values are high enough, and we have two local maxima, we are pretty sure that there are two vertical posts in the image, if there is only one we are looking only for one vertical post. In both cases we scan the image left and right from the maxima and exclude parts of the image which do not contain yellow pixels at all.
+
+Next step is the line detection, using the same approach we have discussed earlier, but now generating points only with a vertical scan, due to the fact that we are only interested in vertical lines. From these vertical lines we choose the best ones in respect to their length, orientation, and with the prior knowledge about possible horizontal positions for the goalposts. These lines will be extended towards the bottom of the goalpost and the top, estimating like this the true height of each goalpost. To estimate the width, we are taking random samples upon the line representing the goalpost and measure with a simple scan the width. The average of all these measurements will be our estimation about its width. We can also compute a confidence measure about the bottom of the goalposts, taking the estimated bottom of the representative line and computing the distance from the yellow-green transition we talked earlier. The same procedure is applied for the horizontal goalpost as well. Horizontal goalpost can be very informative in cases that only one vertical goalpost is visible by our agent. The orientation of the Horizontal goalpost can be used in order our agent to distinguish between left and right goalpost.
+
+
+
+\section{Related Work}
+~\cite{canas2009visual}
+~\cite{ashar2010robocup}
+~\cite{canas2010recognition}
 
 \printbibliography
 

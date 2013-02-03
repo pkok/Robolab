@@ -1,12 +1,12 @@
-\BOOKMARK [1][-]{section.1}{Related Work}{}% 1
-\BOOKMARK [1][-]{section.2}{Feature Extraction}{}% 2
-\BOOKMARK [2][-]{subsection.2.1}{Choosing colorspace}{section.2}% 3
-\BOOKMARK [2][-]{subsection.2.2}{Basic Pipeline}{section.2}% 4
-\BOOKMARK [1][-]{section.3}{Image format}{}% 5
-\BOOKMARK [1][-]{section.4}{Background Removal}{}% 6
-\BOOKMARK [1][-]{section.5}{Image Binarization}{}% 7
-\BOOKMARK [1][-]{section.6}{Line Detection}{}% 8
-\BOOKMARK [2][-]{subsection.6.1}{Other approaches}{section.6}% 9
-\BOOKMARK [2][-]{subsection.6.2}{Our approach}{section.6}% 10
-\BOOKMARK [1][-]{section.7}{Line Feature Detection}{}% 11
-\BOOKMARK [1][-]{section.8}{Goal Detection}{}% 12
+\BOOKMARK [1][-]{section.1}{Feature Extraction}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{Choosing colorspace}{section.1}% 2
+\BOOKMARK [2][-]{subsection.1.2}{Basic Pipeline}{section.1}% 3
+\BOOKMARK [1][-]{section.2}{Image format}{}% 4
+\BOOKMARK [1][-]{section.3}{Background Removal}{}% 5
+\BOOKMARK [1][-]{section.4}{Image Binarization}{}% 6
+\BOOKMARK [1][-]{section.5}{Line Detection}{}% 7
+\BOOKMARK [2][-]{subsection.5.1}{Other approaches}{section.5}% 8
+\BOOKMARK [2][-]{subsection.5.2}{Our approach}{section.5}% 9
+\BOOKMARK [1][-]{section.6}{Line Feature Detection}{}% 10
+\BOOKMARK [1][-]{section.7}{Goal Detection}{}% 11
+\BOOKMARK [1][-]{section.8}{Related Work}{}% 12
