@@ -38,7 +38,8 @@
 \usepackage{here}
 \usepackage{biblatex} 
 \bibliography{report} 
-\usepackage{enumerate}												% Custom fontsizes
+\usepackage{enumerate}
+\usepackage{booktabs}											% Custom fontsizes
 
 
 
@@ -148,8 +149,28 @@ The first step in this procedure is the image input from the NAO's camera in HSV
 \end{enumerate}
 
 \section{Image format}
-NAO's camera can output images in different colorspaces representations. The images from the dataset we had, were in RGB format, and they had QVGA resolution ($320 \times 240$). We wanted to keep a low resolution in order to keep the time complexity of our algorithm feasible for real-time execution. Patrick can add some things here as he experimented better with NAO's camera.
+NAO's camera can output images in different colorspaces representations. The images from the dataset we had, were in RGB format, and they had QVGA resolution ($320 \times 240$). We wanted to keep a low resolution in order to keep the time complexity of our algorithm feasible for real-time execution. \textbf{Patrick can add some things here as he experimented better with NAO's camera.}
 
+\begin{table}
+\begin{center}
+\caption{Threshold values used for color segmentation.}
+\label{thresholdHSV}
+\begin{tabular}{lccc}
+\toprule
+\multicolumn{4}{c}{\textbf{Threshold}} \\
+\cmidrule(r){2-4}
+\textbf{Color}   & \textbf{Hue} & \textbf{Saturation} & \textbf{Value} \\
+\midrule
+Green      & $20 \sim 37$    & $100 \sim 255$    & $100 \sim 255$    \\
+Yellow      & $38 \sim 75$    & $50 \sim 255$    & $50 \sim 255$    \\
+White     & $0 \sim 255$    & $0 \sim 60$    & $200 \sim 255$    \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+\section{Background Removal}
+Background removal defines the task of detecting the field's borders in order to exclude uninformative regions in the processing image, saving this way computational cost and helping to subtract only the useful part of the image, which is the one, where we can detect all the features we are interested in. This can be done by a vertical scan of the image and detecting the first green pixel in each column. This method can work efficiently but it is not robust in many cases, as green pixels can be found above the field's horizon as well. Following the same principle in our approach, we consider as background every region upon a column before a considerable amount of green pixels, and not just one, which can lead us to faulty decisions about the horizon. We start in each column considering the pixel in the first row as background. Then, during scanning each column, we stop when we find many green continuous pixels and assign as horizon row in this column the first of this sequence of green pixels. In this process, we are only interested in green pixels. As you can see in table~\ref{thresholdHSV}, green pixels are considered as those which have HSV values around these thresholds.
 
 
 
