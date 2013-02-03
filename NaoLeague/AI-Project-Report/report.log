@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=pdflatex 2013.2.2)  3 FEB 2013 21:53
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=pdflatex 2013.2.1)  3 FEB 2013 22:35
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1658,6 +1658,10 @@ File: figures/bin_posts.png Graphic file (type png)
 Package pdftex.def Info: figures/bin_posts.png used on input line 195.
 (pdftex.def)             Requested size: 110.69681pt x 83.02235pt.
 
+
+Package hyperref Warning: Difference (2) between bookmark levels is greater 
+(hyperref)                than one, level fixed on input line 203.
+
 <figures/points.png, id=107, 321.2pt x 240.9pt>
 File: figures/points.png Graphic file (type png)
  <use figures/points.png>
@@ -1759,32 +1763,73 @@ l.252
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
 l.252 
-       <./figures/points.png (PNG copy)>] [5 <./figures/lines.png (PNG copy)>]
+       <./figures/points.png (PNG copy)>]
+<figures/img_000003.jpg, id=146, 321.2pt x 240.9pt>
+File: figures/img_000003.jpg Graphic file (type jpg)
+
+<use figures/img_000003.jpg>
+Package pdftex.def Info: figures/img_000003.jpg used on input line 270.
+(pdftex.def)             Requested size: 150.9509pt x 113.21565pt.
+
+<figures/img_000005.jpg, id=147, 321.2pt x 240.9pt>
+File: figures/img_000005.jpg Graphic file (type jpg)
+
+<use figures/img_000005.jpg>
+Package pdftex.def Info: figures/img_000005.jpg used on input line 271.
+(pdftex.def)             Requested size: 150.9509pt x 113.21565pt.
+
+<figures/img_000006.jpg, id=148, 321.2pt x 240.9pt>
+File: figures/img_000006.jpg Graphic file (type jpg)
+
+<use figures/img_000006.jpg>
+Package pdftex.def Info: figures/img_000006.jpg used on input line 272.
+(pdftex.def)             Requested size: 150.9509pt x 113.21565pt.
+ <figures/post3.png, id=149, 321.2pt x 240.9pt>
+File: figures/post3.png Graphic file (type png)
+
+<use figures/post3.png>
+Package pdftex.def Info: figures/post3.png used on input line 273.
+(pdftex.def)             Requested size: 150.9509pt x 113.21565pt.
+ <figures/post5.png, id=150, 321.2pt x 240.9pt>
+File: figures/post5.png Graphic file (type png)
+
+<use figures/post5.png>
+Package pdftex.def Info: figures/post5.png used on input line 274.
+(pdftex.def)             Requested size: 150.9509pt x 113.21565pt.
+ <figures/post6.png, id=151, 321.2pt x 240.9pt>
+File: figures/post6.png Graphic file (type png)
+
+<use figures/post6.png>
+Package pdftex.def Info: figures/post6.png used on input line 275.
+(pdftex.def)             Requested size: 150.9509pt x 113.21565pt.
+ [5 <./figures/lines.png (PNG copy)>]
 
 AED: lastpage setting LastPage
 [6
 
-]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 281.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 281.
+ <./figures/img_000003.jpg> <./figures/img_000005.jpg> <./figures/img_000006.jp
+g> <./figures/post3.png (PNG copy)> <./figures/post5.png (PNG copy)> <./figures
+/post6.png (PNG copy)>]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 295.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 295.
  (./report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 281.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 281.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 295.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 295.
 Package rerunfilecheck Info: File `report.out' has not changed.
-(rerunfilecheck)             Checksum: 081B4A4B813A9E15880A7496762012B6;668.
+(rerunfilecheck)             Checksum: B54CDCEB35F9C73560D41A2EA222CD3D;758.
 Package logreq Info: Writing requests to 'report.run.xml'.
 \openout1 = `report.run.xml'.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 281.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 295.
  ) 
 Here is how much of TeX's memory you used:
- 25943 strings out of 493485
- 445152 string characters out of 3143527
- 780021 words of memory out of 3000000
- 28531 multiletter control sequences out of 15000+200000
- 93673 words of font info for 131 fonts, out of 3000000 for 9000
+ 25990 strings out of 493485
+ 446136 string characters out of 3143527
+ 781021 words of memory out of 3000000
+ 28564 multiletter control sequences out of 15000+200000
+ 101046 words of font info for 137 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
- 65i,12n,71p,1632b,1369s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 65i,11n,71p,1632b,1369s stack positions out of 5000i,500n,10000p,200000b,50000s
 pdfTeX warning (dest): name{algorithm.1} has been referenced but does not exi
 st, replaced by a fixed one
 
@@ -1802,10 +1847,10 @@ blic/lm/lmss17.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/sha
 re/texmf/fonts/type1/public/lm/lmsy9.pfb></usr/share/texmf/fonts/type1/public/l
 m/lmtt9.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb>
 </usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvro8a.pfb>
-Output written on report.pdf (6 pages, 1469326 bytes).
+Output written on report.pdf (6 pages, 1571822 bytes).
 PDF statistics:
- 231 PDF objects out of 1000 (max. 8388607)
- 195 compressed objects within 2 object streams
- 54 named destinations out of 1000 (max. 500000)
- 28821 words of extra memory for PDF output out of 29859 (max. 10000000)
+ 240 PDF objects out of 1000 (max. 8388607)
+ 198 compressed objects within 2 object streams
+ 55 named destinations out of 1000 (max. 500000)
+ 31923 words of extra memory for PDF output out of 35830 (max. 10000000)
 

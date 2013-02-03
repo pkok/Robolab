@@ -150,7 +150,7 @@ The first step in this procedure is the image input from the NAO's camera in HSV
 
 
 
-\section{Image format}
+\subsection{Image format}
 NAO's camera can output images in different colorspaces representations. The images from the dataset we had, were in RGB format, and they had QVGA resolution ($320 \times 240$). We wanted to keep a low resolution in order to keep the time complexity of our algorithm feasible for real-time execution. \textbf{Patrick can add some things here as he experimented better with NAO's camera.}
 
 \begin{table}
@@ -171,7 +171,7 @@ White     & $0 \sim 255$    & $0 \sim 60$    & $200 \sim 255$    \\
 \end{center}
 \end{table}
 
-\section{Background Removal}
+\subsection{Background Removal}
 Background removal defines the task of detecting the field's borders in order to exclude uninformative regions in the processing image, saving this way computational cost and helping to subtract only the useful part of the image, which is the one, where we can detect all the features we are interested in. This can be done by a vertical scan of the image and detecting the first green pixel in each column. This method can work efficiently but it is not robust in many cases, as green pixels can be found above the field's horizon as well. Following the same principle in our approach, we consider as background every region upon a column before a considerable amount of green pixels, and not just one, which can lead us to faulty decisions about the horizon. We start in each column considering the pixel in the first row as background. Then, during scanning each column, we stop when we find many green continuous pixels and assign as horizon row in this column the first of this sequence of green pixels. In this process, we are only interested in green pixels. As you can see in table~\ref{thresholdHSV}, green pixels are considered as those which have hue, saturation, and value around these thresholds. Figure~\ref{background}, illustrates the process of background removal. Even though it is not such a sophisticated method, we can see that in this specific example, almost all background above the field's horizon has been removed, helping us in this way to avoid detect false positive features in the background.
 
 \begin{figure*}[t!]
@@ -184,7 +184,7 @@ Background removal defines the task of detecting the field's borders in order to
 \end{figure*}
 
 
-\section{Image Binarization}
+\subsection{Image Binarization}
 In this section, we will talk about another image pre-processing technique which helped our main procedure detect features easier. Image binarization is a process which outputs two binary images, one in respect to the goals, and the other in respect to the field lines. For goal detection, it is natural that we are interested only in yellow areas of the image. The same applies for field lines, we are only interested in green and white areas of it. The main goal of this process is to classify colors according to table~\ref{thresholdHSV}. As we can realize, a simple way to classify colors is used in order to get a binary image, with the interesting part highlighted in each case. For the first case, goals, we are only interested to find yellow, so we output white for each yellow pixel, and black for any other color. For field lines, black for every other than white pixel.
 
 \begin{figure}[h!]
@@ -200,10 +200,10 @@ Figure~\ref{binary}, illustrates the process of image binarization. To add some 
 \section{Line Detection}
 Before proceeding to the exact procedure about finding goals and line features, it is time to introduce our proposing approach to detect line segments in a binary image like those we presented before in image binarization section.
 
-\subsection{Other approaches}
+\subsubsection{Other approaches}
 In general, we are interested in finding one line segment for each actual line segment appearing in the image. Other methods, such as Hough Transformation or Probabilistic Hough Transformation failed to detect these continuous line segments, due to the fact that they applied after edge detection step. Lines in our images consist of line segments which are thicker than one pixel, and when edge detection is applied to those finds edges at both sides of a line. Therefore, both Hough transformations find lines at both sides of an actual line. There were also some other problems with these methods, namely, the big number of detected lines, small line pieces on each actual line, and wrongly connected line segments. The huge number of detected lines, made our efforts to cluster those lines tough.
 
-\subsection{Our approach}
+\subsubsection{Our approach}
 As a result, we came up with our own approach of finding line segments in these noisy images. The main idea of this approach is that if we had some points on these actual line segments, we could have been able to connect them based on color information, and geometric properties. Therefore, the first step of this algorithm, is to generate these points. A vertical and a Horizontal scan of the picture every $5 \sim 10$ pixels is required. We are only interested in transitions which start from black go white and again black in the end. We store these points as a pixel coordinates $<x,y>$ in a vector. As an illustration, we can see in figure~\ref{points}, where these points are located for the same example input image as before.
 \begin{figure}[t!]
 \caption{Points produced by black-white-black transitions in the example binary image of figure~\ref{binary}.}
@@ -247,7 +247,7 @@ Algorithm~\ref{line}, presents the pseudo-code for the line detection procedure.
 \includegraphics[width=0.4\textwidth]{figures/lines.png}
 \end{figure}
 
-\section{Line Feature Detection}
+\subsection{Line Feature Detection}
 Until now, we have talked about, image binarization and how we detect line segments which represent actual field lines in input images from NAO's camera. The next in our feature extraction procedure, is to identify and extract information about line features. In Robocup SPL field, we can distinguish 4 types of features as far as only field lines are concerned. There three lines intersections types, T, L, X, and a circle in the middle of the field. For the circle or the ellipse detection, as it is seen by the low-height robot's camera, we are going to talk about in a different section. In this section, we are only discussing how we can extract the first three types of intersections.
 
 For this purpose we introduced a confidence measure which is based on geometrical properties of intersections. Given the lines which have been produced by the previous step of the process, we check every possible intersection produced by pairs of lines which have at least $10$ degrees angle difference in order to void find intersections by two continuous lines, and intersection is located within the margins of the image. For each one of these intersections, we compute a confidence measure for T, L, and X types. A brief explanation about how we compute these measures is going to be presented:
@@ -258,16 +258,30 @@ For this purpose we introduced a confidence measure which is based on geometrica
 \end{itemize}
 These measures are computed in a way that an intersection cannot have same confidence for two types. After the computation of the confidence measure for each intersection, we check if there are intersection types which can be combined in one. For example, two T type intersections can form a X type if they are located near and have opposite orientation. Except from the computation of the intersection position and confidence for each type of intersection, we also compute the orientation of each one of them, in order to be feasible for the localization system to acquire more information about the robot's position.
 
-\section{Goal Detection}
+\subsection{Goal Detection}
 Last step in the feature extraction process is the detection of the goal. Goal detection is critical for the robot in order to take sensible actions, and due to the fact that is the only easily-distinguishable landmark in the field. Both goals in the Robocup SPL field have a distinct yellow color. We have already discussed how the binary image in respect to the goals is created. Integrated in the same scan of the input image, we compute two different histograms for yellow pixels, one horizontal and one vertical. These histograms are going to help us later in goal detection. We also store points of yellow-green transitions on the same image scanning.
 
 Goals consist of two vertical bars and a horizontal attached to the tops of the two vertical bars. So, we can realize that vertical bars are more informative, especially to inform our localization system about the orientation in respect to the goalposts.
+
+\begin{figure*}[t!]
+\caption{Goal detection example results( green - left goalpost, red - right goalpost, white - vertical goalpost, blue - horizontal goalpost.}
+\label{posts}
+\centering    
+\includegraphics[width=0.3\textwidth]{figures/img_000003.jpg}	
+\includegraphics[width=0.3\textwidth]{figures/img_000005.jpg}	
+\includegraphics[width=0.3\textwidth]{figures/img_000006.jpg} \\
+\includegraphics[width=0.3\textwidth]{figures/post3.png}
+\includegraphics[width=0.3\textwidth]{figures/post5.png}
+\includegraphics[width=0.3\textwidth]{figures/post6.png}
+\end{figure*}
 
 The first step in goal detection process is the use of the horizontal histogram of yellow pixels in combination with the y-positions in where we found yellow-green transitions, something declaring the possible position of the goalpost's bottom. Combining this information, we can find the local maxima in the horizontal axis and find the position-s, where goalposts are located. If the maxima of this histogram have values under a certain threshold, the process stops here and we do not continue, as it appears that there is no vertical post. If these values are high enough, and we have two local maxima, we are pretty sure that there are two vertical posts in the image, if there is only one we are looking only for one vertical post. In both cases we scan the image left and right from the maxima and exclude parts of the image which do not contain yellow pixels at all.
 
 Next step is the line detection, using the same approach we have discussed earlier, but now generating points only with a vertical scan, due to the fact that we are only interested in vertical lines. From these vertical lines we choose the best ones in respect to their length, orientation, and with the prior knowledge about possible horizontal positions for the goalposts. These lines will be extended towards the bottom of the goalpost and the top, estimating like this the true height of each goalpost. To estimate the width, we are taking random samples upon the line representing the goalpost and measure with a simple scan the width. The average of all these measurements will be our estimation about its width. We can also compute a confidence measure about the bottom of the goalposts, taking the estimated bottom of the representative line and computing the distance from the yellow-green transition we talked earlier. The same procedure is applied for the horizontal goalpost as well. Horizontal goalpost can be very informative in cases that only one vertical goalpost is visible by our agent. The orientation of the Horizontal goalpost can be used in order our agent to distinguish between left and right goalpost.
 
 
+
+In figure~\ref{posts}, we illustrate the results of the goalpost detection, in three different situations.
 
 \section{Related Work}
 ~\cite{canas2009visual}
