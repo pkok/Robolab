@@ -1,0 +1,150 @@
+% $ biblatex auxiliary file $
+% $ biblatex version 1.7 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated as
+% required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+\entry{ashar2010robocup}{inproceedings}{}
+  \true{moreauthor}
+  \name{author}{10}{}{%
+    {{}%
+     {Ashar}{A.}%
+     {J.}{J.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Claridge}{C.}%
+     {D.}{D.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Hall}{H.}%
+     {B.}{B.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Hengst}{H.}%
+     {B.}{B.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Nguyen}{N.}%
+     {H.}{H.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Pagnucco}{P.}%
+     {M.}{M.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Ratter}{R.}%
+     {A.}{A.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Robinson}{R.}%
+     {S.}{S.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Sammut}{S.}%
+     {C.}{C.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Vance}{V.}%
+     {B.}{B.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{AJ+1}
+  \strng{fullhash}{AJCDHBHBNHPMRARSSCVB+1}
+  \field{sortinit}{A}
+  \field{booktitle}{Australasian Conference on Robotics and Automation}
+  \field{title}{RoboCup Standard Platform League-rUNSWift 2010}
+  \field{year}{2010}
+\endentry
+
+\entry{canas2009visual}{inproceedings}{}
+  \name{author}{4}{}{%
+    {{}%
+     {Canas}{C.}%
+     {J.M.}{J.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Puig}{P.}%
+     {D.}{D.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Perdices}{P.}%
+     {E.}{E.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Gonz{\'a}lez}{G.}%
+     {T.}{T.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{CJ+1}
+  \strng{fullhash}{CJPDPEGT1}
+  \field{sortinit}{C}
+  \field{booktitle}{X Workshop on Physical Agents, WAF}
+  \field{pages}{121\bibrangedash 128}
+  \field{title}{Visual Goal Detection for the RoboCup Standard Platform League}
+  \field{year}{2009}
+\endentry
+
+\entry{canas2010recognition}{article}{}
+  \name{author}{4}{}{%
+    {{}%
+     {Ca{\~n}as~Plaza}{C.~P.}%
+     {J.M.}{J.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Perdices}{P.}%
+     {E.}{E.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Gonz{\'a}lez}{G.}%
+     {T.}{T.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Puig}{P.}%
+     {D.}{D.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{CPJ+1}
+  \strng{fullhash}{CPJPEGTPD1}
+  \field{sortinit}{C}
+  \field{number}{1}
+  \field{pages}{11\bibrangedash 18}
+  \field{title}{Recognition of standard platform RoboCup goals}
+  \field{volume}{4}
+  \field{journaltitle}{Journal of Physical Agents}
+  \field{year}{2010}
+\endentry
+
+\lossort
+\endlossort
+
+\endinput

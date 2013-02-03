@@ -35,20 +35,20 @@ void extract_features(Mat img_rgb, vector<field_point> &result_intersections, ve
 
 	// line_most_prob_features(img_lines_binary, lines, ellipse_prob_lines, result_intersections);
 
-	// Mat ee = Mat::zeros(img_hsv.rows, img_hsv.cols, CV_8UC3);
-	// for (int i = 0; i < ee.rows; ++i)
-	// {
-	// 	for (int j = 0; j < ee.cols; ++j)
-	// 	{
-	// 		ee.at<Vec3b>(i,j)[0] = 0;
-	// 		ee.at<Vec3b>(i,j)[1] = 140;
-	// 		ee.at<Vec3b>(i,j)[2] = 0;
-	// 	}
-	// }
-	// for (int i = 0; i < lines.size(); ++i)
-	// {
-	// 	line( ee, Point(lines[i][1], lines[i][0]),Point(lines[i][3],lines[i][2]), Scalar(255,255,255), 2, 8 );
-	// }
+	Mat ee = Mat::zeros(img_hsv.rows, img_hsv.cols, CV_8UC3);
+	for (int i = 0; i < ee.rows; ++i)
+	{
+		for (int j = 0; j < ee.cols; ++j)
+		{
+			ee.at<Vec3b>(i,j)[0] = 0;
+			ee.at<Vec3b>(i,j)[1] = 140;
+			ee.at<Vec3b>(i,j)[2] = 0;
+		}
+	}
+	for (int i = 0; i < lines.size(); ++i)
+	{
+		line( ee, Point(lines[i][1], lines[i][0]),Point(lines[i][3],lines[i][2]), Scalar(255,255,255), 1, 8 );
+	}
 
 	// goalPostDetection(img_posts_binary, goalRoots, hor_hist, ver_hist, goalPosts);
 	// for (int i = 0; i < goalPosts.size(); ++i)
@@ -78,8 +78,8 @@ void extract_features(Mat img_rgb, vector<field_point> &result_intersections, ve
 	// 		cout << "v " << goalPosts[i].width << " " << goalPosts[i].root_confidence << endl;
 	// 	}
 	// }
-	// imshow("gergreb", ee);
-	// imwrite("reconstruction.png",ee);
+	imshow("gergreb", ee);
+	imwrite("reconstruction.png",ee);
 	
 	
 	return;
