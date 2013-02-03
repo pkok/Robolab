@@ -3,3 +3,7 @@
 \BOOKMARK [2][-]{subsection.1.2}{Basic Pipeline}{section.1}% 3
 \BOOKMARK [1][-]{section.2}{Image format}{}% 4
 \BOOKMARK [1][-]{section.3}{Background Removal}{}% 5
+\BOOKMARK [1][-]{section.4}{Image Binarization}{}% 6
+\BOOKMARK [1][-]{section.5}{Line Detection}{}% 7
+\BOOKMARK [2][-]{subsection.5.1}{Other approaches}{section.5}% 8
+\BOOKMARK [2][-]{subsection.5.2}{Our approach}{section.5}% 9

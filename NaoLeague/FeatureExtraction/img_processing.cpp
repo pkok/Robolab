@@ -97,7 +97,7 @@ void ass_val_pixel2pixel(Vec3b &src, Vec3b &dst)
 	src[2] = dst[2];
 }
 
-void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball, vector<Point> &goalRoot, double* hor_hist, int* ver_hist)
+void remove_background(Mat test, Mat image, Mat &lines, Mat &posts, Mat &ball, vector<Point> &goalRoot, double* hor_hist, int* ver_hist)
 {
 
 	lines = Mat::zeros(image.rows, image.cols, CV_8UC3);
@@ -106,7 +106,7 @@ void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball, vector<Poin
 	Mat field = Mat::zeros(image.rows, image.cols, CV_8UC3);
 	Mat background_border = Mat::zeros(image.rows, image.cols, CV_8UC1);
 	vector<Vec2i> background_border_points = vector<Vec2i>();
-
+	imwrite("original.png", test);
 	// boolean variable which declares if the current row pixel is above field
 	// height...
 	bool background, continuous;
@@ -138,10 +138,12 @@ void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball, vector<Poin
 			// check for the horizontal start of the field
 			if(background)
 			{
+				ass_val_pixel(test.at<Vec3b>(i,j), 0, 0, 0);
 				if(hsv_range(image.at<Vec3b>(i,j), GR_HUE_MIN, GR_HUE_MAX, GR_SAT_MIN, GR_SAT_MAX, GR_VAL_MIN, GR_VAL_MAX))
 				{
 					counter ++;
 					ass_val_pixel(field.at<Vec3b>(i,j), 0, 0, 0);
+					ass_val_pixel(test.at<Vec3b>(i,j), 0, 0, 0);
 					if(counter > BACK_THRESHOLD)
 					{
 						ass_val_pixel(field.at<Vec3b>(i - BACK_THRESHOLD, j), 255, 255, 255);
@@ -177,7 +179,7 @@ void remove_background(Mat image, Mat &lines, Mat &posts, Mat &ball, vector<Poin
 				ass_val_pixel2pixel(field.at<Vec3b>(i,j), image.at<Vec3b>(i,j));
 			}
 		}
-		imwrite("back.png", field);
+		imwrite("back.png", test);
 		hor_hist[j] /= image.rows;
 	}
 }

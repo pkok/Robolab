@@ -4,7 +4,6 @@
 							twocolumn]{scrartcl}	 					% KOMA-article class
 
 \usepackage{lipsum}													% Package to create dummy text
-
 \usepackage[english]{babel}										% English language/hyphenation
 \usepackage[protrusion=true,expansion=true]{microtype}				% Better typography
 \usepackage{amsmath,amsfonts,amsthm}					% Math packages
@@ -39,8 +38,9 @@
 \usepackage{biblatex} 
 \bibliography{report} 
 \usepackage{enumerate}
-\usepackage{booktabs}											% Custom fontsizes
-
+\usepackage{booktabs}	
+\usepackage{algorithm}
+\usepackage{algorithmic}
 
 
 %%% Custom sectioning (sectsty package)
@@ -142,11 +142,13 @@ The first step in this procedure is the image input from the NAO's camera in HSV
 \item Input HSV image from camera
 \item Background removal
 \item Image binarization
-\item Goal detection
 \item Line detection
 \item Line feature detection
+\item Goal detection
 \item Output features
 \end{enumerate}
+
+
 
 \section{Image format}
 NAO's camera can output images in different colorspaces representations. The images from the dataset we had, were in RGB format, and they had QVGA resolution ($320 \times 240$). We wanted to keep a low resolution in order to keep the time complexity of our algorithm feasible for real-time execution. \textbf{Patrick can add some things here as he experimented better with NAO's camera.}
@@ -170,31 +172,73 @@ White     & $0 \sim 255$    & $0 \sim 60$    & $200 \sim 255$    \\
 \end{table}
 
 \section{Background Removal}
-Background removal defines the task of detecting the field's borders in order to exclude uninformative regions in the processing image, saving this way computational cost and helping to subtract only the useful part of the image, which is the one, where we can detect all the features we are interested in. This can be done by a vertical scan of the image and detecting the first green pixel in each column. This method can work efficiently but it is not robust in many cases, as green pixels can be found above the field's horizon as well. Following the same principle in our approach, we consider as background every region upon a column before a considerable amount of green pixels, and not just one, which can lead us to faulty decisions about the horizon. We start in each column considering the pixel in the first row as background. Then, during scanning each column, we stop when we find many green continuous pixels and assign as horizon row in this column the first of this sequence of green pixels. In this process, we are only interested in green pixels. As you can see in table~\ref{thresholdHSV}, green pixels are considered as those which have HSV values around these thresholds.
+Background removal defines the task of detecting the field's borders in order to exclude uninformative regions in the processing image, saving this way computational cost and helping to subtract only the useful part of the image, which is the one, where we can detect all the features we are interested in. This can be done by a vertical scan of the image and detecting the first green pixel in each column. This method can work efficiently but it is not robust in many cases, as green pixels can be found above the field's horizon as well. Following the same principle in our approach, we consider as background every region upon a column before a considerable amount of green pixels, and not just one, which can lead us to faulty decisions about the horizon. We start in each column considering the pixel in the first row as background. Then, during scanning each column, we stop when we find many green continuous pixels and assign as horizon row in this column the first of this sequence of green pixels. In this process, we are only interested in green pixels. As you can see in table~\ref{thresholdHSV}, green pixels are considered as those which have hue, saturation, and value around these thresholds. Figure~\ref{background}, illustrates the process of background removal. Even though it is not such a sophisticated method, we can see that in this specific example, almost all background above the field's horizon has been removed, helping us in this way to avoid detect false positive features in the background.
+
+\begin{figure*}[t!]
+\caption{Background removal process example, original RGB image (left), points indicating the start of the field (middle), regions of interest without background information (right).}
+\label{background}
+\centering    
+\includegraphics[width=0.3\textwidth]{figures/original.png} \	
+\includegraphics[width=0.3\textwidth]{figures/back.png} \	
+\includegraphics[width=0.3\textwidth]{figures/back_fixed.png}	
+\end{figure*}
 
 
+\section{Image Binarization}
+In this section, we will talk about another image pre-processing technique which helped our main procedure detect features easier. Image binarization is a process which outputs two binary images, one in respect to the goals, and the other in respect to the field lines. For goal detection, it is natural that we are interested only in yellow areas of the image. The same applies for field lines, we are only interested in green and white areas of it. The main goal of this process is to classify colors according to table~\ref{thresholdHSV}. As we can realize, a simple way to classify colors is used in order to get a binary image, with the interesting part highlighted in each case. For the first case, goals, we are only interested to find yellow, so we output white for each yellow pixel, and black for any other color. For field lines, black for every other than white pixel.
 
+\begin{figure}[h!]
+\caption{Binary images in respect to the lines (left),  and to the goal (right), for the example RGB image in Figure~\ref{background}.}
+\label{binary}
+\centering    
+\includegraphics[width=0.22\textwidth]{figures/bin_lines.png} \	
+\includegraphics[width=0.22\textwidth]{figures/bin_posts.png} \	
+\end{figure}
 
+Figure~\ref{binary}, illustrates the process of image binarization. To add some technical details about the above implementation of image binarization, we can say that the whole process of it is integrated into the background removal procedure which requires only one vertical scan of the input image, and its goal is to minimize the space complexity of the whole feature extraction method as now we have only to process binary images with only one channel, in contrast to the original 3-channel image.
 
+\section{Line Detection}
+Before proceeding to the exact procedure about finding goals and line features, it is time to introduce our proposing approach to detect line segments in a binary image like those we presented before in image binarization section.
 
+\subsection{Other approaches}
+In general, we are interested in finding one line segment for each actual line segment appearing in the image. Other methods, such as Hough Transformation or Probabilistic Hough Transformation failed to detect these continuous line segments, due to the fact that they applied after edge detection step. Lines in our images consist of line segments which are thicker than one pixel, and when edge detection is applied to those finds edges at both sides of a line. Therefore, both Hough transformations find lines at both sides of an actual line. There were also some other problems with these methods, namely, the big number of detected lines, small line pieces on each actual line, and wrongly connected line segments. The huge number of detected lines, made our efforts to cluster those lines tough.
 
+\subsection{Our approach}
+As a result, we came up with our own approach of finding line segments in these noisy images. The main idea of this approach is that if we had some points on these actual line segments, we could have been able to connect them based on color information, and geometric properties. Therefore, the first step of this algorithm, is to generate these points. A vertical and a Horizontal scan of the picture every $5 \sim 10$ pixels is required. We are only interested in transitions which start from black go white and again black in the end. We store these points as a pixel coordinates $<x,y>$ in a vector. As an illustration, we can see in figure~\ref{points}, where these points are located for the same example input image as before.
+\begin{figure}[t!]
+\caption{Points produced by black-white-black transitions in the example binary image of figure~\ref{binary}.}
+\label{points}
+\centering    
+\includegraphics[width=0.3\textwidth]{figures/points.png}
+\end{figure}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Once these points have generated, the next step is to connect them in order to form line segments. For the representation of each line segment we hold a queue of points, at each time the line segment is formed by the first and the last point in the queue as starting and ending points. Pushing always the first point of the vector in the queue and deleting it from the vector the same time, we are looking for the closest points (5 points) to this point. From these closest points, we are checking the white ratio between these points and our initial point. Assuming that points from the same line segment, do not have black pixels between them, we connect the closest one with high white ratio, usually $1.0$, and pushing it in the queue of points as the last element and deleting it from the vector. The same procedure continues, but now we are looking to connect the last element on the queue with one from the remaining points in this vector. So, now the question is how are we going to stop connecting points? Considering a line formed by a many points, these points have to have small distance from the projection point on the line. Based on this idea, we can introduce an error function in order to define when a line starts not to comply with the points consisting it. Assuming a queue of points $Q$, which stores $n$-points, we can say that:
+\begin{equation}
+Error_Q = \sum_{i=1}^{n}(Eucl.Dist(Q_i, Proj.Point(Q_i,Q)))^2
+\end{equation}
+This error measure proved to be really informative in our case to understand when a line is starting to consist of points which may not represent the same line segment. When this error becomes larger than a threshold, we store the produced line so far, and we continue with the next point in the vector. To store the line, we first check if there is an already stored line which is an extension of the current line, to find out we measure the error we introduced in equation 1, taking now as line's starting and ending points the points with the largest distance between them. If the error remains small enough, and the closest points of this connection are covered in high white ratio, then we merge these lines which now represent a continuous line. 
+\begin{algorithm}[t!]
+\caption{Line segment detection algorithm}
+\label{line}
+\begin{algorithmic}[1]
+\STATE {\bf Input: }$points, image$
+\STATE {\bf Output: }$line$
+\STATE{start = points[0]}
+\WHILE{points.size() $\neq$ 0}
+\STATE{line.push(start)}
+\STATE{bestCandidate = findBestCandidate(points, image)}
+\STATE{points.erase(bestCandidate)}
+\STATE{error = computeError(line, bestCandidate)}
+\IF{error < threshold}
+\STATE{start = bestCandidate}
+\ELSE
+\STATE{storeLine(line)}
+\STATE{line.clear()}
+\ENDIF
+\ENDWHILE
+\end{algorithmic}
+\end{algorithm}
+Algorithm~\ref{line}, presents the pseudo-code for the line detection procedure. In line $12$, function $storeLine$, takes as input the produced line, if the line cannot be merged with an already stored line segment, then, it is stored as it is in a vector of lines.
 
 
 

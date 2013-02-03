@@ -282,15 +282,19 @@ void line_extraction(Mat image, vector<Vec4i> &produced_lines, int hor_step, int
 	mark_lines(image, points, hor_step, ver_step);
 
 	Mat ee = Mat::zeros(image.rows, image.cols, CV_8UC3);
-	for (int i = 0; i < ee.rows; ++i)
+	for (int i = 0; i < points.size(); ++i)
 	{
-		for (int j = 0; j < ee.cols; ++j)
-		{
-			ee.at<Vec3b>(i,j)[0] = 0;
-			ee.at<Vec3b>(i,j)[1] = 140;
-			ee.at<Vec3b>(i,j)[2] = 0;
-		}
+		circle(ee, Point(points[i].y, points[i].x), 1, Scalar(0,0,255), 1, 8, 0);
 	}
+	// for (int i = 0; i < ee.rows; ++i)
+	// {
+	// 	for (int j = 0; j < ee.cols; ++j)
+	// 	{
+	// 		ee.at<Vec3b>(i,j)[0] = 0;
+	// 		ee.at<Vec3b>(i,j)[1] = 140;
+	// 		ee.at<Vec3b>(i,j)[2] = 0;
+	// 	}
+	// }
 
 	while(points.size() != 0)
 	{
@@ -375,9 +379,6 @@ void line_extraction(Mat image, vector<Vec4i> &produced_lines, int hor_step, int
 		produced_lines.push_back(Vec4i(point1.x, point1.y, point2.x, point2.y));
 	}
 
-	// for (int i = 0; i < produced_lines.size(); ++i)
-	// {
-	// 	line( ee, Point(produced_lines[i][1], produced_lines[i][0]),Point(produced_lines[i][3],produced_lines[i][2]), Scalar(255,255,255), 2, 8 );
-	// }
-	// imwrite("lines.png", ee);
+
+	imwrite("points.png", ee);
 }
