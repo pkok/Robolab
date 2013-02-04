@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=pdflatex 2013.2.1)  4 FEB 2013 12:31
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=pdflatex 2013.2.1)  4 FEB 2013 13:28
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1610,22 +1610,22 @@ File: figures/1280px-HSV_color_solid_cylinder_alpha_lowgamma.png Graphic file (
 type png)
  <use figures/1280px-HSV_color_solid_cylinder_alpha_lowgamma.png>
 Package pdftex.def Info: figures/1280px-HSV_color_solid_cylinder_alpha_lowgamma
-.png used on input line 154.
+.png used on input line 153.
 (pdftex.def)             Requested size: 154.81046pt x 116.09752pt.
-LaTeX Font Info:    Try loading font information for T1+lmtt on input line 159.
+LaTeX Font Info:    Try loading font information for T1+lmtt on input line 156.
 
 
 (/usr/share/texmf/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMS+lmr on input line 159.
+LaTeX Font Info:    Try loading font information for OMS+lmr on input line 156.
 
 
 (/usr/share/texmf/tex/latex/lm/omslmr.fd
 File: omslmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `OMS/lmr/m/n' in size <7> not available
-(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 159.
+(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 156.
  [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
 
@@ -1633,181 +1633,181 @@ LaTeX Font Info:    Font shape `OMS/lmr/m/n' in size <7> not available
 File: figures/original.png Graphic file (type png)
 
 <use figures/original.png>
-Package pdftex.def Info: figures/original.png used on input line 204.
+Package pdftex.def Info: figures/original.png used on input line 201.
 (pdftex.def)             Requested size: 154.81046pt x 116.10854pt.
  <figures/back.png, id=186, 321.2pt x 240.9pt>
 File: figures/back.png Graphic file (type png)
 
 <use figures/back.png>
-Package pdftex.def Info: figures/back.png used on input line 205.
+Package pdftex.def Info: figures/back.png used on input line 202.
 (pdftex.def)             Requested size: 154.81046pt x 116.10854pt.
  <figures/back_fixed.png, id=187, 321.2pt x 240.9pt>
 File: figures/back_fixed.png Graphic file (type png)
 
 <use figures/back_fixed.png>
-Package pdftex.def Info: figures/back_fixed.png used on input line 206.
+Package pdftex.def Info: figures/back_fixed.png used on input line 203.
 (pdftex.def)             Requested size: 154.81046pt x 116.10854pt.
  [2 <./figures/1280px-HSV_color_solid_cylinder_alpha_lowgamma.png>] <figures/bi
 n_lines.png, id=210, 321.2pt x 240.9pt>
 File: figures/bin_lines.png Graphic file (type png)
 
 <use figures/bin_lines.png>
-Package pdftex.def Info: figures/bin_lines.png used on input line 217.
+Package pdftex.def Info: figures/bin_lines.png used on input line 214.
 (pdftex.def)             Requested size: 113.52715pt x 85.14331pt.
  <figures/bin_posts.png, id=211, 321.2pt x 240.9pt>
 File: figures/bin_posts.png Graphic file (type png)
 
 <use figures/bin_posts.png>
-Package pdftex.def Info: figures/bin_posts.png used on input line 218.
+Package pdftex.def Info: figures/bin_posts.png used on input line 215.
 (pdftex.def)             Requested size: 113.52715pt x 85.14331pt.
  <figures/points.png, id=216, 321.2pt x 240.9pt>
 File: figures/points.png Graphic file (type png)
 
 <use figures/points.png>
-Package pdftex.def Info: figures/points.png used on input line 235.
+Package pdftex.def Info: figures/points.png used on input line 232.
 (pdftex.def)             Requested size: 206.40869pt x 154.81139pt.
  [3 <./figures/original.png (PNG copy)> <./figures/back.png (PNG copy)> <./figu
 res/back_fixed.png (PNG copy)> <./figures/bin_lines.png (PNG copy)> <./figures/
 bin_posts.png (PNG copy)> <./figures/points.png (PNG copy)>]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
-put line 244.
+put line 241.
  <figures/lines.png, id=227, 321.2pt x 240.9pt>
 File: figures/lines.png Graphic file (type png)
  <use figures/lines.png>
-Package pdftex.def Info: figures/lines.png used on input line 270.
+Package pdftex.def Info: figures/lines.png used on input line 267.
 (pdftex.def)             Requested size: 206.40869pt x 154.81139pt.
 
 <figures/img_000003.jpg, id=228, 321.2pt x 240.9pt>
 File: figures/img_000003.jpg Graphic file (type jpg)
 
 <use figures/img_000003.jpg>
-Package pdftex.def Info: figures/img_000003.jpg used on input line 293.
+Package pdftex.def Info: figures/img_000003.jpg used on input line 290.
 (pdftex.def)             Requested size: 154.81046pt x 116.10854pt.
 
 <figures/img_000005.jpg, id=229, 321.2pt x 240.9pt>
 File: figures/img_000005.jpg Graphic file (type jpg)
 
 <use figures/img_000005.jpg>
-Package pdftex.def Info: figures/img_000005.jpg used on input line 294.
+Package pdftex.def Info: figures/img_000005.jpg used on input line 291.
 (pdftex.def)             Requested size: 154.81046pt x 116.10854pt.
 
 <figures/img_000006.jpg, id=230, 321.2pt x 240.9pt>
 File: figures/img_000006.jpg Graphic file (type jpg)
 
 <use figures/img_000006.jpg>
-Package pdftex.def Info: figures/img_000006.jpg used on input line 295.
+Package pdftex.def Info: figures/img_000006.jpg used on input line 292.
 (pdftex.def)             Requested size: 154.81046pt x 116.10854pt.
  <figures/post3.png, id=231, 321.2pt x 240.9pt>
 File: figures/post3.png Graphic file (type png)
 
 <use figures/post3.png>
-Package pdftex.def Info: figures/post3.png used on input line 296.
+Package pdftex.def Info: figures/post3.png used on input line 293.
 (pdftex.def)             Requested size: 154.81046pt x 116.10854pt.
  <figures/post5.png, id=232, 321.2pt x 240.9pt>
 File: figures/post5.png Graphic file (type png)
 
 <use figures/post5.png>
-Package pdftex.def Info: figures/post5.png used on input line 297.
+Package pdftex.def Info: figures/post5.png used on input line 294.
 (pdftex.def)             Requested size: 154.81046pt x 116.10854pt.
  <figures/post6.png, id=233, 321.2pt x 240.9pt>
 File: figures/post6.png Graphic file (type png)
 
 <use figures/post6.png>
-Package pdftex.def Info: figures/post6.png used on input line 298.
+Package pdftex.def Info: figures/post6.png used on input line 295.
 (pdftex.def)             Requested size: 154.81046pt x 116.10854pt.
  [4pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem.1}
 ) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.302 
+l.299 
       pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
 .1}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.302 
+l.299 
       pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
 .1}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.302 
+l.299 
       pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
 .1}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.302 
+l.299 
       pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
 .1}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.302 
+l.299 
       pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
 .1}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.302 
+l.299 
       pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
 .1}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.302 
+l.299 
       pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
 .1}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.302 
+l.299 
       pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
 .1}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.302 
+l.299 
       pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
 .1}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.302 
+l.299 
       pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
 .1}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.302 
+l.299 
       pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
 .1}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.302 
+l.299 
       pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
 .1}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.302 
+l.299 
       pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem
 .1}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.302 
+l.299 
        <./figures/lines.png (PNG copy)>]
 LaTeX Font Info:    Font shape `OMS/lmr/m/n' in size <9> not available
-(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 312.
+(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 309.
 
 <figures/ellipseDetection.png, id=263, 739.26187pt x 190.46156pt>
 File: figures/ellipseDetection.png Graphic file (type png)
 
 <use figures/ellipseDetection.png>
-Package pdftex.def Info: figures/ellipseDetection.png used on input line 322.
+Package pdftex.def Info: figures/ellipseDetection.png used on input line 319.
 (pdftex.def)             Requested size: 154.81046pt x 39.88475pt.
  [5 <./figures/img_000003.jpg> <./figures/img_000005.jpg> <./figures/img_000006
 .jpg> <./figures/post3.png (PNG copy)> <./figures/post5.png (PNG copy)> <./figu
@@ -1816,79 +1816,76 @@ sMapped.png, id=279, 843.15pt x 231.11343pt>
 File: figures/imagePixelsMapped.png Graphic file (type png)
 
 <use figures/imagePixelsMapped.png>
-Package pdftex.def Info: figures/imagePixelsMapped.png used on input line 343.
+Package pdftex.def Info: figures/imagePixelsMapped.png used on input line 340.
 (pdftex.def)             Requested size: 154.81046pt x 42.4344pt.
 
-Underfull \vbox (badness 4505) has occurred while \output is active []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 354--356
+Underfull \hbox (badness 10000) in paragraph at lines 351--353
 
  []
 
 
 LaTeX Warning: Reference `alg:motion_model' on page 6 undefined on input line 3
-79.
+76.
 
 
 LaTeX Warning: Reference `alg:measurement_model' on page 6 undefined on input l
-ine 380.
+ine 377.
 
 
-LaTeX Warning: Reference `alg:resampling' on page 6 undefined on input line 381
+LaTeX Warning: Reference `alg:resampling' on page 6 undefined on input line 378
 .
 
 
 LaTeX Warning: Reference `sec:FeatureExtraction' on page 6 undefined on input l
-ine 389.
+ine 386.
 
 [6 <./figures/imagePixelsMapped.png>]
 
 LaTeX Warning: Citation 'ProbabilisticRobotsics' on page 7 undefined on input l
-ine 394.
+ine 391.
 
 
 LaTeX Warning: Citation 'ProbabilisticRobotsics' on page 7 undefined on input l
-ine 412.
+ine 409.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 409--413
+Underfull \hbox (badness 10000) in paragraph at lines 406--410
 
  []
 
 
-LaTeX Warning: Reference `alg:augmented1' on page 7 undefined on input line 438
+LaTeX Warning: Reference `alg:augmented1' on page 7 undefined on input line 435
 .
 
 
-LaTeX Warning: Reference `alg:augmented2' on page 7 undefined on input line 438
+LaTeX Warning: Reference `alg:augmented2' on page 7 undefined on input line 435
 .
 
 
-LaTeX Warning: Reference `alg:augmented3' on page 7 undefined on input line 438
+LaTeX Warning: Reference `alg:augmented3' on page 7 undefined on input line 435
 .
 
 
-LaTeX Warning: Reference `alg:augmented4' on page 7 undefined on input line 438
+LaTeX Warning: Reference `alg:augmented4' on page 7 undefined on input line 435
 .
 
 
-LaTeX Warning: Citation 'SensorResetting' on page 7 undefined on input line 445
+LaTeX Warning: Citation 'SensorResetting' on page 7 undefined on input line 442
 .
 
 
 LaTeX Warning: Citation 'ProbabilisticRobotsics' on page 7 undefined on input l
-ine 450.
+ine 447.
 
 
 LaTeX Warning: Reference `alg:resampling_rand' on page 7 undefined on input lin
-e 475.
+e 472.
 
 
-LaTeX Warning: Reference `alg:stepsize' on page 7 undefined on input line 475.
+LaTeX Warning: Reference `alg:stepsize' on page 7 undefined on input line 472.
 
 [7]
-Overfull \hbox (124.03212pt too wide) in paragraph at lines 478--478
+Overfull \hbox (124.03212pt too wide) in paragraph at lines 475--475
 [][][]\T1/lmr/m/n/7 (-20) The code can be ac-cessed at: https://github.com/pkok
 /Robolab/tree/master/NaoLeague/LocationVisualizer| 
  []
@@ -1896,16 +1893,19 @@ Overfull \hbox (124.03212pt too wide) in paragraph at lines 478--478
 
 AED: lastpage setting LastPage
 [8]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 503.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 503.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 500.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 500.
  (./report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 503.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 503.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 500.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 500.
 Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: 1CE0F1692E9F7BCB9AA1C2502AC2F56D;1809.
 
 
 LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
 
 Package biblatex Warning: Please (re)run BibTeX on the file(s):
@@ -1915,16 +1915,16 @@ Package biblatex Warning: Please (re)run BibTeX on the file(s):
 Package logreq Info: Writing requests to 'report.run.xml'.
 \openout1 = `report.run.xml'.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 503.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 500.
  ) 
 Here is how much of TeX's memory you used:
- 26167 strings out of 493485
- 448571 string characters out of 3143527
+ 26165 strings out of 493485
+ 448553 string characters out of 3143527
  787843 words of memory out of 3000000
  28657 multiletter control sequences out of 15000+200000
- 118860 words of font info for 160 fonts, out of 3000000 for 9000
+ 118774 words of font info for 159 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
- 65i,12n,71p,1632b,1369s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 65i,12n,71p,1561b,1371s stack positions out of 5000i,500n,10000p,200000b,50000s
 pdfTeX warning (dest): name{algorithm.1} has been referenced but does not exi
 st, replaced by a fixed one
 
@@ -1946,7 +1946,7 @@ ts/type1/public/lm/lmsy6.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy7.pfb>
 /public/lm/lmtt8.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt9.pfb></usr/sh
 are/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texlive/
 texmf-dist/fonts/type1/urw/helvetic/uhvro8a.pfb>
-Output written on report.pdf (8 pages, 2295028 bytes).
+Output written on report.pdf (8 pages, 2294922 bytes).
 PDF statistics:
  429 PDF objects out of 1000 (max. 8388607)
  373 compressed objects within 4 object streams
