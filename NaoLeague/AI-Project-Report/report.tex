@@ -143,13 +143,13 @@ After the description we give a short evaluation of those approaches in section~
 
 \section{Related Work}
 \label{sec:RelatedWork}
-Canas et al.~\cite{canas2009visual} proposes algorithms to detect only the goal from the robot's camera based on geometrical planes and based on color and edge filters and Hough transformations. However, these algorithms make the assumption that the goal is completely visible to the robot, but we know that this is not the case in most of the situations. This approach self localizes the robot only based on goal detection, which we might say is not a robust way.
+Canas et al.~\cite{canas2009visual} propose algorithms to detect only the goal from the robot's camera based on geometrical planes and based on color and edge filters and Hough transformations. However, these algorithms make the assumption that the goal is completely visible to the robot, but we know that this is not the case in most of the situations. This approach self localizes the robot only based on goal detection, which we might say is not a robust way.
 
-Schulz and Behnke~\cite{schulz2012utilizing} gives a ``novel'' method for line-based localization. This method recovers lines from images and dechyphers features from it, which are then used by localization algoritms like Monte-Carlo localization. This method appears to reduce dependance on colour-coded robot soccer environment.
+Schulz and Behnke~\cite{schulz2012utilizing} give a method for line-based localization. This method recovers lines from images and dechyphers features from it, which are then used by localization algoritms like Monte-Carlo localization. This method appears to reduce dependance on colour-coded robot soccer environment.
 
 Deng~\cite{deng2011natural} explores triangulation techniques on the detected features on the robot's horizon. However, although theoretically robust, this technique fails in the practical implementation because of noise in the image caused by movement.
 
-Ashar et al.~\cite{ashar2010robocup} presents a well tested hierarchy of modules implementing perception, world modelling and behaviour generation, incorporating a simpler self-localization system. Due to time constraints we limited ourselves to feature detection and localization.
+Ashar et al.~\cite{ashar2010robocup} present a well tested hierarchy of modules implementing perception, world modelling and behaviour generation, incorporating a simpler self-localization system. Due to time constraints we limited ourselves to feature detection and localization.
 
 \section{Feature Extraction}
 \label{sec:FeatureExtraction}
