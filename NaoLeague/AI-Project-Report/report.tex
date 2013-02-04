@@ -120,7 +120,7 @@
 \maketitle
 \thispagestyle{fancy} 			% Enabling the custom headers/footers for the first page 
 % The first character should be within \initial{}
-\initial{I}\textbf{n this project we propose a basic code for the RoboCup Soccer Standard Platform League for the Dutch NAO Team. We focused on the problem of visual feature recognition and the localization of the robot in a tournament setup. This project contains a detailed description of our implementation together with a conclusion and a brief evaluation. Since this report only covers feature detection and localization we give an outlook on what parts are to be implemented in addition to make the robots play soccer.}
+\initial{I}\textbf{n this project we propose a basic code for the RoboCup Soccer Standard Platform League for the Dutch Nao Team. We focused on the problem of visual feature recognition and the localization of the robot in a tournament setup. This project contains a detailed description of our implementation together with a conclusion and a brief evaluation. Since this report only covers feature detection and localization we give an outlook on what parts are to be implemented in addition to make the robots play soccer.}
 
 \section{Introduction}
 \textit{
@@ -134,7 +134,7 @@ The best known competition of RoboCup is RoboCup Soccer.  This competition encom
 
 To keep on pushing research forwards and the community of participating teams motivated to implement and design new methods, the RoboCup Soccer competition updates the rules each year.  One of the more recent updates in the rules is that all goal posts should be yellow, whereas before there were two differently colored goal posts.  This puts an emphasis on the implementation and enhancement of localization algorithms as the field is completely symmetrical.
 
-The Dutch NAO Team has participated since 2010 in the RoboCup Standard Platform League (STL)~\cite{DNT-TD10, DNT-TD11, DNT-TD12} and plans doing so for 2013 as well~\cite{DNT-TD13}.  The software package used during the previous cup has been written in Python.  Its localization algorithm was very heuristic and course-grained; it did not made explicit where the robot was placed, but indicated whether the robot should kick the ball\footnote{The robot would kick the ball in the direction of a goal post when in sight. The behaviour has not been changed since the field has been made symmetrical.}.  Currently, the Dutch NAO Team is transitioning its code from Python to C++ for speed gains. 
+The Dutch Nao Team has participated since 2010 in the RoboCup Standard Platform League (STL)~\cite{DNT-TD10, DNT-TD11, DNT-TD12} and plans doing so for 2013 as well~\cite{DNT-TD13}.  The software package used during the previous cup has been written in Python.  Its localization algorithm was very heuristic and course-grained; it did not made explicit where the robot was placed, but indicated whether the robot should kick the ball\footnote{The robot would kick the ball in the direction of a goal post when in sight. The behaviour has not been changed since the field has been made symmetrical.}.  Currently, the Dutch Nao Team is transitioning its code from Python to C++ for speed gains. 
 
 The subject of this report can be split in two parts. Section~\ref{sec:FeatureExtraction} describes the first part, where we have implemented modules which extract several visual features located on the field.  We describe which features are extracted and how the images coming from the NAO's camera are processed. 
 
