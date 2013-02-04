@@ -524,6 +524,8 @@ We additionally changed the algorithm slightly, instead of drawing a random numb
 \subsection{Visualization}
 For debugging purposes we developed a simple visualizing modules built on basis of OpenCV\footnote{\texttt{http://opencv.org/}}. This module reads the parameters of the football field from a parameter file, and can draw the particles, the pose hypothesis of the AMCL. It proved to be very useful, and might be used for future projects.\footnote{The code can be accessed at: \texttt{\url{https://github.com/pkok/Robolab/tree/master/NaoLeague/LocationVisualizer}}}
 
+\section{Evaluation}
+\label{sec:Evaluation}
 \section{Discussion}
 \label{sec:Discussion}
 Due to time constraints, the described and implemented parts of the system were only compiled and tested on standard computer hard- and software. The code still has to be tested on the limited resources of the NAO robot.
@@ -547,11 +549,14 @@ Another method one could experiment with is triangulation by audio signals.  Whe
 
 \section{Conclusion}
 \label{sec:Conclusion}
+This report proposes an implementation for the Dutch Nao Team's localization module. While the code has not yet been compiled for the NAO platform, it has proven to run quite fast on standard computer hardware. 
 
+We have implemented a feature extraction module which heavily depends on a line detection algorithm which is designed by us for this project.  A first inspection shows this algorithm to work well.  We have experimented with ellipse detection, but this has not yet been integrated in the localization module.  The localization module is based upon the augmented Monte Carlo localization algorithm.
+
+For both modules we have suggested possible improvements, besides more thorough testing.
 
 \printbibliography
 
 
 
-This report proposes a first implementation for the Dutch Nao Team's localization module. The modules have been tested and 
 \end{document}
