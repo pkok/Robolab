@@ -141,11 +141,15 @@ The subject of this report can be split in two parts. Section~\ref{sec:FeatureEx
 These features and their locations with respect to the robot are passed to the localization module from section~\ref{sec:Localization}.  We first give a general description of the algorithm (i.e. Monte Carlo Localization) in section~\ref{sec:MCL}, and describe how the sensory information is processed and modeled (section~\ref{sec:Odometry} and~\ref{sec:SensorModel}). Section~\ref{sec:AMCL} and section~\ref{sec:Reset} describe extensions implemented to the standard Monte Carlo Localization to improve the performance of the system on common problems in a RoboCup Soccer tournament situation. 
 After the description we give a short evaluation of those approaches in section~\ref{sec:Evaluation} and a conclusion in section~\ref{sec:Conclusion}. In the last section we will sketch future work, that needs to be done to have a functioning robot soccer team in a tournament situation.
 
-\section{Referenced Work}
-\label{sec:ReferencedWork}
+\section{Related Work}
+\label{sec:RelatedWork}
 Canas et al.~\cite{canas2009visual} proposes algorithms to detect only the goal from the robot's camera based on geometrical planes and based on color and edge filters and Hough transformations. However, these algorithms make the assumption that the goal is completely visible to the robot, but we know that this is not the case in most of the situations. This approach self localizes the robot only based on goal detection, which we might say is not a robust way.
 
 Schulz and Behnke~\cite{schulz2012utilizing} gives a ``novel'' method for line-based localization. This method recovers lines from images and dechyphers features from it, which are then used by localization algoritms like Monte-Carlo localization. This method appears to reduce dependance on colour-coded robot soccer environment.
+
+Deng~\cite{deng2011natural} explores triangulation techniques on the detected features on the robot's horizon. However, although theoretically robust, this technique fails in the practical implementation because of noise in the image caused by movement.
+
+Ashar et al.~\cite{ashar2010robocup} presents a well tested hierarchy of modules implementing perception, world modelling and behaviour generation, incorporating a simpler self-localization system. Due to time constraints we limited ourselves to feature detection and localization.
 
 \section{Feature Extraction}
 \label{sec:FeatureExtraction}
@@ -361,11 +365,12 @@ We based our localization module on the Monte Carlo Localization method (MCL). T
 We chose to use the MCL as basis for localization of the robot since it is a well known approach, and thoroughly researched. It is a multimodal particle based localization method (i.e. it can deal with multiple pose hypothesis at the same time). Since the new environment for 2013 is completely symmetric this is a valuable property. In addition to that, MCL can deal with erroneous sensor information, which is an unavoidable problem in real life applications in robotics. It is able to recover from kidnapping (i.e. repositioning the robot on the field without odometry information). Finally the number of particles can be adjusted. This is useful, since the NAO robot platform offers only limited computational resources.
 \subsection{Monte Carlo Localization}
 \label{sec:MCL}
-The basic MCL algorithm is depicted in following pseudocode  as described by Fox et al.~\cite{MonteCarloLocalization}:\\
+The basic MCL algorithm is depicted as pseudocode as described by Fox et al.~\cite{MonteCarloLocalization} in algorithm~\ref{alg:MCL}.
 
 
 \begin{algorithm}[h!]
 \caption{Monte Carlo Localization}
+\label{alg:MCL}
 \begin{algorithmic}[1]
 \STATE {\bf Input: }$\chi_{t-1}, u_t, z_t,m$
 \STATE {\bf Output: }$\chi_t$
@@ -424,8 +429,7 @@ This noise is assumed to be Gaussian and independent. At the moment the odometry
 Since the standard MCL algorithm described in section ~\ref{sec:MCL} might perform poorly in case of kidnapping.
 This is if the confidence of the robot pose is high and it gets replaced from an extrinsic source (e.g. penalty of referee). If the pose confidence is high, the particle density is high around the most probable point in pose space. The robot might get replaced to a pose where no particle is located. It might take a long time till particles will aggregate at the new position. 
 A suitable extension to the standard approach is to keep track of the measurement likelihood both in a short term average and a long term average.
-If those differ, the robot is capable of detecting a kidnapping situation. New particles can be sampled at random according to the difference of short and long term average. Thus increasing the recover speed after a kidnapping situation as described in \cite{
-}:\\
+If those differ, the robot is capable of detecting a kidnapping situation. New particles can be sampled at random according to the difference of short and long term average. Thus increasing the recover speed after a kidnapping situation as described by algorithm~\ref{alg:AMCL}.
 
 
 
@@ -438,6 +442,7 @@ If those differ, the robot is capable of detecting a kidnapping situation. New p
 %  \KwResult{ $\chi_t$ }
 \begin{algorithm}[h!]
 \caption{Augmented Monte Carlo Localization as depicted by Thrun et al.~\cite{ProbabilisticRobotics}}
+\label{alg:AMCL}
 \begin{algorithmic}[1]
 \STATE {\bf Input: }$\chi_{t-1}, u_t, z_t,m$
 \STATE {\bf Output: }$\chi_t$
@@ -480,7 +485,7 @@ It might increase the recovering speed after a case of kidnapping, to sample fro
 
 \subsection{Resampling method}
 As described by Thrun et al.~\cite{ProbabilisticRobotics} resampling using a random number leads to loss of variance. (e.g. a robot with no perception, after a sufficient amount of resampling steps would only remain with one position hypothesis. Since if sampling with a random number for each particle might lead to the loss of one hypothesis, if two particles are resampled at the same pose).
-The following pseudocode depicts low variance resampling:\\
+Algorithm~\ref{alg:lowvariance} depicts low variance resampling.
 %\begin{algorithm}[H]
 % \SetAlgoLined
 % \KwData{$\chi_{t},W_t $}
@@ -502,6 +507,7 @@ The following pseudocode depicts low variance resampling:\\
 %\end{algorithm}
 \begin{algorithm}[h!]
 \caption{Low variance resampling}
+\label{alg:lowvariance}
 \begin{algorithmic}[1]
 \STATE {\bf Input: }$\chi_{t},W_t $
 \STATE {\bf Output: }$\bar{\chi_t}$
