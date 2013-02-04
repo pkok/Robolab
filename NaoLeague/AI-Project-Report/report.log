@@ -1,8 +1,8 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=pdflatex 2012.12.14)  4 FEB 2013 18:40
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=pdflatex 2013.1.12)  4 FEB 2013 20:00
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**report.tex
+**report
 (./report.tex
 LaTeX2e <2011/06/27>
 Babel <v3.8m> and hyphenation patterns for english, dumylang, nohyphenation, lo
@@ -1144,49 +1144,223 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \@float@everytoks=\toks42
 \@floatcapt=\box40
 )
+(/usr/share/texmf/tex/latex/biblatex/biblatex.sty
+Package: biblatex 2011/11/13 v1.7 programmable bibliographies
 
-! LaTeX Error: File `biblatex.sty' not found.
+(/usr/share/texmf/tex/latex/etoolbox/etoolbox.sty
+Package: etoolbox 2011/01/03 v2.1 e-TeX tools for LaTeX
 
-Type X to quit or <RETURN> to proceed,
-or enter new name. (Default extension: sty)
-
-Enter file name: 
-\bibdata{report}
-(./report.bbl) (/usr/share/texlive/texmf-dist/tex/latex/tools/enumerate.sty
-Package: enumerate 1999/03/05 v3.00 enumerate extensions (DPC)
-\@enLab=\toks43
+(/usr/share/texlive/texmf-dist/tex/latex/etex-pkg/etex.sty
+Package: etex 1998/03/26 v2.0 eTeX basic definition package (PEB)
+\et@xins=\count200
 )
-(./algorithm.sty
-Package: algorithm 
+\etb@tempcnta=\count201
+)
+(/usr/share/texmf/tex/latex/logreq/logreq.sty
+Package: logreq 2010/08/04 v1.0 xml request logger
+\lrq@indent=\count202
 
-Document Style `algorithm' - floating environment
+(/usr/share/texmf/tex/latex/logreq/logreq.def
+File: logreq.def 2010/08/04 v1.0 logreq spec v1.0
+))
 (/usr/share/texlive/texmf-dist/tex/latex/base/ifthen.sty
 Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
 )
+\c@listtotal=\count203
+\c@listcount=\count204
+\c@liststart=\count205
+\c@liststop=\count206
+\c@citecount=\count207
+\c@citetotal=\count208
+\c@multicitecount=\count209
+\c@multicitetotal=\count210
+\c@instcount=\count211
+\c@maxnames=\count212
+\c@minnames=\count213
+\c@maxitems=\count214
+\c@minitems=\count215
+\c@citecounter=\count216
+\c@savedcitecounter=\count217
+\c@uniquelist=\count218
+\c@uniquename=\count219
+\c@refsection=\count220
+\c@refsegment=\count221
+\c@maxextrayear=\count222
+\c@maxextraalpha=\count223
+\c@abbrvpenalty=\count224
+\c@highnamepenalty=\count225
+\c@lownamepenalty=\count226
+\c@maxparens=\count227
+\c@parenlevel=\count228
+\blx@tempcnta=\count229
+\blx@tempcntb=\count230
+\blx@tempcntc=\count231
+\blx@maxsection=\count232
+\blx@maxsegment=\count233
+Normal \count register pool exhausted, switching to extended pool.
+\blx@notetype=\count277
+\blx@parenlevel@text=\count278
+\blx@parenlevel@foot=\count279
+\labelnumberwidth=\skip90
+\labelalphawidth=\skip91
+\shorthandwidth=\skip92
+\biblabelsep=\skip93
+\bibitemsep=\skip94
+\bibnamesep=\skip95
+\bibinitsep=\skip96
+\bibparsep=\skip97
+\bibhang=\skip98
+\blx@auxin=\read2
+\blx@auxout=\write4
+\c@mincomprange=\count280
+\c@maxcomprange=\count281
+\c@mincompwidth=\count282
+\c@labelname=\count283
+\c@savedlabelname=\count284
+\c@author=\count285
+\c@savedauthor=\count286
+\c@shortauthor=\count287
+\c@savedshortauthor=\count288
+\c@editor=\count289
+\c@savededitor=\count290
+\c@editora=\count291
+\c@savededitora=\count292
+\c@editorb=\count293
+\c@savededitorb=\count294
+\c@editorc=\count295
+\c@savededitorc=\count296
+\c@shorteditor=\count297
+\c@savedshorteditor=\count298
+\c@bookauthor=\count299
+\c@savedbookauthor=\count300
+\c@translator=\count301
+\c@savedtranslator=\count302
+\c@annotator=\count303
+\c@savedannotator=\count304
+\c@commentator=\count305
+\c@savedcommentator=\count306
+\c@introduction=\count307
+\c@savedintroduction=\count308
+\c@foreword=\count309
+\c@savedforeword=\count310
+\c@afterword=\count311
+\c@savedafterword=\count312
+\c@holder=\count313
+\c@savedholder=\count314
+\c@namea=\count315
+\c@savednamea=\count316
+\c@nameb=\count317
+\c@savednameb=\count318
+\c@namec=\count319
+\c@savednamec=\count320
+\c@institution=\count321
+\c@savedinstitution=\count322
+\c@language=\count323
+\c@savedlanguage=\count324
+\c@location=\count325
+\c@savedlocation=\count326
+\c@organization=\count327
+\c@savedorganization=\count328
+\c@origlocation=\count329
+\c@savedoriglocation=\count330
+\c@origpublisher=\count331
+\c@savedorigpublisher=\count332
+\c@pageref=\count333
+\c@savedpageref=\count334
+\c@publisher=\count335
+\c@savedpublisher=\count336
+\c@lista=\count337
+\c@savedlista=\count338
+\c@listb=\count339
+\c@savedlistb=\count340
+\c@listc=\count341
+\c@savedlistc=\count342
+\c@listd=\count343
+\c@savedlistd=\count344
+\c@liste=\count345
+\c@savedliste=\count346
+\c@listf=\count347
+\c@savedlistf=\count348
+Package biblatex Info: Trying to load compatibility code...
+Package biblatex Info: ... file 'blx-compat.def' found.
+
+(/usr/share/texmf/tex/latex/biblatex/blx-compat.def
+File: blx-compat.def 2011/11/13 v1.7 biblatex generic compatibility
+)
+Package biblatex Info: Trying to load generic definitions...
+Package biblatex Info: ... file 'biblatex.def' found.
+
+(/usr/share/texmf/tex/latex/biblatex/biblatex.def
+File: biblatex.def 2011/11/13 v1.7 biblatex generic definitions
+\c@biburlnumpenalty=\count349
+\c@biburlucpenalty=\count350
+\c@biburllcpenalty=\count351
+\c@smartand=\count352
+)
+Package biblatex Info: Trying to load bibliography style 'numeric'...
+Package biblatex Info: ... file 'numeric.bbx' found.
+
+(/usr/share/texmf/tex/latex/biblatex/bbx/numeric.bbx
+File: numeric.bbx 2011/11/13 v1.7 biblatex bibliography style
+Package biblatex Info: Trying to load bibliography style 'standard'...
+Package biblatex Info: ... file 'standard.bbx' found.
+
+(/usr/share/texmf/tex/latex/biblatex/bbx/standard.bbx
+File: standard.bbx 2011/11/13 v1.7 biblatex bibliography style
+))
+Package biblatex Info: Trying to load citation style 'numeric'...
+Package biblatex Info: ... file 'numeric.cbx' found.
+
+(/usr/share/texmf/tex/latex/biblatex/cbx/numeric.cbx
+File: numeric.cbx 2011/11/13 v1.7 biblatex citation style
+Package biblatex Info: Redefining '\cite'.
+Package biblatex Info: Redefining '\parencite'.
+Package biblatex Info: Redefining '\footcite'.
+Package biblatex Info: Redefining '\footcitetext'.
+Package biblatex Info: Redefining '\smartcite'.
+Package biblatex Info: Redefining '\textcite'.
+Package biblatex Info: Redefining '\supercite'.
+Package biblatex Info: Redefining '\cites'.
+Package biblatex Info: Redefining '\parencites'.
+Package biblatex Info: Redefining '\smartcites'.
+)
+Package biblatex Info: Trying to load configuration file...
+Package biblatex Info: ... file 'biblatex.cfg' found.
+
+(/usr/share/texmf/tex/latex/biblatex/biblatex.cfg
+File: biblatex.cfg 
+))
+(/usr/share/texlive/texmf-dist/tex/latex/tools/enumerate.sty
+Package: enumerate 1999/03/05 v3.00 enumerate extensions (DPC)
+\@enLab=\toks43
+) (./algorithm.sty
+Package: algorithm 
+
+Document Style `algorithm' - floating environment
 \@float@every@algorithm=\toks44
-\c@algorithm=\count200
+\c@algorithm=\count353
 ) (./algorithmic.sty
 Package: algorithmic 2005/07/05
 
 Document Style `algorithmic' - environment
 (/usr/share/texlive/texmf-dist/tex/latex/tools/calc.sty
 Package: calc 2007/08/22 v4.3 Infix arithmetic (KKT,FJ)
-\calc@Acount=\count201
-\calc@Bcount=\count202
+\calc@Acount=\count354
+\calc@Bcount=\count355
 \calc@Adimen=\dimen190
 \calc@Bdimen=\dimen191
-\calc@Askip=\skip90
-\calc@Bskip=\skip91
+\calc@Askip=\skip99
+\calc@Bskip=\skip100
 LaTeX Info: Redefining \setlength on input line 76.
 LaTeX Info: Redefining \addtolength on input line 77.
-\calc@Ccount=\count203
-\calc@Cskip=\skip92
+\calc@Ccount=\count356
+\calc@Cskip=\skip101
 )
-\c@ALC@line=\count204
-\c@ALC@rem=\count205
-\c@ALC@depth=\count206
-\ALC@tlm=\skip93
-\algorithmicindent=\skip94
+\c@ALC@line=\count357
+\c@ALC@rem=\count358
+\c@ALC@depth=\count359
+\ALC@tlm=\skip102
+\algorithmicindent=\skip103
 )
 (/usr/share/texlive/texmf-dist/tex/latex/sectsty/sectsty.sty
 Package: sectsty 2002/02/25 v2.0.2 Commands to change all sectional heading sty
@@ -1195,28 +1369,28 @@ les
 Package hyperref Info: Option `colorlinks' set `true' on input line 63.
 
 (/usr/share/texlive/texmf-dist/tex/latex/fancyhdr/fancyhdr.sty
-\fancy@headwidth=\skip95
-\f@ncyO@elh=\skip96
-\f@ncyO@erh=\skip97
-\f@ncyO@olh=\skip98
-\f@ncyO@orh=\skip99
-\f@ncyO@elf=\skip100
-\f@ncyO@erf=\skip101
-\f@ncyO@olf=\skip102
-\f@ncyO@orf=\skip103
+\fancy@headwidth=\skip104
+\f@ncyO@elh=\skip105
+\f@ncyO@erh=\skip106
+\f@ncyO@olh=\skip107
+\f@ncyO@orh=\skip108
+\f@ncyO@elf=\skip109
+\f@ncyO@erf=\skip110
+\f@ncyO@olf=\skip111
+\f@ncyO@orf=\skip112
 )
 (/usr/share/texlive/texmf-dist/tex/latex/lastpage/lastpage.sty
 Package: lastpage 2011/09/01 v1.2k Refers to last page's name (HMM; JPG)
 )
 (/usr/share/texlive/texmf-dist/tex/latex/lettrine/lettrine.sty
 File: lettrine.sty 2007/08/08 v1.62 (Daniel Flipo)
-\c@DefaultLines=\count207
+\c@DefaultLines=\count360
 \DefaultFindent=\dimen192
 \DefaultNindent=\dimen193
 \DefaultSlope=\dimen194
 \L@lbox=\box41
 \L@tbox=\box42
-\c@L@lines=\count208
+\c@L@lines=\count361
 \L@Pindent=\dimen195
 \L@Findent=\dimen196
 \L@Nindent=\dimen197
@@ -1231,10 +1405,23 @@ Loading lettrine.cfg
 (/usr/share/texlive/texmf-dist/tex/latex/lettrine/lettrine.cfg))
 (/usr/share/texlive/texmf-dist/tex/latex/titling/titling.sty
 Package: titling 2009/09/04 v2.1d maketitle typesetting
-\thanksmarkwidth=\skip104
-\thanksmargin=\skip105
-\droptitle=\skip106
-) (./report.aux
+\thanksmarkwidth=\skip113
+\thanksmargin=\skip114
+\droptitle=\skip115
+)
+Package biblatex Info: Trying to load language 'english'...
+Package biblatex Info: ... file 'english.lbx' found.
+
+(/usr/share/texmf/tex/latex/biblatex/lbx/english.lbx
+File: english.lbx 2011/11/13 v1.7 biblatex localization
+)
+
+Package biblatex Warning: 'babel' detected but 'csquotes' missing.
+(biblatex)                Loading 'csquotes' recommended.
+
+\@quotelevel=\count362
+\@quotereset=\count363
+(./report.aux
 
 LaTeX Warning: Label `line' multiply defined.
 
@@ -1284,16 +1471,16 @@ File: mt-cmr.cfg 2009/11/09 v2.0 microtype config. file: Computer Modern Roman
 )
 (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count209
+\scratchcounter=\count364
 \scratchdimen=\dimen204
 \scratchbox=\box43
-\nofMPsegments=\count210
-\nofMParguments=\count211
+\nofMPsegments=\count365
+\nofMParguments=\count366
 \everyMPshowfont=\toks45
-\MPscratchCnt=\count212
+\MPscratchCnt=\count367
 \MPscratchDim=\dimen205
-\MPnumerator=\count213
-\makeMPintoPDFobject=\count214
+\MPnumerator=\count368
+\makeMPintoPDFobject=\count369
 \everyMPtoPDFconversion=\toks46
 )
 Package caption Info: Begin \AtBeginDocument code.
@@ -1314,20 +1501,34 @@ Package: nameref 2010/04/30 v2.40 Cross-referencing by name of section
 (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
-\c@section@level=\count215
+\c@section@level=\count370
 )
 LaTeX Info: Redefining \ref on input line 119.
 LaTeX Info: Redefining \pageref on input line 119.
 LaTeX Info: Redefining \nameref on input line 119.
 
 (./report.out) (./report.out)
-\@outlinefile=\write4
-\openout4 = `report.out'.
+\@outlinefile=\write5
+\openout5 = `report.out'.
 
  ABD: EveryShipout initializing macros
 
 Package layouts Warning: Layout scale set to 0.5 on input line 119.
 
+Package biblatex Info: Input encoding 'utf8' detected.
+Package biblatex Info: Automatic encoding selection.
+(biblatex)             Assuming data encoding 'utf8'.
+
+Package biblatex Warning: Data encoding is 'utf8'.
+(biblatex)                Use backend=biber.
+
+\openout4 = `report-blx.bib'.
+
+Package biblatex Info: Trying to load bibliographic data...
+Package biblatex Info: ... file 'report.bbl' found.
+(./report.bbl)
+Package biblatex Info: Reference section=0 on input line 119.
+Package biblatex Info: Reference segment=0 on input line 119.
 Package lastpage Info: Please have a look at the pageslts package at
 (lastpage)             http://www.ctan.org/tex-archive/ 
 (lastpage)             macros/latex/contrib/pageslts/ 
@@ -1337,7 +1538,7 @@ Package lastpage Info: Please have a look at the pageslts package at
 (lastpage)             ! on input line 119.
 LaTeX Font Info:    Try loading font information for OT1+phv on input line 120.
 
-(/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1phv.fd
+ (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1phv.fd
 File: ot1phv.fd 2001/06/04 scalable font definitions for OT1/phv.
 )
 Package microtype Info: Character `029' is missing
@@ -1399,30 +1600,30 @@ File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 
-LaTeX Warning: Citation `RoboCupObjective' on page 1 undefined on input line 12
+LaTeX Warning: Citation 'RoboCupObjective' on page 1 undefined on input line 12
 7.
 
 
-LaTeX Warning: Citation `kitano1997robocup' on page 1 undefined on input line 1
+LaTeX Warning: Citation 'kitano1997robocup' on page 1 undefined on input line 1
 27.
 
 
-LaTeX Warning: Citation `RoboCupSTL' on page 1 undefined on input line 131.
+LaTeX Warning: Citation 'RoboCupSTL' on page 1 undefined on input line 131.
 
 
-LaTeX Warning: Citation `RoboCupSTL' on page 1 undefined on input line 131.
+LaTeX Warning: Citation 'RoboCupSTL' on page 1 undefined on input line 131.
 
 
-LaTeX Warning: Citation `DNT-TD10' on page 1 undefined on input line 135.
+LaTeX Warning: Citation 'DNT-TD10' on page 1 undefined on input line 135.
 
 
-LaTeX Warning: Citation `DNT-TD11' on page 1 undefined on input line 135.
+LaTeX Warning: Citation 'DNT-TD11' on page 1 undefined on input line 135.
 
 
-LaTeX Warning: Citation `DNT-TD12' on page 1 undefined on input line 135.
+LaTeX Warning: Citation 'DNT-TD12' on page 1 undefined on input line 135.
 
 
-LaTeX Warning: Citation `DNT-TD13' on page 1 undefined on input line 135.
+LaTeX Warning: Citation 'DNT-TD13' on page 1 undefined on input line 135.
 
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <7> on input line 135.
@@ -1431,27 +1632,53 @@ LaTeX Warning: Reference `sec:FeatureExtraction' on page 1 undefined on input l
 ine 137.
 
 
-LaTeX Warning: Citation `canas2009visual' on page 1 undefined on input line 143
+LaTeX Warning: Citation 'canas2009visual' on page 1 undefined on input line 143
 .
 
 
-LaTeX Warning: Citation `ashar2010robocup' on page 1 undefined on input line 14
+LaTeX Warning: Citation 'ashar2010robocup' on page 1 undefined on input line 14
 4.
 
 
-LaTeX Warning: Citation `canas2010recognition' on page 1 undefined on input lin
+LaTeX Warning: Citation 'canas2010recognition' on page 1 undefined on input lin
 e 145.
 
 
-LaTeX Warning: Citation `schulz2012utilizing' on page 1 undefined on input line
+LaTeX Warning: Citation 'schulz2012utilizing' on page 1 undefined on input line
  146.
 
 
-LaTeX Warning: Citation `deng2011natural' on page 1 undefined on input line 147
+LaTeX Warning: Citation 'deng2011natural' on page 1 undefined on input line 147
 .
 
 
-<figures/1280px-HSV_color_solid_cylinder_alpha_lowgamma.png, id=134, 1284.8pt x
+Underfull \hbox (badness 10000) in paragraph at lines 143--148
+ \T1/lmr/m/n/9 (+20) [[]]  [[]]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 143--148
+\T1/lmr/m/n/9 (+20) [[]]  [[]]
+ []
+
+LaTeX Font Info:    Try loading font information for T1+lmtt on input line 151.
+
+(/usr/share/texmf/tex/latex/lm/t1lmtt.fd
+File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+LaTeX Font Info:    Try loading font information for OMS+lmr on input line 151.
+
+
+(/usr/share/texmf/tex/latex/lm/omslmr.fd
+File: omslmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+LaTeX Font Info:    Font shape `OMS/lmr/m/n' in size <7> not available
+(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 151.
+ [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
+
+
+]
+<figures/1280px-HSV_color_solid_cylinder_alpha_lowgamma.png, id=156, 1284.8pt x
  963.6pt>
 File: figures/1280px-HSV_color_solid_cylinder_alpha_lowgamma.png Graphic file (
 type png)
@@ -1459,36 +1686,20 @@ type png)
 Package pdftex.def Info: figures/1280px-HSV_color_solid_cylinder_alpha_lowgamma
 .png used on input line 156.
 (pdftex.def)             Requested size: 154.81046pt x 116.09752pt.
-LaTeX Font Info:    Try loading font information for T1+lmtt on input line 161.
 
-
-(/usr/share/texmf/tex/latex/lm/t1lmtt.fd
-File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-LaTeX Font Info:    Try loading font information for OMS+lmr on input line 161.
-
-
-(/usr/share/texmf/tex/latex/lm/omslmr.fd
-File: omslmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-LaTeX Font Info:    Font shape `OMS/lmr/m/n' in size <7> not available
-(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 161.
- [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
-
-
-] <figures/original.png, id=160, 321.2pt x 240.9pt>
+<figures/original.png, id=160, 321.2pt x 240.9pt>
 File: figures/original.png Graphic file (type png)
-
-<use figures/original.png>
+ <use figures/original.png>
 Package pdftex.def Info: figures/original.png used on input line 204.
 (pdftex.def)             Requested size: 154.81046pt x 116.10854pt.
- <figures/back.png, id=161, 321.2pt x 240.9pt>
-File: figures/back.png Graphic file (type png)
 
-<use figures/back.png>
+<figures/back.png, id=161, 321.2pt x 240.9pt>
+File: figures/back.png Graphic file (type png)
+ <use figures/back.png>
 Package pdftex.def Info: figures/back.png used on input line 205.
 (pdftex.def)             Requested size: 154.81046pt x 116.10854pt.
- <figures/back_fixed.png, id=162, 321.2pt x 240.9pt>
+
+<figures/back_fixed.png, id=162, 321.2pt x 240.9pt>
 File: figures/back_fixed.png Graphic file (type png)
 
 <use figures/back_fixed.png>
@@ -1648,41 +1859,85 @@ l.302
 l.302 
        <./figures/lines.png (PNG copy)>]
 
-LaTeX Warning: Citation `ED' on page 5 undefined on input line 309.
+LaTeX Warning: Citation 'ED' on page 5 undefined on input line 308.
 
 LaTeX Font Info:    Font shape `OMS/lmr/m/n' in size <9> not available
-(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 312.
-<figures/ellipseDetection.png, id=237, 739.26187pt x 190.46156pt>
+(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 311.
+
+LaTeX Warning: Citation 'ED' on page 5 undefined on input line 315.
+
+<figures/ellipseDetection.png, id=238, 740.7675pt x 186.6975pt>
+! Illegal unit of measure (pt inserted).
+<to be read again> 
+                   !
+l.319 ...idth = 265]{figures/ellipseDetection.png}
+                                                  
+? 
+! Illegal unit of measure (pt inserted).
+<to be read again> 
+                   !
+l.319 ...idth = 265]{figures/ellipseDetection.png}
+                                                  
+? 
 File: figures/ellipseDetection.png Graphic file (type png)
-
 <use figures/ellipseDetection.png>
-Package pdftex.def Info: figures/ellipseDetection.png used on input line 322.
-(pdftex.def)             Requested size: 154.81046pt x 39.88475pt.
+Package pdftex.def Info: figures/ellipseDetection.png used on input line 319.
+(pdftex.def)             Requested size: 265.0pt x 66.78943pt.
 
-
-LaTeX Warning: Citation `IPM2' on page 5 undefined on input line 326.
-
-
-LaTeX Warning: Citation `IPMWeb' on page 5 undefined on input line 328.
+Overfull \hbox (11.9852pt too wide) in paragraph at lines 319--320
+[][] 
+ []
 
 [5 <./figures/img_000003.jpg> <./figures/img_000005.jpg> <./figures/img_000006.
 jpg> <./figures/post3.png (PNG copy)> <./figures/post5.png (PNG copy)> <./figur
 es/post6.png (PNG copy)> <./figures/ellipseDetection.png>]
 
-LaTeX Warning: Citation `IPM' on page 6 undefined on input line 334.
+! Package inputenc Error: Unicode char \u8:ﬀ not set up for use with LaTeX.
+
+See the inputenc package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.327 ...lane and gets rid of the perspective eﬀ
+                                                  ect on objects that are on...
+
+? 
+
+LaTeX Warning: Citation 'IPM2' on page 6 undefined on input line 327.
 
 
-LaTeX Warning: Citation `IPMCode' on page 6 undefined on input line 336.
+LaTeX Warning: Citation 'IPMWeb' on page 6 undefined on input line 329.
 
-<figures/imagePixelsMapped.png, id=247, 843.15pt x 231.11343pt>
+
+LaTeX Warning: Citation 'IPM' on page 6 undefined on input line 337.
+
+
+LaTeX Warning: Citation 'IPMCode' on page 6 undefined on input line 339.
+
+<figures/imagePixelsMapped.png, id=250, 843.15pt x 231.11343pt>
+! Illegal unit of measure (pt inserted).
+<to be read again> 
+                   !
+l.342 ...h = 265]{{figures/imagePixelsMapped.png}}
+                                                  
+? 
+! Illegal unit of measure (pt inserted).
+<to be read again> 
+                   !
+l.342 ...h = 265]{{figures/imagePixelsMapped.png}}
+                                                  
+? 
 File: figures/imagePixelsMapped.png Graphic file (type png)
-
 <use figures/imagePixelsMapped.png>
-Package pdftex.def Info: figures/imagePixelsMapped.png used on input line 343.
-(pdftex.def)             Requested size: 154.81046pt x 42.4344pt.
+Package pdftex.def Info: figures/imagePixelsMapped.png used on input line 342.
+(pdftex.def)             Requested size: 265.0pt x 72.63889pt.
+
+Overfull \hbox (11.9852pt too wide) in paragraph at lines 342--343
+[][] 
+ []
 
 
-LaTeX Warning: Citation `MonteCarloLocalization' on page 6 undefined on input l
+LaTeX Warning: Citation 'MonteCarloLocalization' on page 6 undefined on input l
 ine 354.
 
 
@@ -1844,73 +2099,69 @@ LaTeX Warning: Reference `sec:FeatureExtraction' on page 7 undefined on input l
 ine 393.
 
 
-LaTeX Warning: Citation `ProbabilisticRobotics' on page 7 undefined on input li
+LaTeX Warning: Citation 'ProbabilisticRobotics' on page 7 undefined on input li
 ne 398.
 
 
-LaTeX Warning: Citation `ProbabilisticRobotics' on page 7 undefined on input li
-ne 416.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 413--417
+Underfull \hbox (badness 10000) in paragraph at lines 413--418
 
  []
 
 
-LaTeX Warning: Citation `ProbabilisticRobotics' on page 7 undefined on input li
-ne 428.
+LaTeX Warning: Citation 'ProbabilisticRobotics' on page 7 undefined on input li
+ne 429.
 
 
-LaTeX Warning: Citation `ProbabilisticRobotics' on page 7 undefined on input li
-ne 428.
+LaTeX Warning: Citation 'ProbabilisticRobotics' on page 7 undefined on input li
+ne 429.
 
 pdfTeX warning (ext4): destination with the same identifier (name{ALC@line.1}) 
 has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.431 \STATE
+l.432 \STATE
              {\bf Input: }$\chi_{t-1}, u_t, z_t,m$pdfTeX warning (ext4): destin
 ation with the same identifier (name{ALC@rem.1}) has been already used, duplica
 te ignored
 <to be read again> 
                    \relax 
-l.431 \STATE
+l.432 \STATE
              {\bf Input: }$\chi_{t-1}, u_t, z_t,m$pdfTeX warning (ext4): destin
 ation with the same identifier (name{ALC@line.2}) has been already used, duplic
 ate ignored
 <to be read again> 
                    \relax 
-l.432 \STATE
+l.433 \STATE
              {\bf Output: }$\chi_t$pdfTeX warning (ext4): destination with the 
 same identifier (name{ALC@rem.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.432 \STATE
+l.433 \STATE
              {\bf Output: }$\chi_t$pdfTeX warning (ext4): destination with the 
 same identifier (name{ALC@line.3}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.433 \STATE
+l.434 \STATE
              \textbf{augmented\_monte\_carlo\_localization(}$\chi_{t-1}, u_t...
 pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem.1}) h
 as been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.433 \STATE
+l.434 \STATE
              \textbf{augmented\_monte\_carlo\_localization(}$\chi_{t-1}, u_t...
 pdfTeX warning (ext4): destination with the same identifier (name{ALC@line.4}) 
 has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.434 \STATE
+l.435 \STATE
              static $w_{slow}$,$ w_{fast}$ \label{alg:augmented1}\;pdfTeX warni
 ng (ext4): destination with the same identifier (name{ALC@rem.1}) has been alre
 ady used, duplicate ignored
 <to be read again> 
                    \relax 
-l.434 \STATE
+l.435 \STATE
              static $w_{slow}$,$ w_{fast}$ \label{alg:augmented1}\;
-Overfull \hbox (4.09766pt too wide) in paragraph at lines 433--434
+Overfull \hbox (4.09766pt too wide) in paragraph at lines 434--435
 [] []\T1/lmr/bx/n/9 augmented_monte_carlo_localization($\OML/lmm/m/it/9 ^^_[]; 
 u[]; z[]; m$\T1/lmr/bx/n/9 )
  []
@@ -1919,354 +2170,364 @@ pdfTeX warning (ext4): destination with the same identifier (name{ALC@line.5})
 has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.435 \STATE
+l.436 \STATE
              $\bar{\chi_t} = \chi_t = \emptyset$\;pdfTeX warning (ext4): destin
 ation with the same identifier (name{ALC@rem.1}) has been already used, duplica
 te ignored
 <to be read again> 
                    \relax 
-l.435 \STATE
+l.436 \STATE
              $\bar{\chi_t} = \chi_t = \emptyset$\;pdfTeX warning (ext4): destin
 ation with the same identifier (name{ALC@line.6}) has been already used, duplic
 ate ignored
 <to be read again> 
                    \relax 
-l.436 \FOR{$m$=1 to $M$}
+l.437 \FOR{$m$=1 to $M$}
                         pdfTeX warning (ext4): destination with the same identi
 fier (name{ALC@rem.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.436 \FOR{$m$=1 to $M$}
+l.437 \FOR{$m$=1 to $M$}
                         pdfTeX warning (ext4): destination with the same identi
 fier (name{ALC@line.7}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.437 \STATE
+l.438 \STATE
              $x^{[m]}_t$ = sample\_motion\_model( $u_t$ , $x^{[m]}_{t-1}$ )\;pd
 fTeX warning (ext4): destination with the same identifier (name{ALC@rem.1}) has
  been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.437 \STATE
+l.438 \STATE
              $x^{[m]}_t$ = sample\_motion\_model( $u_t$ , $x^{[m]}_{t-1}$ )\;pd
 fTeX warning (ext4): destination with the same identifier (name{ALC@line.8}) ha
 s been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.438 \STATE
+l.439 \STATE
              $w^{[m]}_t$ = measurement\_model($z_t$, $x^{[m]}_t$ , $m$)\;pdfTeX
  warning (ext4): destination with the same identifier (name{ALC@rem.1}) has bee
 n already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.438 \STATE
+l.439 \STATE
              $w^{[m]}_t$ = measurement\_model($z_t$, $x^{[m]}_t$ , $m$)\;pdfTeX
  warning (ext4): destination with the same identifier (name{ALC@line.9}) has be
 en already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.439 \STATE
+l.440 \STATE
              $\bar{\chi_t} = \bar{\chi_t} + \langle x^{[m]}_t, w^{[m]}_t \ra...
 pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem.1}) h
 as been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.439 \STATE
+l.440 \STATE
              $\bar{\chi_t} = \bar{\chi_t} + \langle x^{[m]}_t, w^{[m]}_t \ra...
 pdfTeX warning (ext4): destination with the same identifier (name{ALC@line.10})
  has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.440 \STATE
+l.441 \STATE
              $w_{avg} = w_{avg} + \frac{1}{M} w^{[m]}_t $ \label{alg:augment...
 pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem.1}) h
 as been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.440 \STATE
+l.441 \STATE
              $w_{avg} = w_{avg} + \frac{1}{M} w^{[m]}_t $ \label{alg:augment...
 pdfTeX warning (ext4): destination with the same identifier (name{ALC@line.11})
  has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.441 \ENDFOR
+l.442 \ENDFOR
              pdfTeX warning (ext4): destination with the same identifier (name{
 ALC@rem.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.441 \ENDFOR
+l.442 \ENDFOR
              pdfTeX warning (ext4): destination with the same identifier (name{
 ALC@line.12}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.443 \STATE
+l.444 \STATE
              $w_{slow} = w_{slow} + \alpha_{slow}(w_{avg} - w_{slow})$ \labe...
 pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem.1}) h
 as been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.443 \STATE
+l.444 \STATE
              $w_{slow} = w_{slow} + \alpha_{slow}(w_{avg} - w_{slow})$ \labe...
 pdfTeX warning (ext4): destination with the same identifier (name{ALC@line.13})
  has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.444 \STATE
+l.445 \STATE
              $w_{fast} = w_{fast} + \alpha_{fast}(w_{avg} - w_{fast})$ \labe...
 pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem.1}) h
 as been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.444 \STATE
+l.445 \STATE
              $w_{fast} = w_{fast} + \alpha_{fast}(w_{avg} - w_{fast})$ \labe...
 pdfTeX warning (ext4): destination with the same identifier (name{ALC@line.14})
  has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.446 ... to $M$ \label{alg:augmented_resampling}}
+l.447 ... to $M$ \label{alg:augmented_resampling}}
                                                   pdfTeX warning (ext4): destin
 ation with the same identifier (name{ALC@rem.1}) has been already used, duplica
 te ignored
 <to be read again> 
                    \relax 
-l.446 ... to $M$ \label{alg:augmented_resampling}}
+l.447 ... to $M$ \label{alg:augmented_resampling}}
                                                   pdfTeX warning (ext4): destin
 ation with the same identifier (name{ALC@line.15}) has been already used, dupli
 cate ignored
 <to be read again> 
                    \relax 
-l.447 \STATE
-             \textbf{with} probability max\{0.0, 1.0 - $w_{fast}/w_{slow}$\}...
-pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem.1}) h
-as been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.447 \STATE
+l.448 \STATE
              \textbf{with} probability max\{0.0, 1.0 - $w_{fast}/w_{slow}$\}...
 pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem.1}) h
 as been already used, duplicate ignored
 <to be read again> 
                    \relax 
 l.448 \STATE
+             \textbf{with} probability max\{0.0, 1.0 - $w_{fast}/w_{slow}$\}...
+pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem.1}) h
+as been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.449 \STATE
              \tab add random pose to $\chi_t$pdfTeX warning (ext4): destination
  with the same identifier (name{ALC@rem.1}) has been already used, duplicate ig
 nored
 <to be read again> 
                    \relax 
-l.449 \STATE
+l.450 \STATE
              \textbf{else}pdfTeX warning (ext4): destination with the same iden
 tifier (name{ALC@rem.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.450 \STATE
+l.451 \STATE
              \tab draw $i\in{1,..,N}$ with probability $\alpha$  $w^{[i]}_t$\;p
 dfTeX warning (ext4): destination with the same identifier (name{ALC@rem.1}) ha
 s been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.451 \STATE
+l.452 \STATE
              \tab add $x^{[i]}_t $ to $\chi_t$\;pdfTeX warning (ext4): destinat
 ion with the same identifier (name{ALC@rem.1}) has been already used, duplicate
  ignored
 <to be read again> 
                    \relax 
-l.452 \STATE
+l.453 \STATE
              \textbf{end with}pdfTeX warning (ext4): destination with the same 
 identifier (name{ALC@rem.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.453 \ENDFOR
-              [7]
+l.454 \ENDFOR
+             
 
-LaTeX Warning: Citation `SensorResetting' on page 8 undefined on input line 466
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+LaTeX Warning: Citation 'SensorResetting' on page 7 undefined on input line 467
 .
 
+[7]
 
-LaTeX Warning: Citation `ProbabilisticRobotics' on page 8 undefined on input li
-ne 471.
+LaTeX Warning: Citation 'ProbabilisticRobotics' on page 8 undefined on input li
+ne 472.
 
 pdfTeX warning (ext4): destination with the same identifier (name{ALC@line.1}) 
 has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.496 \STATE
+l.497 \STATE
              {\bf Input: }$\chi_{t},W_t $pdfTeX warning (ext4): destination wit
 h the same identifier (name{ALC@rem.1}) has been already used, duplicate ignore
 d
 <to be read again> 
                    \relax 
-l.496 \STATE
+l.497 \STATE
              {\bf Input: }$\chi_{t},W_t $pdfTeX warning (ext4): destination wit
 h the same identifier (name{ALC@line.2}) has been already used, duplicate ignor
 ed
 <to be read again> 
                    \relax 
-l.497 \STATE
+l.498 \STATE
              {\bf Output: }$\bar{\chi_t}$pdfTeX warning (ext4): destination wit
 h the same identifier (name{ALC@rem.1}) has been already used, duplicate ignore
 d
 <to be read again> 
                    \relax 
-l.497 \STATE
+l.498 \STATE
              {\bf Output: }$\bar{\chi_t}$pdfTeX warning (ext4): destination wit
 h the same identifier (name{ALC@line.3}) has been already used, duplicate ignor
 ed
 <to be read again> 
                    \relax 
-l.498 \STATE
+l.499 \STATE
              \textbf{low\_variance\_resampling(}$\chi_{t},W_t$\textbf{)}\\pdfTe
 X warning (ext4): destination with the same identifier (name{ALC@rem.1}) has be
 en already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.498 \STATE
+l.499 \STATE
              \textbf{low\_variance\_resampling(}$\chi_{t},W_t$\textbf{)}\\pdfTe
 X warning (ext4): destination with the same identifier (name{ALC@line.4}) has b
 een already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.499 \STATE
+l.500 \STATE
               $\bar{\chi_t} =  \emptyset$pdfTeX warning (ext4): destination wit
 h the same identifier (name{ALC@rem.1}) has been already used, duplicate ignore
 d
 <to be read again> 
                    \relax 
-l.499 \STATE
+l.500 \STATE
               $\bar{\chi_t} =  \emptyset$pdfTeX warning (ext4): destination wit
 h the same identifier (name{ALC@line.5}) has been already used, duplicate ignor
 ed
 <to be read again> 
                    \relax 
-l.500 \STATE
+l.501 \STATE
              r = rand(0;$M^{-1}$)\label{alg:resampling_rand}pdfTeX warning (ext
 4): destination with the same identifier (name{ALC@rem.1}) has been already use
 d, duplicate ignored
 <to be read again> 
                    \relax 
-l.500 \STATE
+l.501 \STATE
              r = rand(0;$M^{-1}$)\label{alg:resampling_rand}pdfTeX warning (ext
 4): destination with the same identifier (name{ALC@line.6}) has been already us
 ed, duplicate ignored
 <to be read again> 
                    \relax 
-l.501 \STATE
+l.502 \STATE
              c = $w^{[1]}_t$pdfTeX warning (ext4): destination with the same id
 entifier (name{ALC@rem.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.501 \STATE
+l.502 \STATE
              c = $w^{[1]}_t$pdfTeX warning (ext4): destination with the same id
 entifier (name{ALC@line.7}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.502 \STATE
+l.503 \STATE
               i=1pdfTeX warning (ext4): destination with the same identifier (n
 ame{ALC@rem.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.502 \STATE
+l.503 \STATE
               i=1pdfTeX warning (ext4): destination with the same identifier (n
 ame{ALC@line.8}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.503 \FOR{$m$=1 to $M$ }
+l.504 \FOR{$m$=1 to $M$ }
                          pdfTeX warning (ext4): destination with the same ident
 ifier (name{ALC@rem.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.503 \FOR{$m$=1 to $M$ }
+l.504 \FOR{$m$=1 to $M$ }
                          pdfTeX warning (ext4): destination with the same ident
 ifier (name{ALC@line.9}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.504 \STATE
+l.505 \STATE
              U = r + ($m$-1)* $M^{-1}$\label{alg:stepsize}pdfTeX warning (ext4)
 : destination with the same identifier (name{ALC@rem.1}) has been already used,
  duplicate ignored
 <to be read again> 
                    \relax 
-l.504 \STATE
+l.505 \STATE
              U = r + ($m$-1)* $M^{-1}$\label{alg:stepsize}pdfTeX warning (ext4)
 : destination with the same identifier (name{ALC@line.10}) has been already use
 d, duplicate ignored
 <to be read again> 
                    \relax 
-l.505 \WHILE{U $>$ c}
+l.506 \WHILE{U $>$ c}
                      pdfTeX warning (ext4): destination with the same identifie
 r (name{ALC@rem.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.505 \WHILE{U $>$ c}
+l.506 \WHILE{U $>$ c}
                      pdfTeX warning (ext4): destination with the same identifie
 r (name{ALC@line.11}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.506 \STATE
+l.507 \STATE
              i = i + 1\;pdfTeX warning (ext4): destination with the same identi
 fier (name{ALC@rem.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.506 \STATE
+l.507 \STATE
              i = i + 1\;pdfTeX warning (ext4): destination with the same identi
 fier (name{ALC@line.12}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.507 \STATE
+l.508 \STATE
              c = c + $w^{[i]}_t$pdfTeX warning (ext4): destination with the sam
 e identifier (name{ALC@rem.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.507 \STATE
+l.508 \STATE
              c = c + $w^{[i]}_t$pdfTeX warning (ext4): destination with the sam
 e identifier (name{ALC@line.13}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.508 \ENDWHILE
+l.509 \ENDWHILE
                pdfTeX warning (ext4): destination with the same identifier (nam
 e{ALC@rem.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.508 \ENDWHILE
+l.509 \ENDWHILE
                pdfTeX warning (ext4): destination with the same identifier (nam
 e{ALC@line.14}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.509 \STATE
+l.510 \STATE
               add $x^{[i]}_t$ to $\bar{\chi_t}$pdfTeX warning (ext4): destinati
 on with the same identifier (name{ALC@rem.1}) has been already used, duplicate 
 ignored
 <to be read again> 
                    \relax 
-l.509 \STATE
+l.510 \STATE
               add $x^{[i]}_t$ to $\bar{\chi_t}$pdfTeX warning (ext4): destinati
 on with the same identifier (name{ALC@line.15}) has been already used, duplicat
 e ignored
 <to be read again> 
                    \relax 
-l.510 \ENDFOR
+l.511 \ENDFOR
              pdfTeX warning (ext4): destination with the same identifier (name{
 ALC@rem.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.510 \ENDFOR
+l.511 \ENDFOR
              
-Overfull \hbox (124.03212pt too wide) in paragraph at lines 521--521
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+Overfull \hbox (124.03212pt too wide) in paragraph at lines 522--522
 [][][]\T1/lmr/m/n/7 (-20) The code can be ac-cessed at: https://github.com/pkok
 /Robolab/tree/master/NaoLeague/LocationVisualizer| 
  []
 
-! Undefined control sequence.
-l.542 \printbibliography
-                        
-? 
+[8]
+
+LaTeX Warning: Empty bibliography on input line 543.
+
 
 AED: lastpage setting LastPage
-[8]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 546.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 546.
+[9
+
+]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 547.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 547.
  (./report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 546.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 546.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 547.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 547.
 Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: 1CE0F1692E9F7BCB9AA1C2502AC2F56D;1809.
 
@@ -2276,16 +2537,24 @@ LaTeX Warning: There were undefined references.
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 546.
+
+Package biblatex Warning: Please (re)run BibTeX on the file(s):
+(biblatex)                report
+(biblatex)                and rerun LaTeX afterwards.
+
+Package logreq Info: Writing requests to 'report.run.xml'.
+\openout1 = `report.run.xml'.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 547.
  ) 
 Here is how much of TeX's memory you used:
- 21506 strings out of 495059
- 368602 string characters out of 3182029
- 617070 words of memory out of 3000000
- 23945 multiletter control sequences out of 15000+200000
- 117675 words of font info for 152 fonts, out of 3000000 for 9000
+ 26112 strings out of 495059
+ 447239 string characters out of 3182030
+ 793836 words of memory out of 3000000
+ 28512 multiletter control sequences out of 15000+200000
+ 117285 words of font info for 149 fonts, out of 3000000 for 9000
  14 hyphenation exceptions out of 8191
- 65i,12n,71p,1561b,715s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 65i,12n,71p,1557b,1371s stack positions out of 5000i,500n,10000p,200000b,50000s
 pdfTeX warning (dest): name{algorithm.4} has been referenced but does not exi
 st, replaced by a fixed one
 
@@ -2306,10 +2575,10 @@ ts/type1/public/lm/lmsy6.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy7.pfb>
 </usr/share/texmf/fonts/type1/public/lm/lmsy9.pfb></usr/share/texmf/fonts/type1
 /public/lm/lmtt8.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uh
 vb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvro8a.pfb>
-Output written on report.pdf (8 pages, 2270865 bytes).
+Output written on report.pdf (9 pages, 2273074 bytes).
 PDF statistics:
- 383 PDF objects out of 1000 (max. 8388607)
- 328 compressed objects within 4 object streams
- 84 named destinations out of 1000 (max. 500000)
+ 392 PDF objects out of 1000 (max. 8388607)
+ 336 compressed objects within 4 object streams
+ 85 named destinations out of 1000 (max. 500000)
  37701 words of extra memory for PDF output out of 42996 (max. 10000000)
 
