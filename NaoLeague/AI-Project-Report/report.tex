@@ -200,10 +200,10 @@ White     & $0 \sim 255$    & $0 \sim 60$    & $200 \sim 255$    \\
 \end{table}
 
 \subsection{Background Removal}
-Background removal defines the task of detecting the field's borders in order to exclude uninformative regions in the processing image, saving this way computational cost and helping to subtract only the useful part of the image, which is the one, where we can detect all the features we are interested in. This can be done by a vertical scan of the image and detecting the first green pixel in each column. This method can work efficiently but it is not robust in many cases, as green pixels can be found above the field's horizon as well. Following the same principle in our approach, we consider as background every region in a column before a considerable amount of green pixels, and not just one, which can lead us to faulty decisions about the horizon. We start in each column considering the pixel in the first row as background. Then, during scanning each column, we stop when we find many green continuous pixels and assign as horizon row in this column the first of this sequence of green pixels.  As you can see in table~\ref{thresholdHSV}, green pixels are considered as those which have hue, saturation, and value around these thresholds. Figure~\ref{background}, illustrates the process of background removal. Even though it is not such a sophisticated method, we can see that in this specific example, almost all background above the field's horizon has been removed, helping us in this way to avoid detect false positive features in the background.
+Background removal defines the task of detecting the field's borders in order to exclude uninformative regions in the processing image. By doing so, computation time is saved as only that part of the image is subtracted, where all the features are located we are interested in. This can be done by a vertical scan of the image and detecting the first green pixel in each column. This method can work efficiently but it is not robust in many cases, as green pixels can be found above the field's horizon as well. Following the same principle in our approach, we consider as background every region in a column before a considerable amount of green pixels. We start in each column considering the pixel in the first row as background. Then, during scanning each column, we stop when we find a set amount of continuous pixels which are green and assign as horizon row in this column the first of this sequence of green pixels.  Table~\ref{thresholdHSV} displays the hue, saturation and value thresholds for pixels to be classified as green. Figure~\ref{background} illustrates the process of background removal. Even though it is not a sophisticated method, we can see that in this specific example, almost all background above the field's horizon has been removed, helping us in this way to avoid detect false positive features in the background.
 
 \begin{figure*}[t!]
-\caption{Background removal process example, original RGB image (left), points indicating the start of the field (middle), regions of interest without background information (right).}
+\caption{Background removal process example. Left to right: original RGB image, points indicating the start of the field, regions of interest without background information.}
 \label{background}
 \centering    
 \includegraphics[width=0.3\textwidth]{figures/original.png} \	
@@ -213,6 +213,7 @@ Background removal defines the task of detecting the field's borders in order to
 
 
 \subsection{Image Binarization}
+\label{sec:ImageBinarization}
 In this section, we will talk about another image pre-processing technique which helped our main procedure detect features easier. Image binarization is a process which outputs two binary images, one in respect to the goals, and the other in respect to the field lines. For goal detection, it is natural that we are interested only in yellow areas of the image. The same applies for field lines, we are only interested in green and white areas of it. The main goal of this process is to classify colors according to table~\ref{thresholdHSV}. As we can realize, a simple way to classify colors is used in order to get a binary image, with the interesting part highlighted in each case. For the first case, goals, we are only interested to find yellow, so we output white for each yellow pixel, and black for any other color. For field lines, black for every other than white pixel.
 
 \begin{figure}[h!]
@@ -226,10 +227,10 @@ In this section, we will talk about another image pre-processing technique which
 Figure~\ref{binary}, illustrates the process of image binarization. To add some technical details about the above implementation of image binarization, we can say that the whole process of it is integrated into the background removal procedure which requires only one vertical scan of the input image, and its goal is to minimize the space complexity of the whole feature extraction method, as now we have only to process binary images with only one channel, in contrast to the original 3-channel image.
 
 \subsection{Line Detection}
-Before proceeding to the exact procedure about finding goals and line features, it is time to introduce our approach to detect line segments in a binary image like those we presented before in image binarization section.
+Before proceeding to the exact procedure about finding goal posts and line features, it is time to introduce our approach to detect line segments in a binary image like those we presented before in section~\ref{sec:ImageBinarization}.
 
 \subsubsection{Other approaches}
-In general, we are interested in finding one line segment for each actual line appearing in the image. Other methods, such as Hough Transformation or Probabilistic Hough Transformation failed to detect these continuous line segments, due to the fact that they applied after edge detection step. Lines in our images consist of line segments which are thicker than one pixel, and when edge detection is applied to those finds edges at both sides of a line. Therefore, both Hough transformations find lines at both sides of an actual line. There were also some other problems with these methods, namely, the big number of detected lines, small line pieces on each actual line, and wrongly connected line segments. Furthermore, the huge number of detected lines, made our efforts to cluster those lines tough.
+In general, we are interested in finding a single line segment for each actual line appearing in the image. Other methods, such as the Hough transformation or the probabilistic Hough transformation failed to detect a single, continuous line segment, due to the fact that these transformations were applied after edge detection. Lines in our images consist of line segments which are thicker than one pixel, and when edge detection is applied to those, it finds edges at both sides of a line. Therefore, both Hough transforms find lines at both sides of an actual line. There were also some other problems with these methods, namely, the big number of detected lines, small line pieces on each actual line, and wrongly connected line segments. Furthermore, the huge number of detected lines made our efforts to cluster those lines tough.
 
 \subsubsection{Our approach}
 As a result, we came up with our own approach of finding line segments in these noisy images. The main idea in this approach is that if we had some points on these actual line segments, we could be able to connect them based on color information, and geometric properties they have. Therefore, the first step of this algorithm, is to generate these points, scanning the picture every $5 \sim 10$ pixels vertically and horizontally. We are only interested in transitions which start from black go white and again black in the end. We store these points as a pixel coordinates $<x,y>$ in a vector. As an illustration, we can see in figure~\ref{points}, where these points are located for the same example input image as before.
@@ -321,9 +322,9 @@ To tackle the problem of false positives, \emph{a contrario} validation is emplo
 However, as can be seen in figure \ref{fig:ED}, even after this step, we still find a number of false positives because small features like penalty X crossings, and resedue background noise often gets classified as small arcs by the ellipse detector. This problem can easily be tackled by filtering the candidate ellipses on their arc lengths and putting a minimum threshold on it.
 
 \begin{figure}
-\includegraphics[width = 265px]{figures/ellipseDetection.png}
 \caption{Left to right: RGB image obtained from NAO's lower camera, binary image of field lines after background removal, possible ellipses detected (and lines, not considered) }
 \label{fig:ED}
+\includegraphics[width = 255px]{figures/ellipseDetection.png}
 \end{figure}
 
 The ellipse detection step can also ensure lesser false positives (and faster computation) during the line feature detections stage if ellipse detection is performed first: If we know with confidence the area that the circumference of the ellipse is covering, we know that line crossings do not exist on it and hence we can mask this area for the line feature detection step.
@@ -344,9 +345,9 @@ We now briefly explain this transformation\cite{IPM} while not going into the de
 We first create matrices that contain the $x$ and $y$ locations in the world frame, where the pixels in the bottom portion of the camera image (where we assume we see the field based on the camera's viewing angle, height and aperture) are mapped by using the inverse perspective transformation equations (see figure \ref{fig:IPM}, center). Next, we find the weights needed to create an inverse-perspective-mapped image with evenly spaced pixels by linearly interpolating between intensity/color values in the original image. Finally, we apply the inverse-perspective interpolation mapping to an RBG camera image to get an inverse-perspective-mapped image\cite{IPMCode} (see figure \ref{fig:IPM}, right).
 
 \begin{figure}
-\includegraphics[width = 265px]{figures/imagePixelsMapped.png}
 \caption{Left to right: front facing RGB image obtained from NAO's lower camera, map of image pixels to the world frame, bird's eye view obtained after IPM}
 \label{fig:IPM}
+\includegraphics[width = 255px]{figures/imagePixelsMapped.png}
 \end{figure}
 
 
@@ -400,7 +401,7 @@ The feature recognition module returns the range and bearing and type of a featu
 where $f$ is the feature observed, $f_x$ and $f_y$ the feature position and $m_{j,x}$ and $m_{j,y}$ the position of feature $j$ in the featuremap with the same type as observed feature $f$. 
 
 (This simple model was chosen due to time constraints. More elaborate models are possible, e.g. aggregate two or more features and compute correspondence values for those "feature patterns"). To compute the final likelihood, we calculate the range and bearing of the featuremap feature chosen, according to our pose hypothesis. Again we assume erroneous sensory information. For simplicity we model this error as a gaussian, although the underlying error model could be different. 
-The sensory model computes the final likelihood of a pose estimate as described in \cite{ProbabilisticRobotics}:
+The sensory model computes the final likelihood of a pose estimate as described by Thrun et al.~\cite{ProbabilisticRobotics}:
 \[ q = \prod\limits_{i=1}^{N}{ prob(r^i  - \hat{r}^j,\sigma_r) * prob(\phi^i - \hat{\phi}^j ,\sigma_{\phi}) * prob(s^i - \hat{s}^j ,\sigma_s)  }  \]
 where q is our final likelihood estimate for a certain pose hypothesis, i = 1 .. N the number of features observed in current image of the camera, $ r^i $ the range of the observed feature i, $\hat{r}^j$ the computed range of the feature j in the feature map associated with the observed feature according to the current pose hypothesis, $prob(r^i - \hat{r}^j,\sigma_r)$ denotes the probability of value $r^i - \hat{r}^j$ in a zero mean gaussian with variance $\sigma_r$. $prob(\phi^i - \hat{\phi}^j ,\sigma_{\phi})$ and  $prob(s^i - \hat{s}^j ,\sigma_s)$ denote the probability of a zero mean gaussians for difference in bearing of observed feature $\phi^i$ and bearing of associated map feature $\phi^j$ and probability of $s^i - \hat{s}^j$ on a zero mean gaussian with variance $\sigma_s$ for the difference in certainty of having chosen the right association of feature on the map and observed feature accordingly.
 
@@ -431,7 +432,7 @@ If those differ, the robot is capable of detecting a kidnapping situation. New p
 % \tab add $x^{[i]}_t $ to $\chi_t$ \label{alg:augmented_resample_end}\;}
 %  \KwResult{ $\chi_t$ }
 \begin{algorithm}[h!]
-\caption{Augmented Monte Carlo Localization as depicted in \cite{ProbabilisticRobotics}}
+\caption{Augmented Monte Carlo Localization as depicted by Thrun et al.~\cite{ProbabilisticRobotics}}
 \begin{algorithmic}[1]
 \STATE {\bf Input: }$\chi_{t-1}, u_t, z_t,m$
 \STATE {\bf Output: }$\chi_t$
@@ -468,12 +469,12 @@ This is called Augmented Monte Carlo Localization (AMCL).
 \label{sec:Reset}
 Now the robot is to a certain extend able to detect a kidnapping situation (this might take several iterations of the AMCL till the long and short term average differ sufficiently), and injects particles at random. 
 In the case of injecting particles totally at random, the localization module is subject to pure chance to sample particles near to the actual position. We can speed up the process in case we have observed visual features. E.g. if we see both goal posts, it is highly unlikely that we are in a position from where we actually cant see any goal.
-In this case it is possible to sample from the visual sensor information instead of totally at random a similar method  was originally proposed by Lenser and Veloso  in \cite{SensorResetting}. In our implementation we sample from one feature at random with added gaussian noise in range and bearing. Since we have several features of the same type in the feature map, again we choose one at random for each sample we want to resample. This will result in several circles around all features on the feature map of the type of chosen visual feature to sample from. Due to time constraints, we only chose one observed feature to sample from.
+In this case it is possible to sample from the visual sensor information instead of totally at random a similar method  was originally proposed by Lenser and Veloso in \cite{SensorResetting}. In our implementation we sample from one feature at random with added gaussian noise in range and bearing. Since we have several features of the same type in the feature map, again we choose one at random for each sample we want to resample. This will result in several circles around all features on the feature map of the type of chosen visual feature to sample from. Due to time constraints, we only chose one observed feature to sample from.
 It might increase the recovering speed after a case of kidnapping, to sample from the pose probability distribution of several features (we can reduce the sample space from several circles around the features in the feature map to several points, if we observe and take into account two visible features).
 
 
 \subsection{Resampling method}
-As described by Thrun et al. in \cite{ProbabilisticRobotics} resampling using a random number leads to loss of variance. (e.g. a robot with no perception, after a sufficient amount of resampling steps would only remain with one position hypothesis. Since if sampling with a random number for each particle might lead to the loss of one hypothesis, if two particles are resampled at the same pose).
+As described by Thrun et al.~\cite{ProbabilisticRobotics} resampling using a random number leads to loss of variance. (e.g. a robot with no perception, after a sufficient amount of resampling steps would only remain with one position hypothesis. Since if sampling with a random number for each particle might lead to the loss of one hypothesis, if two particles are resampled at the same pose).
 The following pseudocode depicts low variance resampling:\\
 %\begin{algorithm}[H]
 % \SetAlgoLined
