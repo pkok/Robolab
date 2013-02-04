@@ -350,12 +350,12 @@ We first create matrices that contain the $x$ and $y$ locations in the world fra
 
 \section{Localization}
 \label{sec:Localization}
-We based our localization module on the Monte Carlo Localization method (MCL). The module has been augmented with several extensions taken from literature. This part of the report describes the standard MCL approach, the models that were used to incorporate incomming sensor information (i.e. odometry and observed visual features in the camera image). We describe how the observed features are associated with the given featuremap of the soccer field. Eventually we elaborate on how the standard approach was improved to overcome well known shortcomings of the usage of particle filters in a robot soccer turnament environment.
+We based our localization module on the Monte Carlo Localization method (MCL). The module has been augmented with several extensions taken from literature. This part of the report describes the standard MCL approach, the models that were used to incorporate incoming sensor information (i.e. odometry and observed visual features in the camera image). We describe how the observed features are associated with the given feature map of the soccer field. Eventually we elaborate on how the standard approach was improved to overcome well known shortcomings of the usage of particle filters in a robot soccer tournament environment.
 
-We chose to use the MCL as basis for localization of the robot since it is a well known approach, and toroughly researched. It is a multimodal particle based localization method (i.e. it can deal with multiple pose hypothesis at the same time). Since the new environment for 2013 is completely symmetric this is a valuable property. In addition to that, MCL can deal with erroneous sensor information, which is an unavoidable problem in real life applications in robotics. It is able to recover from kidnapping (i.e. repositioning the robot on the field without odometry information). Finally the number of particles can be adjusted. This is usefull, since the NAO robot platform offers only limited computational resources.
+We chose to use the MCL as basis for localization of the robot since it is a well known approach, and thoroughly researched. It is a multimodal particle based localization method (i.e. it can deal with multiple pose hypothesis at the same time). Since the new environment for 2013 is completely symmetric this is a valuable property. In addition to that, MCL can deal with erroneous sensor information, which is an unavoidable problem in real life applications in robotics. It is able to recover from kidnapping (i.e. repositioning the robot on the field without odometry information). Finally the number of particles can be adjusted. This is useful, since the NAO robot platform offers only limited computational resources.
 \subsection{Monte Carlo Localization}
 \label{sec:MCL}
-The basic MCL algorithm is depicted in following pseudocode  as described by Fox et al. in \cite{MonteCarloLocalization}:\\
+The basic MCL algorithm is depicted in following pseudocode  as described by Fox et al.~\cite{MonteCarloLocalization}:\\
 
 
 \begin{algorithm}[h!]
@@ -378,7 +378,7 @@ The basic MCL algorithm is depicted in following pseudocode  as described by Fox
 \end{algorithm}
 
 
-where $m$ denotes the map, $\chi_t$ particles at time $t$, $u_t$ control input / odometry information at time $t$, $z_t$ sensor input (in our case visual features) at time $t$.
+where $m$ denotes the map, $\chi_t$ particles at time $t$, $u_t$ control input (in our case odometry information) at time $t$, $z_t$ sensor input (in our case visual features) at time $t$.
 \\
 In general the MCL consists of three main steps:\\
 \textbf{Initialize:} place particles at random
@@ -387,27 +387,29 @@ In general the MCL consists of three main steps:\\
 \item \textbf{process visual sensor input (extracted features):} Calculate likelihood of pose hypothesis (particle) and weight particle accordingly. (line : ~\ref{alg:measurement_model})
 \item \textbf{resample:} Redraw all particles, place new particles distributed according to the former computed weights, and reset all weights to one. (for loop starting in line :  ~\ref{alg:mcl_resampling} ) %Such that at poses with high likelihood (weight) more particles will end up.
 \end{enumerate}
-The initialization of particle poses does not necessairily have to be at random, if the initial robot's position is known, or approximately known (e.g. only one side of the field) it is advantageous to sample from this known prior position.\\
-Everytime new information is available those three steps can be executed, first process the odometry information, and move all particles accordingly. Since the odometry of robots in the majority of cases incorporates an error, we add additional (gaussian) noise to it. \\
-Then we process the visual features, which in our case will be returned from the feature recognition module. Each feature comes with range, bearing and type. In order to compute a likelihood for each pose hypothesis, we need to associate each given feature to a feature of the featuremap. This process is described in detail in the following section. Finally we resample all particles according to the likelihood of each pose hypothesis. Such that at poses that had a high likelihood and thus a high weight, we place more particles. In this step all weights will be reset to one. And we repeat all steps with new incomming information.
+The initialization of particle poses does not necessarily have to be at random, if the initial robot's position is known, or approximately known (e.g. only one side of the field) it is advantageous to sample from this known prior position.
+
+Everytime new information is available those three steps can be executed, first process the odometry information, and move all particles accordingly. Since the odometry of robots in the majority of cases incorporates an error, we add additional (Gaussian) noise to it.
+
+Then we process the visual features, which in our case will be returned from the feature recognition module. Each feature comes with range, bearing and type. In order to compute a likelihood for each pose hypothesis, we need to associate each given feature to a feature of the feature map. This process is described in detail in the following section. Finally we resample all particles according to the likelihood of each pose hypothesis. Such that at poses that had a high likelihood and thus a high weight, we place more particles. In this step all weights will be reset to one. And we repeat all steps with new incoming information.
 
 \subsection{Sensor Model}
 \label{sec:SensorModel}
-The feature recognition module returns the range and bearing and type of a feature extracted from the image feed of the NAO robot (an elaborate description of the methods used can be found in section~\ref{sec:FeatureExtraction}). Currently L-crossings, T-crossings and X-crossings and the the bottom of the goal posts can be processed (it is possible to incorporate more types of features, e.g. lines, or the middle circle). These features occure multiple times in the map, it is not possible to distinguish between different features of the same type a priori. For the Monte Carlo Method to work, we need to associate one feature to a feature on our feature map of the soccer field. To determine which observed feature will be associated with which map feature, we compute the observed feature position according to our current pose hypothesis to map space (assuming that we are positioned in the particle position, whose weight we want to compute), then choose to associate it with the feature in the feature map which is closest:
+The feature recognition module returns the range and bearing and type of a feature extracted from the image feed of the NAO robot (an elaborate description of the methods used can be found in section~\ref{sec:FeatureExtraction}). Currently L-crossings, T-crossings and X-crossings and the bottom of the goal posts can be processed (it is possible to incorporate more types of features, e.g. lines, or the middle circle). These features occur multiple times in the map, it is not possible to distinguish between different features of the same type a priori. For the Monte Carlo Method to work, we need to associate one feature to a feature on our feature map of the soccer field. To determine which observed feature will be associated with which map feature, we compute the observed feature position according to our current pose hypothesis to map space (assuming that we are positioned in the particle position, whose weight we want to compute), then choose to associate it with the feature in the feature map which is closest:
 \[\underset{j}{\operatorname{argmin}}  (\sqrt{(m_{j,x} - f_x)^2 + (m_{j,y} - f_y)^2})   \] 
-where $f$ is the feature observed, $f_x$ and $f_y$ the feature position and $m_{j,x}$ and $m_{j,y}$ the position of feature $j$ in the featuremap with the same type as observed feature $f$. 
+where $f$ is the feature observed, $f_x$ and $f_y$ the feature position and $m_{j,x}$ and $m_{j,y}$ the position of feature $j$ in the feature map with the same type as observed feature $f$. 
 
-(This simple model was chosen due to time constraints. More elaborate models are possible, e.g. aggregate two or more features and compute correspondence values for those "feature patterns"). To compute the final likelihood, we calculate the range and bearing of the featuremap feature chosen, according to our pose hypothesis. Again we assume erroneous sensory information. For simplicity we model this error as a gaussian, although the underlying error model could be different. 
+(This simple model was chosen due to time constraints. More elaborate models are possible, e.g. aggregate two or more features and compute correspondence values for those "feature patterns"). To compute the final likelihood, we calculate the range and bearing of the feature map feature chosen, according to our pose hypothesis. Again we assume erroneous sensory information. For simplicity we model this error as a Gaussian, although the underlying error model could be different. 
 The sensory model computes the final likelihood of a pose estimate as described by Thrun et al.~\cite{ProbabilisticRobotics}:
 \[ q = \prod\limits_{i=1}^{N}{ prob(r^i  - \hat{r}^j,\sigma_r) * prob(\phi^i - \hat{\phi}^j ,\sigma_{\phi}) * prob(s^i - \hat{s}^j ,\sigma_s)  }  \]
-where q is our final likelihood estimate for a certain pose hypothesis, i = 1 .. N the number of features observed in current image of the camera, $ r^i $ the range of the observed feature i, $\hat{r}^j$ the computed range of the feature j in the feature map associated with the observed feature according to the current pose hypothesis, $prob(r^i - \hat{r}^j,\sigma_r)$ denotes the probability of value $r^i - \hat{r}^j$ in a zero mean gaussian with variance $\sigma_r$. $prob(\phi^i - \hat{\phi}^j ,\sigma_{\phi})$ and  $prob(s^i - \hat{s}^j ,\sigma_s)$ denote the probability of a zero mean gaussians for difference in bearing of observed feature $\phi^i$ and bearing of associated map feature $\phi^j$ and probability of $s^i - \hat{s}^j$ on a zero mean gaussian with variance $\sigma_s$ for the difference in certainty of having chosen the right association of feature on the map and observed feature accordingly.
+where q is our final likelihood estimate for a certain pose hypothesis, i = 1 .. N the number of features observed in current image of the camera, $ r^i $ the range of the observed feature i, $\hat{r}^j$ the computed range of the feature j in the feature map associated with the observed feature according to the current pose hypothesis, $prob(r^i - \hat{r}^j,\sigma_r)$ denotes the probability of value $r^i - \hat{r}^j$ in a zero mean Gaussian with variance $\sigma_r$. $prob(\phi^i - \hat{\phi}^j ,\sigma_{\phi})$ and  $prob(s^i - \hat{s}^j ,\sigma_s)$ denote the probability of a zero mean Gaussians for difference in bearing of observed feature $\phi^i$ and bearing of associated map feature $\phi^j$ and probability of $s^i - \hat{s}^j$ on a zero mean Gaussian with variance $\sigma_s$ for the difference in certainty of having chosen the right association of feature on the map and observed feature accordingly.
 
 
 \subsection{Odometry Model}
 \label{sec:Odometry}
 The odometry model can be either implemented from actual sensor data (through built in accelerometer, or computation of steps taken), or the control input. Since the current implementation was not tested on the NAO robot platform yet, it is still left to further evaluation which input is more advantageous. 
 Since both methods incorporate an error, control input through not exactly working motors, or sensor information noise, for each particle we sample from the odometry input with additional noise.
-This noise is assumed to be gaussian and independent. At the moment the odometry noise is modelled as error in x and y direction travelled and noise for additional rotation.
+This noise is assumed to be Gaussian and independent. At the moment the odometry noise is modelled as error in x and y direction travelled and noise for additional rotation.
 
 
 \subsection{Augmented Monte Carlo Localization}
@@ -466,7 +468,7 @@ This is called Augmented Monte Carlo Localization (AMCL).
 \label{sec:Reset}
 Now the robot is to a certain extend able to detect a kidnapping situation (this might take several iterations of the AMCL till the long and short term average differ sufficiently), and injects particles at random. 
 In the case of injecting particles totally at random, the localization module is subject to pure chance to sample particles near to the actual position. We can speed up the process in case we have observed visual features. E.g. if we see both goal posts, it is highly unlikely that we are in a position from where we actually cant see any goal.
-In this case it is possible to sample from the visual sensor information instead of totally at random a similar method  was originally proposed by Lenser and Veloso in \cite{SensorResetting}. In our implementation we sample from one feature at random with added gaussian noise in range and bearing. Since we have several features of the same type in the feature map, again we choose one at random for each sample we want to resample. This will result in several circles around all features on the feature map of the type of chosen visual feature to sample from. Due to time constraints, we only chose one observed feature to sample from.
+In this case it is possible to sample from the visual sensor information instead of totally at random a similar method  was originally proposed by Lenser and Veloso~\cite{SensorResetting}. In our implementation we sample from one feature at random with added Gaussian noise in range and bearing. Since we have several features of the same type in the feature map, again we choose one at random for each sample we want to resample. This will result in several circles around all features on the feature map of the type of chosen visual feature to sample from. Due to time constraints, we only chose one observed feature to sample from.
 It might increase the recovering speed after a case of kidnapping, to sample from the pose probability distribution of several features (we can reduce the sample space from several circles around the features in the feature map to several points, if we observe and take into account two visible features).
 
 
@@ -517,16 +519,14 @@ Where $X_t$ particles with weights $W_t$ at time $t$, and $M$ the number of part
 This method creates only one random number, and adds a fixed step size iteratively to a "pointer" (U).
 In addition to that we keep track of the sum of particle weights such that, for every step we sample one particle. The particle will be sampled with pose values of particle which "weight bin" (c) the "pointer" is currently pointing. 
 This method ensures the systematical coverage of the sample space, and no samples are lost.
-We additionaly changed the algorithm slightly, instead of drawing a random number between 0 and $M^{-1}$ (line ~\ref{alg:resampling_rand}) we compute the average particle weight beforhand. This also applies for adding stepsize in line ~\ref{alg:stepsize}, we add the average particle weight instead of $M^{-1}$. This is done to evade complications in case the assignment of particle weights in previous steps is not totally statistically sound.
+We additionally changed the algorithm slightly, instead of drawing a random number between 0 and $M^{-1}$ (line ~\ref{alg:resampling_rand}) we compute the average particle weight beforehand. This also applies for adding step size in line ~\ref{alg:stepsize}, we add the average particle weight instead of $M^{-1}$. This is done to evade complications in case the assignment of particle weights in previous steps is not totally statistically sound.
 
 \subsection{Visualization}
-For debugging purposes we developed a simple visualizing modules built on basis of openvc\footnote{\texttt{http://opencv.org/}}. This module reads the parameters of the football field from a parameter file, and can draw the particles, the pose hypothesis of the AMCL. It prvoed to be very usefull, and might be used for future projects.\footnote{The code can be accessed at: \texttt{\url{https://github.com/pkok/Robolab/tree/master/NaoLeague/LocationVisualizer}}}
+For debugging purposes we developed a simple visualizing modules built on basis of OpenCV\footnote{\texttt{http://opencv.org/}}. This module reads the parameters of the football field from a parameter file, and can draw the particles, the pose hypothesis of the AMCL. It proved to be very useful, and might be used for future projects.\footnote{The code can be accessed at: \texttt{\url{https://github.com/pkok/Robolab/tree/master/NaoLeague/LocationVisualizer}}}
 
 \section{Discussion}
 \label{sec:Discussion}
-\textbf{???}
-
-However, due to time constraints, the described and implemented parts of the system were only compiled and tested on standard computer hard- and software. The code still has to be tested on the limited resources of the NAO robot.
+Due to time constraints, the described and implemented parts of the system were only compiled and tested on standard computer hard- and software. The code still has to be tested on the limited resources of the NAO robot.
 
 \subsection{Feature detection}
 All tests of the feature recognition were conducted on still images, taken from the NAO's bottom camera. The images of a moving robot will contain a considerable amount of blur, which might require additional tricks to make the whole system robust enough in an actual soccer game, e.g., only classify detected features if they can be observed in a sufficient number of frames.
@@ -553,4 +553,5 @@ Another method one could experiment with is triangulation by audio signals.  Whe
 
 
 
+This report proposes a first implementation for the Dutch Nao Team's localization module. The modules have been tested and 
 \end{document}
