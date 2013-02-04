@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=pdflatex 2013.2.1)  4 FEB 2013 13:28
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=pdflatex 2013.2.1)  4 FEB 2013 14:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1428,7 +1428,14 @@ Package biblatex Warning: 'babel' detected but 'csquotes' missing.
 
 \@quotelevel=\count362
 \@quotereset=\count363
-(./report.aux)
+(./report.aux
+
+LaTeX Warning: Label `line' multiply defined.
+
+
+LaTeX Warning: Label `line' multiply defined.
+
+)
 \openout1 = `report.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 116.
@@ -1819,85 +1826,396 @@ File: figures/imagePixelsMapped.png Graphic file (type png)
 Package pdftex.def Info: figures/imagePixelsMapped.png used on input line 340.
 (pdftex.def)             Requested size: 154.81046pt x 42.4344pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 351--353
+Underfull \hbox (badness 10000) in paragraph at lines 351--352
 
  []
 
+pdfTeX warning (ext4): destination with the same identifier (name{ALC@line.1}) 
+has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.358 \STATE
+             {\bf Input: }$\chi_{t-1}, u_t, z_t,m$pdfTeX warning (ext4): destin
+ation with the same identifier (name{ALC@rem.1}) has been already used, duplica
+te ignored
+<to be read again> 
+                   \relax 
+l.358 \STATE
+             {\bf Input: }$\chi_{t-1}, u_t, z_t,m$pdfTeX warning (ext4): destin
+ation with the same identifier (name{ALC@line.2}) has been already used, duplic
+ate ignored
+<to be read again> 
+                   \relax 
+l.359 \STATE
+             {\bf Output: }$\chi_t$pdfTeX warning (ext4): destination with the 
+same identifier (name{ALC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.359 \STATE
+             {\bf Output: }$\chi_t$pdfTeX warning (ext4): destination with the 
+same identifier (name{ALC@line.3}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.360 \STATE
+             \textbf{monte\_carlo\_localization(}$\chi_{t-1}, u_t, z_t,m$\te...
+pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem.1}) h
+as been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.360 \STATE
+             \textbf{monte\_carlo\_localization(}$\chi_{t-1}, u_t, z_t,m$\te...
+pdfTeX warning (ext4): destination with the same identifier (name{ALC@line.4}) 
+has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.361 \FOR{$m$=1 to $M$}
+                        pdfTeX warning (ext4): destination with the same identi
+fier (name{ALC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.361 \FOR{$m$=1 to $M$}
+                        pdfTeX warning (ext4): destination with the same identi
+fier (name{ALC@line.5}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.362 \STATE
+             {}$x^{[m]}_t$ = sample\_motion\_model( $u_t$ , $x^{[m]}_{t-1}$ ...
+pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem.1}) h
+as been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.362 \STATE
+             {}$x^{[m]}_t$ = sample\_motion\_model( $u_t$ , $x^{[m]}_{t-1}$ ...
+pdfTeX warning (ext4): destination with the same identifier (name{ALC@line.6}) 
+has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.363 \STATE
+             {}$w^{[m]}_t$ = measurement\_model($z_t$, $x^{[m]}_t$ , $m$)\;\...
+pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem.1}) h
+as been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.363 \STATE
+             {}$w^{[m]}_t$ = measurement\_model($z_t$, $x^{[m]}_t$ , $m$)\;\...
+pdfTeX warning (ext4): destination with the same identifier (name{ALC@line.7}) 
+has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.364 \STATE
+             {}$\bar{\chi} = \bar{\chi} + \langle x^{[m]}_t, w^{[m]}_t \rang...
+pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem.1}) h
+as been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.364 \STATE
+             {}$\bar{\chi} = \bar{\chi} + \langle x^{[m]}_t, w^{[m]}_t \rang...
+pdfTeX warning (ext4): destination with the same identifier (name{ALC@line.8}) 
+has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.365 \ENDFOR
+             pdfTeX warning (ext4): destination with the same identifier (name{
+ALC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.365 \ENDFOR
+             pdfTeX warning (ext4): destination with the same identifier (name{
+ALC@line.9}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.366 \FOR{$m$=1 to $M$}
+                        pdfTeX warning (ext4): destination with the same identi
+fier (name{ALC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.366 \FOR{$m$=1 to $M$}
+                        pdfTeX warning (ext4): destination with the same identi
+fier (name{ALC@line.10}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.367 \STATE
+             draw $i$ with probability $\alpha$  $w^{[i]}_t$\;pdfTeX warning (e
+xt4): destination with the same identifier (name{ALC@rem.1}) has been already u
+sed, duplicate ignored
+<to be read again> 
+                   \relax 
+l.367 \STATE
+             draw $i$ with probability $\alpha$  $w^{[i]}_t$\;pdfTeX warning (e
+xt4): destination with the same identifier (name{ALC@line.11}) has been already
+ used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.368 \STATE
+             add $x^{[i]}_t $ to $\chi_t$\;pdfTeX warning (ext4): destination w
+ith the same identifier (name{ALC@rem.1}) has been already used, duplicate igno
+red
+<to be read again> 
+                   \relax 
+l.368 \STATE
+             add $x^{[i]}_t $ to $\chi_t$\;pdfTeX warning (ext4): destination w
+ith the same identifier (name{ALC@line.12}) has been already used, duplicate ig
+nored
+<to be read again> 
+                   \relax 
+l.369 \ENDFOR
+             pdfTeX warning (ext4): destination with the same identifier (name{
+ALC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.369 \ENDFOR
+             
 
-LaTeX Warning: Reference `alg:motion_model' on page 6 undefined on input line 3
-76.
-
-
-LaTeX Warning: Reference `alg:measurement_model' on page 6 undefined on input l
-ine 377.
-
-
-LaTeX Warning: Reference `alg:resampling' on page 6 undefined on input line 378
+LaTeX Warning: Reference `alg:resampling' on page 6 undefined on input line 381
 .
-
-
-LaTeX Warning: Reference `sec:FeatureExtraction' on page 6 undefined on input l
-ine 386.
 
 [6 <./figures/imagePixelsMapped.png>]
 
-LaTeX Warning: Citation 'ProbabilisticRobotsics' on page 7 undefined on input l
-ine 391.
+LaTeX Warning: Reference `sec:FeatureExtraction' on page 7 undefined on input l
+ine 389.
 
 
 LaTeX Warning: Citation 'ProbabilisticRobotsics' on page 7 undefined on input l
-ine 409.
+ine 394.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 406--410
+LaTeX Warning: Citation 'ProbabilisticRobotsics' on page 7 undefined on input l
+ine 412.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 409--413
 
  []
 
 
-LaTeX Warning: Reference `alg:augmented1' on page 7 undefined on input line 435
-.
-
-
-LaTeX Warning: Reference `alg:augmented2' on page 7 undefined on input line 435
-.
-
-
-LaTeX Warning: Reference `alg:augmented3' on page 7 undefined on input line 435
-.
-
-
-LaTeX Warning: Reference `alg:augmented4' on page 7 undefined on input line 435
-.
-
-
-LaTeX Warning: Citation 'SensorResetting' on page 7 undefined on input line 442
-.
+LaTeX Warning: Citation 'ProbabilisticRobotsics' on page 7 undefined on input l
+ine 424.
 
 
 LaTeX Warning: Citation 'ProbabilisticRobotsics' on page 7 undefined on input l
-ine 447.
+ine 424.
+
+pdfTeX warning (ext4): destination with the same identifier (name{ALC@line.1}) 
+has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.427 \STATE
+             {\bf Input: }$\chi_{t-1}, u_t, z_t,m$pdfTeX warning (ext4): destin
+ation with the same identifier (name{ALC@rem.1}) has been already used, duplica
+te ignored
+<to be read again> 
+                   \relax 
+l.427 \STATE
+             {\bf Input: }$\chi_{t-1}, u_t, z_t,m$pdfTeX warning (ext4): destin
+ation with the same identifier (name{ALC@line.2}) has been already used, duplic
+ate ignored
+<to be read again> 
+                   \relax 
+l.428 \STATE
+             {\bf Output: }$\chi_t$pdfTeX warning (ext4): destination with the 
+same identifier (name{ALC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.428 \STATE
+             {\bf Output: }$\chi_t$pdfTeX warning (ext4): destination with the 
+same identifier (name{ALC@line.3}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.429 \STATE
+             \textbf{augmented\_monte\_carlo\_localization(}$\chi_{t-1}, u_t...
+pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem.1}) h
+as been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.429 \STATE
+             \textbf{augmented\_monte\_carlo\_localization(}$\chi_{t-1}, u_t...
+pdfTeX warning (ext4): destination with the same identifier (name{ALC@line.4}) 
+has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.430 \STATE
+             static $w_{slow}$,$ w_{fast}$ \label{alg:augmented1}\;pdfTeX warni
+ng (ext4): destination with the same identifier (name{ALC@rem.1}) has been alre
+ady used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.430 \STATE
+             static $w_{slow}$,$ w_{fast}$ \label{alg:augmented1}\;
+Overfull \hbox (4.09766pt too wide) in paragraph at lines 429--430
+[] []\T1/lmr/bx/n/9 augmented_monte_carlo_localization($\OML/lmm/m/it/9 ^^_[]; 
+u[]; z[]; m$\T1/lmr/bx/n/9 )
+ []
+
+pdfTeX warning (ext4): destination with the same identifier (name{ALC@line.5}) 
+has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.431 \STATE
+             $\bar{\chi_t} = \chi_t = \emptyset$\;pdfTeX warning (ext4): destin
+ation with the same identifier (name{ALC@rem.1}) has been already used, duplica
+te ignored
+<to be read again> 
+                   \relax 
+l.431 \STATE
+             $\bar{\chi_t} = \chi_t = \emptyset$\;pdfTeX warning (ext4): destin
+ation with the same identifier (name{ALC@line.6}) has been already used, duplic
+ate ignored
+<to be read again> 
+                   \relax 
+l.432 \FOR{$m$=1 to $M$}
+                        pdfTeX warning (ext4): destination with the same identi
+fier (name{ALC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.432 \FOR{$m$=1 to $M$}
+                        pdfTeX warning (ext4): destination with the same identi
+fier (name{ALC@line.7}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.433 \STATE
+             $x^{[m]}_t$ = sample\_motion\_model( $u_t$ , $x^{[m]}_{t-1}$ )\;pd
+fTeX warning (ext4): destination with the same identifier (name{ALC@rem.1}) has
+ been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.433 \STATE
+             $x^{[m]}_t$ = sample\_motion\_model( $u_t$ , $x^{[m]}_{t-1}$ )\;pd
+fTeX warning (ext4): destination with the same identifier (name{ALC@line.8}) ha
+s been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.434 \STATE
+             $w^{[m]}_t$ = measurement\_model($z_t$, $x^{[m]}_t$ , $m$)\;pdfTeX
+ warning (ext4): destination with the same identifier (name{ALC@rem.1}) has bee
+n already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.434 \STATE
+             $w^{[m]}_t$ = measurement\_model($z_t$, $x^{[m]}_t$ , $m$)\;pdfTeX
+ warning (ext4): destination with the same identifier (name{ALC@line.9}) has be
+en already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.435 \STATE
+             $\bar{\chi} = \bar{\chi} + \langle x^{[m]}_t, w^{[m]}_t \rangle...
+pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem.1}) h
+as been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.435 \STATE
+             $\bar{\chi} = \bar{\chi} + \langle x^{[m]}_t, w^{[m]}_t \rangle...
+pdfTeX warning (ext4): destination with the same identifier (name{ALC@line.10})
+ has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.437 \STATE
+             $w_{slow} = w_{slow} + \alpha_{slow}(w_{avg} - w_{slow})$ \labe...
+pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem.1}) h
+as been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.437 \STATE
+             $w_{slow} = w_{slow} + \alpha_{slow}(w_{avg} - w_{slow})$ \labe...
+pdfTeX warning (ext4): destination with the same identifier (name{ALC@line.11})
+ has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.438 \STATE
+             $w_{fast} = w_{fast} + \alpha_{fast}(w_{avg} - w_{fast})$ \labe...
+pdfTeX warning (ext4): destination with the same identifier (name{ALC@rem.1}) h
+as been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.438 \STATE
+             $w_{fast} = w_{fast} + \alpha_{fast}(w_{avg} - w_{fast})$ \labe...
+pdfTeX warning (ext4): destination with the same identifier (name{ALC@line.12})
+ has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.439 \ENDFOR
+             pdfTeX warning (ext4): destination with the same identifier (name{
+ALC@rem.1}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.439 \ENDFOR
+             pdfTeX warning (ext4): destination with the same identifier (name{
+ALC@line.13}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.440 ... to $M$ \label{alg:augmented_resampling}}
+                                                  pdfTeX warning (ext4): destin
+ation with the same identifier (name{ALC@rem.1}) has been already used, duplica
+te ignored
+<to be read again> 
+                   \relax 
+l.440 ... to $M$ \label{alg:augmented_resampling}}
+                                                  pdfTeX warning (ext4): destin
+ation with the same identifier (name{ALC@line.14}) has been already used, dupli
+cate ignored
+<to be read again> 
+                   \relax 
+l.441 \STATE
+             draw $i$ with probability $\alpha$  $w^{[i]}_t$\;pdfTeX warning (e
+xt4): destination with the same identifier (name{ALC@rem.1}) has been already u
+sed, duplicate ignored
+<to be read again> 
+                   \relax 
+l.441 \STATE
+             draw $i$ with probability $\alpha$  $w^{[i]}_t$\;pdfTeX warning (e
+xt4): destination with the same identifier (name{ALC@line.15}) has been already
+ used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.442 \STATE
+             add $x^{[i]}_t $ to $\chi_t$\;pdfTeX warning (ext4): destination w
+ith the same identifier (name{ALC@rem.1}) has been already used, duplicate igno
+red
+<to be read again> 
+                   \relax 
+l.442 \STATE
+             add $x^{[i]}_t $ to $\chi_t$\;pdfTeX warning (ext4): destination w
+ith the same identifier (name{ALC@rem.1}) has been already used, duplicate igno
+red
+<to be read again> 
+                   \relax 
+l.443 \ENDFOR
+             
+
+LaTeX Warning: Reference `alg:augmented2' on page 7 undefined on input line 449
+.
 
 
-LaTeX Warning: Reference `alg:resampling_rand' on page 7 undefined on input lin
-e 472.
-
-
-LaTeX Warning: Reference `alg:stepsize' on page 7 undefined on input line 472.
+LaTeX Warning: Citation 'SensorResetting' on page 7 undefined on input line 456
+.
 
 [7]
-Overfull \hbox (124.03212pt too wide) in paragraph at lines 475--475
+
+LaTeX Warning: Citation 'ProbabilisticRobotsics' on page 8 undefined on input l
+ine 461.
+
+
+LaTeX Warning: Reference `alg:resampling_rand' on page 8 undefined on input lin
+e 486.
+
+
+LaTeX Warning: Reference `alg:stepsize' on page 8 undefined on input line 486.
+
+
+Overfull \hbox (124.03212pt too wide) in paragraph at lines 489--489
 [][][]\T1/lmr/m/n/7 (-20) The code can be ac-cessed at: https://github.com/pkok
 /Robolab/tree/master/NaoLeague/LocationVisualizer| 
  []
 
-
+[8] 
 AED: lastpage setting LastPage
-[8]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 500.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 500.
+[9
+
+]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 514.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 514.
  (./report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 500.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 500.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 514.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 514.
 Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: 1CE0F1692E9F7BCB9AA1C2502AC2F56D;1809.
 
@@ -1905,7 +2223,7 @@ Package rerunfilecheck Info: File `report.out' has not changed.
 LaTeX Warning: There were undefined references.
 
 
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+LaTeX Warning: There were multiply-defined labels.
 
 
 Package biblatex Warning: Please (re)run BibTeX on the file(s):
@@ -1915,17 +2233,17 @@ Package biblatex Warning: Please (re)run BibTeX on the file(s):
 Package logreq Info: Writing requests to 'report.run.xml'.
 \openout1 = `report.run.xml'.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 500.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 514.
  ) 
 Here is how much of TeX's memory you used:
- 26165 strings out of 493485
- 448553 string characters out of 3143527
- 787843 words of memory out of 3000000
- 28657 multiletter control sequences out of 15000+200000
+ 26168 strings out of 493485
+ 448596 string characters out of 3143527
+ 794843 words of memory out of 3000000
+ 28658 multiletter control sequences out of 15000+200000
  118774 words of font info for 159 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
  65i,12n,71p,1561b,1371s stack positions out of 5000i,500n,10000p,200000b,50000s
-pdfTeX warning (dest): name{algorithm.1} has been referenced but does not exi
+pdfTeX warning (dest): name{algorithm.3} has been referenced but does not exi
 st, replaced by a fixed one
 
 {/usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc}{/usr/share/texmf/fonts/enc/dvip
@@ -1946,10 +2264,10 @@ ts/type1/public/lm/lmsy6.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy7.pfb>
 /public/lm/lmtt8.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt9.pfb></usr/sh
 are/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texlive/
 texmf-dist/fonts/type1/urw/helvetic/uhvro8a.pfb>
-Output written on report.pdf (8 pages, 2294922 bytes).
+Output written on report.pdf (9 pages, 2303667 bytes).
 PDF statistics:
- 429 PDF objects out of 1000 (max. 8388607)
- 373 compressed objects within 4 object streams
- 97 named destinations out of 1000 (max. 500000)
+ 440 PDF objects out of 1000 (max. 8388607)
+ 383 compressed objects within 4 object streams
+ 99 named destinations out of 1000 (max. 500000)
  38213 words of extra memory for PDF output out of 42996 (max. 10000000)
 

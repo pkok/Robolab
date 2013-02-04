@@ -349,25 +349,28 @@ We chose to use the MCL as basis for localization of the robot since it is a wel
 \subsection{Monte Carlo Localization}
 \label{sec:MCL}
 The basic MCL algorithm is depicted in following pseudocode  as described by Fox et al. in \cite{MonteCarloLocalization}:\\
-%maybe put this in the appendix.
 
-%\begin{algorithm}[H]
-% \SetAlgoLined
-% \KwData{$\chi_{t-1}, u_t, z_t,m$}
-% \textbf{monte\_carlo\_localization(}$\chi_{t-1}, u_t, z_t,m$\textbf{)}\\
-% $\bar{\chi_t} = \chi_t = \emptyset$\;
-% \For{$m$=1 to $M$ do}{
-% $x^{[m]}_t$ = sample\_motion\_model( $u_t$ , $x^{[m]}_{t-1}$ )\;\label{alg:motion_model}
-% $w^{[m]}__t$ = measurement\_model($z_t$, $x^{[m]}_t$ , $m$)\;\label{alg:measurement_model}
-% $\bar{\chi} = \bar{\chi} + \langle x^{[m]}_t, w^{[m]}_t \rangle $\;}
-% \For{$m$=1 to $M$ do \label{alg:resampling}} 
-% {
-% draw $i$ with probability $\alpha$  $w^{[i]}_t$\;
-% add $x^{[i]}_t $ to $\chi_t$\;
-% }
-%  \KwResult{ $\chi_t$ }
-% \caption{Monte Carlo Localization}
-%\end{algorithm}
+
+\begin{algorithm}[h!]
+\caption{Monte Carlo Localization}
+\label{line}
+\begin{algorithmic}[1]
+\STATE {\bf Input: }$\chi_{t-1}, u_t, z_t,m$
+\STATE {\bf Output: }$\chi_t$
+\STATE \textbf{monte\_carlo\_localization(}$\chi_{t-1}, u_t, z_t,m$\textbf{)}\\
+\FOR{$m$=1 to $M$}
+\STATE {}$x^{[m]}_t$ = sample\_motion\_model( $u_t$ , $x^{[m]}_{t-1}$ )\;\label{alg:motion_model}
+\STATE {}$w^{[m]}_t$ = measurement\_model($z_t$, $x^{[m]}_t$ , $m$)\;\label{alg:measurement_model}
+\STATE {}$\bar{\chi} = \bar{\chi} + \langle x^{[m]}_t, w^{[m]}_t \rangle $\;
+\ENDFOR
+\FOR{$m$=1 to $M$}
+\STATE draw $i$ with probability $\alpha$  $w^{[i]}_t$\;
+\STATE add $x^{[i]}_t $ to $\chi_t$\;
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+
 where $m$ denotes the map, $\chi_t$ particles at time $t$, $u_t$ control input / odometry information at time $t$, $z_t$ sensor input (in our case visual features) at time $t$.
 \\
 In general the MCL consists of three main steps:\\
@@ -408,20 +411,8 @@ This is if the confidence of the robot pose is high and it gets replaced from an
 A suitable extension to the standard approach is to keep track of the measurement likelihood both in a short term average and a long term average.
 If those differ, the robot is capable of detecting a kidnapping situation. New particles can be sampled at random according to the difference of short and long term average. Thus increasing the recover speed after a kidnapping situation as described in \cite{ProbabilisticRobotsics}:\\
 
-%\begin{algorithm}[H]
-% \SetAlgoLined
-% \KwData{$\chi_{t-1}, u_t, z_t,m$}
-% \textbf{augmented\_monte\_carlo\_localization(}$\chi_{t-1}, u_t, z_t,m$\textbf{)}\\
-% static $w_{slow}$,$ w_{fast}$ \label{alg:augmented1}\;
-% $\bar{\chi_t} = \chi_t = \emptyset$\;
-% \For{$m$=1 to $M$ do}{
-% $x^{[m]}_t$ = sample\_motion\_model( $u_t$ , $x^{[m]}_{t-1}$ )\;
-% $w^{[m]}__t$ = measurement\_model($z_t$, $x^{[m]}_t$ , $m$)\;
-% $\bar{\chi} = \bar{\chi} + \langle x^{[m]}_t, w^{[m]}_t \rangle $\;
-% $w_{avg} = w_{avg} + \frac_{M}^{1} w^{[m]}_t $ \label{alg:augmented2}\;
-% }
-% $w_{slow} = w_{slow} + \alpha_{slow}(w_{avg} - w_{slow})$\label{alg:augmented3}\;
-% $w_{fast} = w_{fast} + \alpha_{fast}(w_{avg} - w_{fast})$\label{alg:augmented4}\;
+
+
 %\For{$m$=1 to $M$ do \label{alg:augmented_resampling}} {
 % with probability max\{0.0,1.0 - $w_{fast}/w_{slow}$\} do\label{alg:augmented_resample_start}\\
 % \tab add random pose to $\chi_t$\;
@@ -429,8 +420,31 @@ If those differ, the robot is capable of detecting a kidnapping situation. New p
 % \tab draw $i \in \{1,...N\}$ with probability $\alpha$  $w^{[i]}_t$\;
 % \tab add $x^{[i]}_t $ to $\chi_t$ \label{alg:augmented_resample_end}\;}
 %  \KwResult{ $\chi_t$ }
-% \caption{Augmented Monte Carlo Localization as depicted in \cite{ProbabilisticRobotsics}}
-%\end{algorithm}
+\begin{algorithm}[h!]
+\caption{Augmented Monte Carlo Localization as depicted in \cite{ProbabilisticRobotsics}}
+\label{line}
+\begin{algorithmic}[1]
+\STATE {\bf Input: }$\chi_{t-1}, u_t, z_t,m$
+\STATE {\bf Output: }$\chi_t$
+\STATE \textbf{augmented\_monte\_carlo\_localization(}$\chi_{t-1}, u_t, z_t,m$\textbf{)}
+\STATE static $w_{slow}$,$ w_{fast}$ \label{alg:augmented1}\;
+\STATE $\bar{\chi_t} = \chi_t = \emptyset$\;
+\FOR{$m$=1 to $M$}
+\STATE $x^{[m]}_t$ = sample\_motion\_model( $u_t$ , $x^{[m]}_{t-1}$ )\;
+\STATE $w^{[m]}_t$ = measurement\_model($z_t$, $x^{[m]}_t$ , $m$)\;
+\STATE $\bar{\chi} = \bar{\chi} + \langle x^{[m]}_t, w^{[m]}_t \rangle $\;
+%\STATE $w_{avg} = w_{avg} + \frac_{M}^{1} w^{[m]}_t $ \label{alg:augmented2}\;
+\STATE $w_{slow} = w_{slow} + \alpha_{slow}(w_{avg} - w_{slow})$ \label{alg:augmented3}\;
+\STATE $w_{fast} = w_{fast} + \alpha_{fast}(w_{avg} - w_{fast})$ \label{alg:augmented4}\;
+\ENDFOR
+\FOR{$m$=1 to $M$ \label{alg:augmented_resampling}}
+\STATE draw $i$ with probability $\alpha$  $w^{[i]}_t$\;
+\STATE add $x^{[i]}_t $ to $\chi_t$\;
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+
 To incorporate the long and short term average we change the basic algorithm described in section ~\ref{sec:MCL} as follows:\\
 We define the long and short term average in line ~\ref{alg:augmented1}, insert the computation of the current weight average in line ~\ref{alg:augmented2}, then update $w_{slow}$ and $w_{fast}$ in lines ~\ref{alg:augmented3} and ~\ref{alg:augmented4}. With $\alpha_{fast}$ and $\alpha_{slow}$ being the decay rates, where $0<=\alpha_{slow}<<\alpha_{fast}$. Finally we sample particles at random with probability $max\{0.0,1.0-w_{fast}/w_{slow}\}$ and otherwise according to the particle weights computed in the measurement step, as before.
 This is called Augmented Monte Carlo Localization (AMCL).
