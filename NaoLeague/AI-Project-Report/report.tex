@@ -330,7 +330,7 @@ However, as can be seen in figure \ref{fig:ED}, even after this step, we still f
 The ellipse detection step can also ensure fewer false positives (and faster computation) during the line feature detections stage if ellipse detection is performed first: if we know with confidence the area that the circumference of the ellipse is covering, we know that line crossings do not exist on it and hence we can mask this area for the line feature detection step.
 
 \subsection{Inverse Perspective Mapping}
-A transformation from one projective plane to another can be utilized for generating views of objects different from the camera position. Inverse perspective mapping (IPM) makes use of this. It projects an image on a known plane and gets rid of the perspective effect on objects that are on that plane and produces a distorted view for all others~\cite{IPM2}.
+A transformation from one projective plane to another can be utilized for generating views of objects different from the camera position. Inverse perspective mapping (IPM) makes use of this. It projects an image on a known plane and gets rid of the perspective effect on objects that are on that plane and produces a distorted view for all others~\cite{IPM2}.  We have not found other teams using this method.
 
 Information like the angle of view (under the horizon) and the distance of objects from camera associate a different information content with each pixel of an image. In fact, the perspective effect must be considered during the processing of images so as to weigh each pixel with respect to its information content. As a counter to this issue, IPM lets us remove the perspective effect and remap the image to a 2D domain, so that the information content is evenly spreadout among all pixels~\cite{IPMWeb}. 
 
@@ -555,9 +555,9 @@ Another method one could experiment with is triangulation by audio signals.  Whe
 \label{sec:Conclusion}
 This report proposes an implementation for the Dutch Nao Team's localization module. While the code has not yet been compiled for the NAO platform, it has proven to run quite fast on standard computer hardware. 
 
-We have implemented a feature extraction module which heavily depends on a line detection algorithm which is designed by us for this project.  A first inspection shows this algorithm to work well.  We have experimented with ellipse detection, but this has not yet been integrated in the localization module.  The localization module is based upon the augmented Monte Carlo localization algorithm.
+We have implemented a feature extraction module which heavily depends on a line detection algorithm which is designed by us for this project.  A first inspection shows this algorithm to work well.  We have implemented ellipse detection, but these features have not yet been integrated in the localization module.  The distance from the robot to a feature is computed with an inverse perspective mapping, which, in future work, can be used for easier feature detection.  The localization module is based upon the augmented Monte Carlo localization algorithm.
 
-For both modules we have suggested possible improvements, besides more thorough testing.
+For both modules we have suggested possible improvements in \ref{sec:Discussion}, besides more thorough testing.
 
 \printbibliography
 
