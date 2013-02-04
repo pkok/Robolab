@@ -15,47 +15,50 @@ Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Database file #1: report-blx.bib
 Database file #2: report.bib
+Warning--I didn't find a database entry for "ProbabilisticRobotsics"
+Warning--I didn't find a database entry for "SensorResetting"
 Biblatex version: 1.7
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated wiz_functions (elt_size=4) to 9000 items from 6000.
-You've used 4 entries,
+You've used 19 entries,
             6019 wiz_defined-function locations,
-            1136 strings with 8639 characters,
-and the built_in function-call counts, 11748 in all, are:
-= -- 404
-> -- 413
-< -- 75
-+ -- 161
-- -- 185
-* -- 1070
-:= -- 961
+            1227 strings with 12327 characters,
+and the built_in function-call counts, 61803 in all, are:
+= -- 2105
+> -- 2183
+< -- 495
++ -- 735
+- -- 863
+* -- 5582
+:= -- 4031
 add.period$ -- 0
-call.type$ -- 4
-change.case$ -- 28
-chr.to.int$ -- 34
-cite$ -- 6
-duplicate$ -- 1282
-empty$ -- 1179
-format.name$ -- 324
-if$ -- 2513
+call.type$ -- 19
+change.case$ -- 198
+chr.to.int$ -- 64
+cite$ -- 36
+duplicate$ -- 7290
+empty$ -- 6389
+format.name$ -- 1738
+if$ -- 13404
 int.to.chr$ -- 0
-int.to.str$ -- 6
+int.to.str$ -- 44
 missing$ -- 0
-newline$ -- 150
-num.names$ -- 123
-pop$ -- 1054
+newline$ -- 687
+num.names$ -- 793
+pop$ -- 5975
 preamble$ -- 1
-purify$ -- 46
+purify$ -- 288
 quote$ -- 0
-skip$ -- 592
+skip$ -- 3401
 stack$ -- 0
-substring$ -- 212
-swap$ -- 429
-text.length$ -- 105
-text.prefix$ -- 3
+substring$ -- 746
+swap$ -- 2419
+text.length$ -- 539
+text.prefix$ -- 18
 top$ -- 1
-type$ -- 140
+type$ -- 710
 warning$ -- 0
-while$ -- 102
+while$ -- 382
 width$ -- 0
-write$ -- 145
+write$ -- 667
+(There were 2 warnings)

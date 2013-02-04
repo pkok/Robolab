@@ -1,12 +1,29 @@
-\BOOKMARK [1][-]{section.1}{Feature Extraction}{}% 1
-\BOOKMARK [2][-]{subsection.1.1}{Choosing colorspace}{section.1}% 2
-\BOOKMARK [2][-]{subsection.1.2}{Basic Pipeline}{section.1}% 3
-\BOOKMARK [2][-]{subsection.1.3}{Image format}{section.1}% 4
-\BOOKMARK [2][-]{subsection.1.4}{Background Removal}{section.1}% 5
-\BOOKMARK [2][-]{subsection.1.5}{Image Binarization}{section.1}% 6
-\BOOKMARK [1][-]{section.2}{Line Detection}{}% 7
-\BOOKMARK [2][-]{subsubsection.2.0.1}{Other approaches}{section.2}% 8
-\BOOKMARK [3][-]{subsubsection.2.0.2}{Our approach}{subsubsection.2.0.1}% 9
-\BOOKMARK [2][-]{subsection.2.1}{Line Feature Detection}{section.2}% 10
-\BOOKMARK [2][-]{subsection.2.2}{Goal Detection}{section.2}% 11
-\BOOKMARK [1][-]{section.3}{Related Work}{}% 12
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Related Work}{}% 2
+\BOOKMARK [1][-]{section.3}{Feature Extraction}{}% 3
+\BOOKMARK [2][-]{subsection.3.1}{Choosing colorspace}{section.3}% 4
+\BOOKMARK [2][-]{subsection.3.2}{Basic Pipeline}{section.3}% 5
+\BOOKMARK [2][-]{subsection.3.3}{Image format}{section.3}% 6
+\BOOKMARK [2][-]{subsection.3.4}{Background Removal}{section.3}% 7
+\BOOKMARK [2][-]{subsection.3.5}{Image Binarization}{section.3}% 8
+\BOOKMARK [2][-]{subsection.3.6}{Line Detection}{section.3}% 9
+\BOOKMARK [3][-]{subsubsection.3.6.1}{Other approaches}{subsection.3.6}% 10
+\BOOKMARK [3][-]{subsubsection.3.6.2}{Our approach}{subsection.3.6}% 11
+\BOOKMARK [2][-]{subsection.3.7}{Line Feature Detection}{section.3}% 12
+\BOOKMARK [2][-]{subsection.3.8}{Goal Detection}{section.3}% 13
+\BOOKMARK [2][-]{subsection.3.9}{Ellipse Detection}{section.3}% 14
+\BOOKMARK [2][-]{subsection.3.10}{Inverse Perspective Mapping}{section.3}% 15
+\BOOKMARK [1][-]{section.4}{Localization}{}% 16
+\BOOKMARK [2][-]{subsection.4.1}{Monte Carlo Localization}{section.4}% 17
+\BOOKMARK [2][-]{subsection.4.2}{Sensor Model}{section.4}% 18
+\BOOKMARK [2][-]{subsection.4.3}{Odometry Model}{section.4}% 19
+\BOOKMARK [2][-]{subsection.4.4}{Augmented Monte Carlo Localization}{section.4}% 20
+\BOOKMARK [2][-]{subsection.4.5}{Resetting Sensor Model}{section.4}% 21
+\BOOKMARK [2][-]{subsection.4.6}{Resampling method}{section.4}% 22
+\BOOKMARK [2][-]{subsection.4.7}{Visualization}{section.4}% 23
+\BOOKMARK [1][-]{section.5}{Evaluation}{}% 24
+\BOOKMARK [1][-]{section.6}{Discussion}{}% 25
+\BOOKMARK [1][-]{section.7}{Conclusion}{}% 26
+\BOOKMARK [1][-]{section.8}{Outlook}{}% 27
+\BOOKMARK [2][-]{subsection.8.1}{feature detection}{section.8}% 28
+\BOOKMARK [2][-]{subsection.8.2}{localization}{section.8}% 29

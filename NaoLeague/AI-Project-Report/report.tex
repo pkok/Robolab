@@ -1,6 +1,6 @@
 \documentclass[	DIV=calc,%
 							paper=a4,%
-							fontsize=11pt,%
+							fontsize=9pt,%
 							twocolumn]{scrartcl}	 					% KOMA-article class
 
 \usepackage{lipsum}													% Package to create dummy text
@@ -97,28 +97,51 @@
 										}
 
 \pretitle{\vspace{-30pt} \begin{flushleft} \HorRule 
-				\fontsize{50}{50} \usefont{OT1}{phv}{b}{n} \color{DarkRed} \selectfont 
+				\fontsize{25}{25} \usefont{OT1}{phv}{b}{n} \color{DarkRed} \selectfont 
 				}
-\title{NAO Localization}					% Title of your article goes here
+\title{Feature Detection and Localization for the Robocup SPL}					% Title of your article goes here
 \posttitle{\par\end{flushleft}\vskip 0.5em}
 
 \preauthor{\begin{flushleft}
 					\large \lineskip 0.5em \usefont{OT1}{phv}{b}{sl} \color{DarkRed}}
-\author{Amogh Gudi, Georgios K. Methenitis, Nikolaas Steenbergen, Patrick de Kok\\}											% Author name goes here
+				
+\author{Amogh \textsc{Gudi} {\small\emph{(23408036)}}, Patrick \textsc{de Kok} {\small\emph{(5640318)}},
+        Georgios \textsc{K. Methenitis} {\small\emph{(10407537)}},
+		Nikolaas \textsc{Steenbergen} {\small\emph{(10333681)}}\\}											% Author name goes here
 \postauthor{\footnotesize \usefont{OT1}{phv}{m}{sl} \color{Black} 
 					University of Amsterdam 								% Institution of author
-					\par\end{flushleft}\HorRule}
-
-\date{}																				% No date
-
-
+					\end{flushleft}\HorRule}
 
 %%% Begin document
 \begin{document}
 \maketitle
 \thispagestyle{fancy} 			% Enabling the custom headers/footers for the first page 
 % The first character should be within \initial{}
-\initial{I}\textbf{n this Project we propose a basic code for the Robo soccer Standard league Platform for the Dutch national team. We focused on the problem of visual feature recognition and the localization of the robot in a tournament setup. This project contains a detailed description of our implementation together with a conclusion and a brief evaluation. Since this report only covers feature detection and Localization we give an outlook on what parts are to be implemented in addition to make the robots play soccer.}
+\initial{I}\textbf{n this project we propose a basic code for the RoboCup Soccer Standard Platform League for the Dutch Nao Team. We focused on the problem of visual feature recognition and the localization of the robot in a tournament setup. This project contains a detailed description of our implementation together with a conclusion and a brief evaluation. Since this report only covers feature detection and localization we give an outlook on what parts are to be implemented in addition to make the robots play soccer.}
+
+\section{Introduction}
+\textit{RoboCup Initiative, objective statement
+By mid-21st century, a team of fully autonomous humanoid robot soccer players shall win the soccer game, comply with the official rule of the FIFA, against the winner of the most recent World Cup.}~\cite{RoboCupObjective},~\cite{kitano1997robocup}
+
+RoboCup encompasses a set of competitions, stimulating innovation and research towards reaching one of the grand challenges within both the robotics and AI community -- defeating the most recent World Cup winning soccer team by a team of robots in 2050.  This demands for systems which can deal with a dynamic environment with a continuous, incompletely observable state space, with non-symbolic sensor readings and with cooperation.
+
+The best known competition of RoboCup is RoboCup Soccer.  This competition encompasses 5 leagues, each with different rules imposed on the game as well as on the participating robots~\cite{RoboCupSTL}.  These differences induce a different research focus within each league.  One of those leagues is the Standard Platform League, where all teams use identical robots.  The Robocup Federation states that ``[t]herefore the teams concentrate on software development only, while still using state-of-the-art robots. Omnidirectional vision is not allowed, forcing decision-making to trade vision resources for self-localization and ball localization.''~\cite{RoboCupSTL}
+
+To keep on pushing research forwards and the community of participating teams motivated to implement and design new methods, the RoboCup Soccer competition updates the rules each year.  One of the more recent updates in the rules is that all goal posts should be yellow, whereas before there were two differently colored goal posts.  This puts an emphasis on the implementation and enhancement of localization algorithms as the field is completely symmetrical.
+
+The Dutch Nao Team has participated since 2010 in the RoboCup Standard Platform League (STL)~\cite{DNT-TD10, DNT-TD11, DNT-TD12} and plans doing so for 2013 as well~\cite{DNT-TD13}.  The software package used during the previous cup has been written in Python.  Its localization algorithm was very heuristic and course-grained; it did not made explicit where the robot was placed, but indicated whether the robot should kick the ball\footnote{The robot would kick the ball in the direction of a goal post when in sight. The behaviour has not been changed since the field has been made symmetrical.}.  Currently, the Dutch Nao Team is transitioning its code from Python to C++ for speed gains. 
+
+The subject of this report can be split in two parts. Section~\ref{sec:FeatureExtraction} describes the first part, where we have implemented modules which extract several visual features located on the field.  We describe which features are extracted and how the images coming from the Nao's camera are processed. 
+
+These features and their locations with respect to the robot are passed to the localization module from section~\ref{sec:Localization}.  We first give a general description of the algorithm (i.e. Monte Carlo Localization) in section~\ref{sec:MCL}, and describe how the sensory information is processed and modeled (section~\ref{sec:Odometry} and~\ref{sec:SensorModel}). Section~\ref{sec:AMCL} and section~\ref{sec:Reset} describe extensions implemented to the standard Monte Carlo Localization to improve the performance of the system on common problems in a RoboCup Soccer tournament situation. 
+After the description we give a short evaluation of those approaches in section~\ref{sec:Evaluation} and a conclusion in section~\ref{sec:Conclusion}. In the last section we will sketch future work, that needs to be done to have a functioning robot soccer team in a tournament situation.
+
+\section{Related Work}
+~\cite{canas2009visual}
+~\cite{ashar2010robocup}
+~\cite{canas2010recognition}
+~\cite{schulz2012utilizing}
+~\cite{deng2011natural}
 
 \section{Feature Extraction}
 Visual object recognition is a key ability for autonomous robotic agents especially in dynamic and partially observable environments. A reliable landmark detection process is really crucial for achieving self-localization, which can be easily considered as the stepping stone for having a functional robotic soccer team. In this section, we describe the whole procedure of processing input images from the NAO's camera, outputting features that are informative to be used by the core of our localization scheme.  Using a variety of image processing techniques, we successfully detect field landmarks. In general, we have to deal with noisy images, which not only contain the field region but also background noise and useless information which comes from above the horizon of the field view. Furthermore, we had to deal with lighting conditions which may vary significantly.
@@ -197,7 +220,7 @@ In this section, we will talk about another image pre-processing technique which
 
 Figure~\ref{binary}, illustrates the process of image binarization. To add some technical details about the above implementation of image binarization, we can say that the whole process of it is integrated into the background removal procedure which requires only one vertical scan of the input image, and its goal is to minimize the space complexity of the whole feature extraction method as now we have only to process binary images with only one channel, in contrast to the original 3-channel image.
 
-\section{Line Detection}
+\subsection{Line Detection}
 Before proceeding to the exact procedure about finding goals and line features, it is time to introduce our proposing approach to detect line segments in a binary image like those we presented before in image binarization section.
 
 \subsubsection{Other approaches}
@@ -277,16 +300,201 @@ Goals consist of two vertical bars and a horizontal attached to the tops of the 
 
 The first step in goal detection process is the use of the horizontal histogram of yellow pixels in combination with the y-positions in where we found yellow-green transitions, something declaring the possible position of the goalpost's bottom. Combining this information, we can find the local maxima in the horizontal axis and find the position-s, where goalposts are located. If the maxima of this histogram have values under a certain threshold, the process stops here and we do not continue, as it appears that there is no vertical post. If these values are high enough, and we have two local maxima, we are pretty sure that there are two vertical posts in the image, if there is only one we are looking only for one vertical post. In both cases we scan the image left and right from the maxima and exclude parts of the image which do not contain yellow pixels at all.
 
-Next step is the line detection, using the same approach we have discussed earlier, but now generating points only with a vertical scan, due to the fact that we are only interested in vertical lines. From these vertical lines we choose the best ones in respect to their length, orientation, and with the prior knowledge about possible horizontal positions for the goalposts. These lines will be extended towards the bottom of the goalpost and the top, estimating like this the true height of each goalpost. To estimate the width, we are taking random samples upon the line representing the goalpost and measure with a simple scan the width. The average of all these measurements will be our estimation about its width. We can also compute a confidence measure about the bottom of the goalposts, taking the estimated bottom of the representative line and computing the distance from the yellow-green transition we talked earlier. The same procedure is applied for the horizontal goalpost as well. Horizontal goalpost can be very informative in cases that only one vertical goalpost is visible by our agent. The orientation of the Horizontal goalpost can be used in order our agent to distinguish between left and right goalpost.
+Next step is the line detection, using the same approach we have discussed earlier, but now generating points only with a vertical scan, due to the fact that we are only interested in vertical lines. From these vertical lines we choose the best ones in respect to their length, orientation, and with the prior knowledge about possible horizontal positions for the goalposts. These lines will be extended towards the bottom of the goalpost and the top, estimating like this the true height of each goalpost. To estimate the width, we are taking random samples upon the line representing the goalpost and measure with a simple scan the width. The average of all these measurements will be our estimation about its width. We can also compute a confidence measure about the bottom of the goalposts, taking the estimated bottom of the representative line and computing the distance from the yellow-green transition we talked earlier. The same procedure is applied for the horizontal goalpost as well. Horizontal goalpost can be very informative in cases that only one vertical goalpost is visible by our agent. The orientation of the Horizontal goalpost can be used in order our agent to distinguish between left and right goalpost. In figure~\ref{posts}, we illustrate the results of the goalpost detection, in three different situations.
 
 
+\subsection{Ellipse Detection}
+The field of the RoboCup Soccer STL league has a circle in the middle with a diameter of 120cm. This is an important feature for the Nao's self-localization as this is the only unique feature on the field. In computer vision, most commonly performed ellipse detection is carried out on binary images from an edge detector. However, in general, ellipse detection does not adress the problem of false positives and false negetives well, especially for partially visible ellipses.
 
-In figure~\ref{posts}, we illustrate the results of the goalpost detection, in three different situations.
+For this project, we chose to implement an ellipse detector based on P{\u{a}}tr{\u{a}}ucean's method~\cite{ED}. We chose this technique for the following reason: It is parameterless and required no special tunining for different scenarios. Most ellipse detectors require as input certain parameters that define the scenary such as a range of expected radii of ellipses, and a minimum distance between two ellipses. This approach aims to be free of critical parameters as much as possible, in order to avoid introducing false negatives. Also, it provides a control over the number of false positives by using \emph{a contrario} validation. The greedy-like candidate selection step implemented by this algorithm ensures a reasonable execution time. The two primary steps in this algorithm are: 
 
-\section{Related Work}
-~\cite{canas2009visual}
-~\cite{ashar2010robocup}
-~\cite{canas2010recognition}
+\begin{itemize}
+\item Region growing: Pixles with a similar gradient orientation are alligned to form rectangular regions.
+\item Region chaining: These detected regions are chained together if they roughly follow some conditions that define ellipses.
+\end{itemize}
+
+To tackle the problem of false positives, \emph{a contrario} validation is employed to reject or validate candidate ellipses. The \emph{a contrario} theory employs the non-accidentalness principle (which says that ``we see nothing in noise''). Therefore, candidate ellipses that have a higher chance to be observed in noise are discarded. % how is that done? 
+
+\begin{figure}[t!]
+\caption{ellipse whatever}
+\label{ellipse1}
+\centering    
+\includegraphics[width=0.3\textwidth]{figures/ellipseDetection.png}
+\end{figure}
+
+\subsection{Inverse Perspective Mapping}
+Transformation from one projective plane to another can be utilized for generating views of objects different from the camera position. Inverse perspective mapping (IPM) makes use of this. It projects an image on a known plane and gets rid of the perspective effect on objects that are on that plane and produces a distorted view for all others\cite{IPM2}.
+
+Information like the angle of view (under the horizon) and the distance of objects from camera associate a different information content with each pixel of an image. In fact, the perspective effect must be considered during the processing of images so as to weigh each pixel wit respect to its information content. As a counter to this issue, Inverse Perspective Mapping lets us remove the perspective effect and remap the image to a 2-D domain, so that the information content is evenly spreadout among all pixels\cite{IPMWeb}. 
+
+It must be noted that the applying the IPM transform requires some camera conditions to be known. These are the camera's height about ground level, its aperture, its tilt with respect to the vertical axis and its resolution. Since this information can be fairly accurately computed by the Nao from reverse kinemetics, the IPM transformation can be used by it. Thus, assuming that the field in front of the camera is planer, a bird's eye view of the playing field can be obtained.
+
+In the domain of robosoccer, the advantages of IPM transformation are several. Estimation of distance and bearing to a feature point on the field is simplified because now we have a bird's eye view of the field in front of us. Preprocessing steps like background removal is also much easier than on regual camera images because of the fact that always the lower part of the image contains the field. Moreover, IPM also overcomes the problem of the Nao's head can tilt along various axes because this transformantion is robust to such viewpoint changes. Lastly, the feature extraction step can itself be made more robust and computationally inexpensive. This is because when viewing the field from a top perspective, all lines on the field appear to intersect orthogonally and circles retain their shapes. However, one of the main problems we faced while using inverse perspective mapping for feature extraction was that feature points far from the camera appear to get distorted due to the transformation. This causes the many false negetives while extracting features. One ad-hoc solution to this problem was transforming the binary images of the lines in the field instead of the complete RGB image. Another problem with using IPM was the difficulty in measuring projected objects such as goal posts on the field. The transformation always streches the goal posts such that their top portions are no longer visible/detectable. Thus, goal post detected continues to rely on frong-facing camera images.
+
+We now briefly explain this transformation\cite{IPM} while not going into the details of its mathematics. In inverse perspective mapping, for a point in the image plane, we trace a ray from this point through the center of projection and towards the horizontal plane, where it results in an intersection. In this way, we find the corrosponding image point.
+
+We first create matrices that contain the x and y locations in the world frame, where the pixels in the bottom portion of the camera image (where we assume we see the field based on the camera's viewing angle, height and aperture) are mapped by using the inverse perspective transformation equations. Next, we find the weights needed to create an inverse-perspectbive-mapped image with evenly spaced pixels by linearly interpolating between intensity/color values in the original image. Finally, we apply the inverse-perspective interpolation mapping to an RBG camera image to get an inverse-perspective-mapped image\cite{IPMCode}.
+
+
+\begin{figure}[t!]
+\caption{ellipse whatever}
+\label{ellipse2}
+\centering    
+\includegraphics[width=0.3\textwidth]{figures/imagePixelsMapped.png}
+\end{figure}
+
+
+\section{Localization}
+\label{sec:Localization}
+We based our localization module on the Monte Carlo Localization method (MCL). The module has been augmented with several extensions taken from literature. This part of the report describes the standard MCL approach, the models that were used to incorporate incomming sensor information (i.e. odometry and observed visual features in the camera image). We describe how the observed features are associated with the given featuremap of the soccer field. Eventually we elaborate on how the standard approach was improved to overcome well known shortcomings of the usage of particle filters in a robot soccer turnament environment.
+
+We chose to use the MCL as basis for localization of the robot since it is a well known approach, and toroughly researched. It is a multimodal particle based localization method (i.e. it can deal with multiple pose hypothesis at the same time). Since the new environment for 2013 is completely symmetric this is a valuable property. In addition to that, MCL can deal with erroneous sensor information, which is an unavoidable problem in real life applications in robotics. It is able to recover from kidnapping (i.e. repositioning the robot on the field without odometry information). Finally the number of particles can be adjusted. This is usefull, since the Nao robot platform offers only limited computational resources.
+\subsection{Monte Carlo Localization}
+\label{sec:MCL}
+The basic MCL algorithm is depicted in following pseudocode  as described by Fox et al. in \cite{MonteCarloLocalization}:\\
+%maybe put this in the appendix.
+
+%\begin{algorithm}[H]
+% \SetAlgoLined
+% \KwData{$\chi_{t-1}, u_t, z_t,m$}
+% \textbf{monte\_carlo\_localization(}$\chi_{t-1}, u_t, z_t,m$\textbf{)}\\
+% $\bar{\chi_t} = \chi_t = \emptyset$\;
+% \For{$m$=1 to $M$ do}{
+% $x^{[m]}_t$ = sample\_motion\_model( $u_t$ , $x^{[m]}_{t-1}$ )\;\label{alg:motion_model}
+% $w^{[m]}__t$ = measurement\_model($z_t$, $x^{[m]}_t$ , $m$)\;\label{alg:measurement_model}
+% $\bar{\chi} = \bar{\chi} + \langle x^{[m]}_t, w^{[m]}_t \rangle $\;}
+% \For{$m$=1 to $M$ do \label{alg:resampling}} 
+% {
+% draw $i$ with probability $\alpha$  $w^{[i]}_t$\;
+% add $x^{[i]}_t $ to $\chi_t$\;
+% }
+%  \KwResult{ $\chi_t$ }
+% \caption{Monte Carlo Localization}
+%\end{algorithm}
+where $m$ denotes the map, $\chi_t$ particles at time $t$, $u_t$ control input / odometry information at time $t$, $z_t$ sensor input (in our case visual features) at time $t$.
+\\
+In general the MCL consists of three main steps:\\
+\textbf{Initialize:} place particles at random
+\begin{enumerate}
+\item \textbf{process odometry information:} Change particle poses (position and rotation) accordingly. (line : ~\ref{alg:motion_model})
+\item \textbf{process visual sensor input (extracted features):} Calculate likelihood of pose hypothesis (particle) and weight particle accordingly. (line : ~\ref{alg:measurement_model})
+\item \textbf{resample:} Redraw all particles, place new particles distributed according to the former computed weights, and reset all weights to one. (for loop starting in line : ~\ref{alg:resampling} ) %Such that at poses with high likelihood (weight) more particles will end up.
+\end{enumerate}
+The initialization of particle poses does not necessairily have to be at random, if the initial robot's position is known, or approximately known (e.g. only one side of the field) it is advantageous to sample from this known prior position.\\
+Everytime new information is available those three steps can be executed, first process the odometry information, and move all particles accordingly. Since the odometry of robots in the majority of cases incorporates an error, we add additional (gaussian) noise to it. \\
+Then we process the visual features, which in our case will be returned from the feature recognition module. Each feature comes with range, bearing and type. In order to compute a likelihood for each pose hypothesis, we need to associate each given feature to a feature of the featuremap. This process is described in detail in the following section. Finally we resample all particles according to the likelihood of each pose hypothesis. Such that at poses that had a high likelihood and thus a high weight, we place more particles. In this step all weights will be reset to one. And we repeat all steps with new incomming information.
+
+\subsection{Sensor Model}
+\label{sec:SensorModel}
+The feature recognition module returns the range and bearing and type of a feature extracted from the image feed of the Nao robot (an elaborate description of the methods used can be found in section ~\ref{sec:FeatureExtraction}). Currently L-crossings, T-crossings and X-crossings and the the bottom of the goal posts can be processed (it is possible to incorporate more types of features, e.g. lines, or the middle circle). These features occure multiple times in the map, it is not possible to distinguish between different features of the same type a priori. For the Monte Carlo Method to work, we need to associate one feature to a feature on our feature map of the soccer field. To determine which observed feature will be associated with which map feature, we compute the observed feature position according to our current pose hypothesis to map space (assuming that we are positioned in the particle position, whose weight we want to compute), then choose to associate it with the feature in the feature map which is closest:
+\[\underset{j}{\operatorname{argmin}}  (\sqrt{(m_{j,x} - f_x)^2 + (m_{j,y} - f_y)^2})   \] 
+where $f$ is the feature observed, $f_x$ and $f_y$ the feature position and $m_{j,x}$ and $m_{j,y}$ the position of feature $j$ in the featuremap with the same type as observed feature $f$. 
+
+(This simple model was chosen due to time constraints. More elaborate models are possible, e.g. aggregate two or more features and compute correspondence values for those "feature patterns"). To compute the final likelihood, we calculate the range and bearing of the featuremap feature chosen, according to our pose hypothesis. Again we assume erroneous sensory information. For simplicity we model this error as a gaussian, although the underlying error model could be different. 
+The sensory model computes the final likelihood of a pose estimate as described in \cite{ProbabilisticRobotsics}:
+\[ q = \prod\limits_{i=1}^{N}{ prob(r^i  - \hat{r}^j,\sigma_r) * prob(\phi^i - \hat{\phi}^j ,\sigma_{\phi}) * prob(s^i - \hat{s}^j ,\sigma_s)  }  \]
+where q is our final likelihood estimate for a certain pose hypothesis, i = 1 .. N the number of features observed in current image of the camera, $ r^i $ the range of the observed feature i, $\hat{r}^j$ the computed range of the feature j in the feature map associated with the observed feature according to the current pose hypothesis, $prob(r^i - \hat{r}^j,\sigma_r)$ denotes the probability of value $r^i - \hat{r}^j$ in a zero mean gaussian with variance $\sigma_r$. $prob(\phi^i - \hat{\phi}^j ,\sigma_{\phi})$ and  $prob(s^i - \hat{s}^j ,\sigma_s)$ denote the probability of a zero mean gaussians for difference in bearing of observed feature $\phi^i$ and bearing of associated map feature $\phi^j$ and probability of $s^i - \hat{s}^j$ on a zero mean gaussian with variance $\sigma_s$ for the difference in certainty of having chosen the right association of feature on the map and observed feature accordingly.
+
+
+\subsection{Odometry Model}
+\label{sec:Odometry}
+The odometry model can be either implemented from actual sensor data (through built in accelerometer, or computation of steps taken), or the control input. Since the current implementation was not tested on the Nao robot platform yet, it is still left to further evaluation which input is more advantageous. 
+Since both methods incorporate an error, control input through not exactly working motors, or sensor information noise, for each particle we sample from the odometry input with additional noise.
+This noise is assumed to be gaussian and independent. At the moment the odometry noise is modelled as error in x and y direction travelled and noise for additional rotation.
+
+
+\subsection{Augmented Monte Carlo Localization}
+\label{sec:AMCL}
+
+Since the standard MCL algorithm described in section ~\ref{sec:MCL} might perform poorly in case of kidnapping.
+This is if the confidence of the robot pose is high and it gets replaced from an extrinsic source (e.g. penalty of referee). If the pose confidence is high, the particle density is high around the most probable point in pose space. The robot might get replaced to a pose where no particle is located. It might take a long time till particles will aggregate at the new position. 
+A suitable extension to the standard approach is to keep track of the measurement likelihood both in a short term average and a long term average.
+If those differ, the robot is capable of detecting a kidnapping situation. New particles can be sampled at random according to the difference of short and long term average. Thus increasing the recover speed after a kidnapping situation as described in \cite{ProbabilisticRobotsics}:\\
+
+%\begin{algorithm}[H]
+% \SetAlgoLined
+% \KwData{$\chi_{t-1}, u_t, z_t,m$}
+% \textbf{augmented\_monte\_carlo\_localization(}$\chi_{t-1}, u_t, z_t,m$\textbf{)}\\
+% static $w_{slow}$,$ w_{fast}$ \label{alg:augmented1}\;
+% $\bar{\chi_t} = \chi_t = \emptyset$\;
+% \For{$m$=1 to $M$ do}{
+% $x^{[m]}_t$ = sample\_motion\_model( $u_t$ , $x^{[m]}_{t-1}$ )\;
+% $w^{[m]}__t$ = measurement\_model($z_t$, $x^{[m]}_t$ , $m$)\;
+% $\bar{\chi} = \bar{\chi} + \langle x^{[m]}_t, w^{[m]}_t \rangle $\;
+% $w_{avg} = w_{avg} + \frac_{M}^{1} w^{[m]}_t $ \label{alg:augmented2}\;
+% }
+% $w_{slow} = w_{slow} + \alpha_{slow}(w_{avg} - w_{slow})$\label{alg:augmented3}\;
+% $w_{fast} = w_{fast} + \alpha_{fast}(w_{avg} - w_{fast})$\label{alg:augmented4}\;
+%\For{$m$=1 to $M$ do \label{alg:augmented_resampling}} {
+% with probability max\{0.0,1.0 - $w_{fast}/w_{slow}$\} do\label{alg:augmented_resample_start}\\
+% \tab add random pose to $\chi_t$\;
+% else:\\
+% \tab draw $i \in \{1,...N\}$ with probability $\alpha$  $w^{[i]}_t$\;
+% \tab add $x^{[i]}_t $ to $\chi_t$ \label{alg:augmented_resample_end}\;}
+%  \KwResult{ $\chi_t$ }
+% \caption{Augmented Monte Carlo Localization as depicted in \cite{ProbabilisticRobotsics}}
+%\end{algorithm}
+To incorporate the long and short term average we change the basic algorithm described in section ~\ref{sec:MCL} as follows:\\
+We define the long and short term average in line ~\ref{alg:augmented1}, insert the computation of the current weight average in line ~\ref{alg:augmented2}, then update $w_{slow}$ and $w_{fast}$ in lines ~\ref{alg:augmented3} and ~\ref{alg:augmented4}. With $\alpha_{fast}$ and $\alpha_{slow}$ being the decay rates, where $0<=\alpha_{slow}<<\alpha_{fast}$. Finally we sample particles at random with probability $max\{0.0,1.0-w_{fast}/w_{slow}\}$ and otherwise according to the particle weights computed in the measurement step, as before.
+This is called Augmented Monte Carlo Localization (AMCL).
+%pseudocode
+\subsection{Resetting Sensor Model}
+\label{sec:Reset}
+Now the robot is to a certain extend able to detect a kidnapping situation (this might take several iterations of the AMCL till the long and short term average differ sufficiently), and injects particles at random. 
+In the case of injecting particles totally at random, the localization module is subject to pure chance to sample particles near to the actual position. We can speed up the process in case we have observed visual features. E.g. if we see both goal posts, it is highly unlikely that we are in a position from where we actually cant see any goal.
+In this case it is possible to sample from the visual sensor information instead of totally at random a similar method  was originally proposed by Lenser and Veloso  in \cite{SensorResetting}. In our implementation we sample from one feature at random with added gaussian noise in range and bearing. Since we have several features of the same type in the feature map, again we choose one at random for each sample we want to resample. This will result in several circles around all features on the feature map of the type of chosen visual feature to sample from. Due to time constraints, we only chose one observed feature to sample from.
+It might increase the recovering speed after a case of kidnapping, to sample from the pose probability distribution of several features (we can reduce the sample space from several circles around the features in the feature map to several points, if we observe and take into account two visible features).
+
+
+\subsection{Resampling method}
+As described by Thrun et al. in \cite{ProbabilisticRobotsics} resampling using a random number leads to loss of variance. (e.g. a robot with no perception, after a sufficient amount of resampling steps would only remain with one position hypothesis. Since if sampling with a random number for each particle might lead to the loss of one hypothesis, if two particles are resampled at the same pose).
+The following pseudocode depicts low variance resampling:\\
+%\begin{algorithm}[H]
+% \SetAlgoLined
+% \KwData{$\chi_{t},W_t $}
+% \textbf{low\_variance\_resampling(}$\chi_{t},W_t$\textbf{)}\\
+% $\bar{\chi_t} =  \emptyset$\;
+% r = rand(0;$M^{-1}$)\label{alg:resampling_rand}\;
+% c = $w^{[1]}_t$\;
+% i=1\;
+%  \For{$m$=1 to $M$ }{
+%  U = r + ($m$-1)* $M^{-1}$\label{alg:stepsize}\;
+%  \While{U $>$ c}{
+%  i = i + 1\;
+%  c = c + $w^{[i]}_t$ \;
+%  }
+%  add $x^{[i]}_t$ to $\bar{\chi_t}$\;
+%  }
+%  \KwResult{ $\bar{\chi_t}$ }
+% \caption{Low variance resampling as described in \cite{ProbabilisticRobotsics}}
+%\end{algorithm}
+Where $X_t$ particles with weights $W_t$ at time $t$, and $M$ the number of particles.
+This method creates only one random number, and adds a fixed step size iteratively to a "pointer" (U).
+In addition to that we keep track of the sum of particle weights such that, for every step we sample one particle. The particle will be sampled with pose values of particle which "weight bin" (c) the "pointer" is currently pointing. 
+This method ensures the systematical coverage of the sample space, and no samples are lost.
+We additionaly changed the algorithm slightly, instead of drawing a random number between 0 and $M^{-1}$ (line ~\ref{alg:resampling_rand}) we compute the average particle weight beforhand. This also applies for adding stepsize in line ~\ref{alg:stepsize}, we add the average particle weight instead of $M^{-1}$. This is done to evade complications in case the assignment of particle weights in previous steps is not totally statistically sound.
+
+\subsection{Visualization}
+For debugging purposes we developed a simple visualizing modules built on basis of openvc\footnote{http://opencv.org/}. This module reads the parameters of the football field from a parameter file, and can draw the particles, the pose hypothesis of the AMCL. It prvoed to be very usefull, and might be used for future projects.\footnote{The code can be accessed at: https://github.com/pkok/Robolab/tree/master/NaoLeague/LocationVisualizer}
+
+\section{Evaluation}
+\label{sec:Evaluation}
+
+\section{Discussion}
+\label{sec:Discussion}
+
+\section{Conclusion}
+\label{sec:Conclusion}
+
+\section{Outlook}
+Due to time constraints, the described and implemented parts of the system were only compiled and tested on standard computer hard- and software. The code still has to be tested on the limited resources of the Nao Standard robot.
+\subsection{feature detection}
+All tests of the feature recognition were conducted on still images (taken from the Nao camera). The images of a moving robot will contain a considerable amount of blur, which might require additional tricks to make the whole system robust enough in an actual soccer game. E.g. only classify detected features if they can be observed in a sufficient number of frames.
+The existence of other robots on the field will increase the number of false positives the feature recognition will detect.
+\subsection{localization}
+The Monte carlo localization has a number of parameters, which influence the performance to a great extend.
+Although the algorithm can be adjusted to less processing power platforms, in decreasing the number of particles, there might be some space to decrease the computational costs by tweaking the code.
+Besides that both the feature recognition and Localization do not have to be executed for every new frame. It might be beneficial to postpone computation of features and location updates if the robot does not move, or the computational resources have to be used for other computations.
 
 \printbibliography
 
