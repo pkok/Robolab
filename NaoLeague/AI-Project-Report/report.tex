@@ -318,12 +318,12 @@ For this project, we chose to implement an ellipse detector based on P{\u{a}}tr{
 \end{itemize}
 
 To tackle the problem of false positives, \emph{a contrario} validation is employed to reject or validate candidate ellipses. The \emph{a contrario} theory employs the non-accidentalness principle (which says that ``we see nothing in noise''). Therefore, as described in \cite{ED}, candidate ellipses that have a higher chance to be observed in noise are discarded. % P: Possible comment I see from Theo/Arnoud is "how is that done?"
-However, as can be seen in figure \ref{fig ED}, even after this step, we still find a number of false positives because small features like penalty X crossings, and resedue background noise often gets classified as small arcs by the ellipse detector. This problem can easily be tackled by filtering the candidate ellipses on their arc lengths and putting a minimum threshold on it.
+However, as can be seen in figure \ref{fig:ED}, even after this step, we still find a number of false positives because small features like penalty X crossings, and resedue background noise often gets classified as small arcs by the ellipse detector. This problem can easily be tackled by filtering the candidate ellipses on their arc lengths and putting a minimum threshold on it.
 
 \begin{figure}
 \includegraphics[width = 265px]{figures/ellipseDetection.png}
 \caption{Left to right: RGB image obtained from NAO's lower camera, binary image of field lines after background removal, possible ellipses detected (and lines, not considered) }
-\label{fig ED}
+\label{fig:ED}
 \end{figure}
 
 The ellipse detection step can also ensure lesser false positives (and faster computation) during the line feature detections stage if ellipse detection is performed first: If we know with confidence the area that the circumference of the ellipse is covering, we know that line crossings do not exist on it and hence we can mask this area for the line feature detection step.
@@ -341,12 +341,12 @@ Estimation of distance and bearing to a feature point on the field is simplified
 
 We now briefly explain this transformation\cite{IPM} while not going into the details of its mathematics. In IPM, for a point in the image plane, we trace a ray from this point through the center of projection and towards the horizontal plane, where it results in an intersection. In this way, we find the corrosponding image point.
 
-We first create matrices that contain the $x$ and $y$ locations in the world frame, where the pixels in the bottom portion of the camera image (where we assume we see the field based on the camera's viewing angle, height and aperture) are mapped by using the inverse perspective transformation equations (see figure \ref{fig IPM}, center). Next, we find the weights needed to create an inverse-perspective-mapped image with evenly spaced pixels by linearly interpolating between intensity/color values in the original image. Finally, we apply the inverse-perspective interpolation mapping to an RBG camera image to get an inverse-perspective-mapped image\cite{IPMCode} (see figure \ref{fig IPM}, right).
+We first create matrices that contain the $x$ and $y$ locations in the world frame, where the pixels in the bottom portion of the camera image (where we assume we see the field based on the camera's viewing angle, height and aperture) are mapped by using the inverse perspective transformation equations (see figure \ref{fig:IPM}, center). Next, we find the weights needed to create an inverse-perspective-mapped image with evenly spaced pixels by linearly interpolating between intensity/color values in the original image. Finally, we apply the inverse-perspective interpolation mapping to an RBG camera image to get an inverse-perspective-mapped image\cite{IPMCode} (see figure \ref{fig:IPM}, right).
 
 \begin{figure}
 \includegraphics[width = 265px]{figures/imagePixelsMapped.png}
 \caption{Left to right: front facing RGB image obtained from NAO's lower camera, map of image pixels to the world frame, bird's eye view obtained after IPM}
-\label{fig IPM}
+\label{fig:IPM}
 \end{figure}
 
 
