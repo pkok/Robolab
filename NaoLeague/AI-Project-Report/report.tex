@@ -80,6 +80,9 @@
 
 
 
+ \newcommand{\tab}{\hspace*{2em}} % tabs for pseudocode indent
+
+
 %%% Creating an initial of the very first character of the content
 \usepackage{lettrine}
 \newcommand{\initial}[1]{%
@@ -358,12 +361,13 @@ The basic MCL algorithm is depicted in following pseudocode  as described by Fox
 \STATE {\bf Input: }$\chi_{t-1}, u_t, z_t,m$
 \STATE {\bf Output: }$\chi_t$
 \STATE \textbf{monte\_carlo\_localization(}$\chi_{t-1}, u_t, z_t,m$\textbf{)}\\
+\STATE $\bar{\chi_t} = \chi_t = \emptyset$
 \FOR{$m$=1 to $M$}
 \STATE {}$x^{[m]}_t$ = sample\_motion\_model( $u_t$ , $x^{[m]}_{t-1}$ )\;\label{alg:motion_model}
 \STATE {}$w^{[m]}_t$ = measurement\_model($z_t$, $x^{[m]}_t$ , $m$)\;\label{alg:measurement_model}
 \STATE {}$\bar{\chi} = \bar{\chi} + \langle x^{[m]}_t, w^{[m]}_t \rangle $\;
 \ENDFOR
-\FOR{$m$=1 to $M$}
+\FOR{$m$=1 to $M$} \label{alg:mcl_resampling}
 \STATE draw $i$ with probability $\alpha$  $w^{[i]}_t$\;
 \STATE add $x^{[i]}_t $ to $\chi_t$\;
 \ENDFOR
@@ -378,7 +382,7 @@ In general the MCL consists of three main steps:\\
 \begin{enumerate}
 \item \textbf{process odometry information:} Change particle poses (position and rotation) accordingly. (line : ~\ref{alg:motion_model})
 \item \textbf{process visual sensor input (extracted features):} Calculate likelihood of pose hypothesis (particle) and weight particle accordingly. (line : ~\ref{alg:measurement_model})
-\item \textbf{resample:} Redraw all particles, place new particles distributed according to the former computed weights, and reset all weights to one. (for loop starting in line : ~\ref{alg:resampling} ) %Such that at poses with high likelihood (weight) more particles will end up.
+\item \textbf{resample:} Redraw all particles, place new particles distributed according to the former computed weights, and reset all weights to one. (for loop starting in line :  ~\ref{alg:mcl_resampling} ) %Such that at poses with high likelihood (weight) more particles will end up.
 \end{enumerate}
 The initialization of particle poses does not necessairily have to be at random, if the initial robot's position is known, or approximately known (e.g. only one side of the field) it is advantageous to sample from this known prior position.\\
 Everytime new information is available those three steps can be executed, first process the odometry information, and move all particles accordingly. Since the odometry of robots in the majority of cases incorporates an error, we add additional (gaussian) noise to it. \\
@@ -391,7 +395,7 @@ The feature recognition module returns the range and bearing and type of a featu
 where $f$ is the feature observed, $f_x$ and $f_y$ the feature position and $m_{j,x}$ and $m_{j,y}$ the position of feature $j$ in the featuremap with the same type as observed feature $f$. 
 
 (This simple model was chosen due to time constraints. More elaborate models are possible, e.g. aggregate two or more features and compute correspondence values for those "feature patterns"). To compute the final likelihood, we calculate the range and bearing of the featuremap feature chosen, according to our pose hypothesis. Again we assume erroneous sensory information. For simplicity we model this error as a gaussian, although the underlying error model could be different. 
-The sensory model computes the final likelihood of a pose estimate as described in \cite{ProbabilisticRobotsics}:
+The sensory model computes the final likelihood of a pose estimate as described in \cite{ProbabilisticRobotics}:
 \[ q = \prod\limits_{i=1}^{N}{ prob(r^i  - \hat{r}^j,\sigma_r) * prob(\phi^i - \hat{\phi}^j ,\sigma_{\phi}) * prob(s^i - \hat{s}^j ,\sigma_s)  }  \]
 where q is our final likelihood estimate for a certain pose hypothesis, i = 1 .. N the number of features observed in current image of the camera, $ r^i $ the range of the observed feature i, $\hat{r}^j$ the computed range of the feature j in the feature map associated with the observed feature according to the current pose hypothesis, $prob(r^i - \hat{r}^j,\sigma_r)$ denotes the probability of value $r^i - \hat{r}^j$ in a zero mean gaussian with variance $\sigma_r$. $prob(\phi^i - \hat{\phi}^j ,\sigma_{\phi})$ and  $prob(s^i - \hat{s}^j ,\sigma_s)$ denote the probability of a zero mean gaussians for difference in bearing of observed feature $\phi^i$ and bearing of associated map feature $\phi^j$ and probability of $s^i - \hat{s}^j$ on a zero mean gaussian with variance $\sigma_s$ for the difference in certainty of having chosen the right association of feature on the map and observed feature accordingly.
 
@@ -409,7 +413,8 @@ This noise is assumed to be gaussian and independent. At the moment the odometry
 Since the standard MCL algorithm described in section ~\ref{sec:MCL} might perform poorly in case of kidnapping.
 This is if the confidence of the robot pose is high and it gets replaced from an extrinsic source (e.g. penalty of referee). If the pose confidence is high, the particle density is high around the most probable point in pose space. The robot might get replaced to a pose where no particle is located. It might take a long time till particles will aggregate at the new position. 
 A suitable extension to the standard approach is to keep track of the measurement likelihood both in a short term average and a long term average.
-If those differ, the robot is capable of detecting a kidnapping situation. New particles can be sampled at random according to the difference of short and long term average. Thus increasing the recover speed after a kidnapping situation as described in \cite{ProbabilisticRobotsics}:\\
+If those differ, the robot is capable of detecting a kidnapping situation. New particles can be sampled at random according to the difference of short and long term average. Thus increasing the recover speed after a kidnapping situation as described in \cite{
+}:\\
 
 
 
@@ -421,7 +426,7 @@ If those differ, the robot is capable of detecting a kidnapping situation. New p
 % \tab add $x^{[i]}_t $ to $\chi_t$ \label{alg:augmented_resample_end}\;}
 %  \KwResult{ $\chi_t$ }
 \begin{algorithm}[h!]
-\caption{Augmented Monte Carlo Localization as depicted in \cite{ProbabilisticRobotsics}}
+\caption{Augmented Monte Carlo Localization as depicted in \cite{ProbabilisticRobotics}}
 \label{line}
 \begin{algorithmic}[1]
 \STATE {\bf Input: }$\chi_{t-1}, u_t, z_t,m$
@@ -432,14 +437,20 @@ If those differ, the robot is capable of detecting a kidnapping situation. New p
 \FOR{$m$=1 to $M$}
 \STATE $x^{[m]}_t$ = sample\_motion\_model( $u_t$ , $x^{[m]}_{t-1}$ )\;
 \STATE $w^{[m]}_t$ = measurement\_model($z_t$, $x^{[m]}_t$ , $m$)\;
-\STATE $\bar{\chi} = \bar{\chi} + \langle x^{[m]}_t, w^{[m]}_t \rangle $\;
-%\STATE $w_{avg} = w_{avg} + \frac_{M}^{1} w^{[m]}_t $ \label{alg:augmented2}\;
+\STATE $\bar{\chi_t} = \bar{\chi_t} + \langle x^{[m]}_t, w^{[m]}_t \rangle $\;
+\STATE $w_{avg} = w_{avg} + \frac{1}{M} w^{[m]}_t $ \label{alg:augmented2}
+\ENDFOR
+%\STATE $w_{avg} = w_{avg} + \frac_{1}^{M} w^{[m]}_t $ \label{alg:augmented2}\;
 \STATE $w_{slow} = w_{slow} + \alpha_{slow}(w_{avg} - w_{slow})$ \label{alg:augmented3}\;
 \STATE $w_{fast} = w_{fast} + \alpha_{fast}(w_{avg} - w_{fast})$ \label{alg:augmented4}\;
-\ENDFOR
+
 \FOR{$m$=1 to $M$ \label{alg:augmented_resampling}}
-\STATE draw $i$ with probability $\alpha$  $w^{[i]}_t$\;
-\STATE add $x^{[i]}_t $ to $\chi_t$\;
+\STATE \textbf{with} probability max\{0.0, 1.0 - $w_{fast}/w_{slow}$\} \textbf{do}
+\STATE \tab add random pose to $\chi_t$
+\STATE \textbf{else}
+\STATE \tab draw $i\in{1,..,N}$ with probability $\alpha$  $w^{[i]}_t$\;
+\STATE \tab add $x^{[i]}_t $ to $\chi_t$\;
+\STATE \textbf{end with}
 \ENDFOR
 \end{algorithmic}
 \end{algorithm}
@@ -458,7 +469,7 @@ It might increase the recovering speed after a case of kidnapping, to sample fro
 
 
 \subsection{Resampling method}
-As described by Thrun et al. in \cite{ProbabilisticRobotsics} resampling using a random number leads to loss of variance. (e.g. a robot with no perception, after a sufficient amount of resampling steps would only remain with one position hypothesis. Since if sampling with a random number for each particle might lead to the loss of one hypothesis, if two particles are resampled at the same pose).
+As described by Thrun et al. in \cite{ProbabilisticRobotics} resampling using a random number leads to loss of variance. (e.g. a robot with no perception, after a sufficient amount of resampling steps would only remain with one position hypothesis. Since if sampling with a random number for each particle might lead to the loss of one hypothesis, if two particles are resampled at the same pose).
 The following pseudocode depicts low variance resampling:\\
 %\begin{algorithm}[H]
 % \SetAlgoLined
@@ -477,8 +488,30 @@ The following pseudocode depicts low variance resampling:\\
 %  add $x^{[i]}_t$ to $\bar{\chi_t}$\;
 %  }
 %  \KwResult{ $\bar{\chi_t}$ }
-% \caption{Low variance resampling as described in \cite{ProbabilisticRobotsics}}
+% \caption{Low variance resampling as described in \cite{ProbabilisticRobotics}}
 %\end{algorithm}
+\begin{algorithm}[h!]
+\caption{Low variance resampling}
+\label{line}
+\begin{algorithmic}[1]
+\STATE {\bf Input: }$\chi_{t},W_t $
+\STATE {\bf Output: }$\bar{\chi_t}$
+\STATE \textbf{low\_variance\_resampling(}$\chi_{t},W_t$\textbf{)}\\
+\STATE  $\bar{\chi_t} =  \emptyset$
+\STATE r = rand(0;$M^{-1}$)\label{alg:resampling_rand}
+\STATE c = $w^{[1]}_t$
+\STATE  i=1
+\FOR{$m$=1 to $M$ }
+\STATE U = r + ($m$-1)* $M^{-1}$\label{alg:stepsize}
+\WHILE{U $>$ c}
+\STATE i = i + 1\;
+\STATE c = c + $w^{[i]}_t$
+\ENDWHILE
+\STATE  add $x^{[i]}_t$ to $\bar{\chi_t}$
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
 Where $X_t$ particles with weights $W_t$ at time $t$, and $M$ the number of particles.
 This method creates only one random number, and adds a fixed step size iteratively to a "pointer" (U).
 In addition to that we keep track of the sum of particle weights such that, for every step we sample one particle. The particle will be sampled with pose values of particle which "weight bin" (c) the "pointer" is currently pointing. 
