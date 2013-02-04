@@ -302,7 +302,6 @@ The first step in goal detection process is the use of the horizontal histogram 
 
 Next step is the line detection, using the same approach we have discussed earlier, but now generating points only with a vertical scan, as we are only interested in vertical lines. From these vertical lines we choose the best ones in respect to their length, orientation, and with the prior knowledge about possible horizontal positions for the goalposts. These lines will be extended towards the bottom of the goalpost and the top, estimating like this the true height of each goalpost. To estimate the width, we are taking random samples upon the line representing the goalpost and measure with a simple scan the width. The average of all these measurements will be our estimation about its width. We also compute a confidence measure about the bottom of the goalposts, taking the estimated bottom of the representative line and computing the distance from the yellow-green transition we talked earlier. The same procedure is applied for the horizontal goalpost as well. Horizontal goalpost can be very informative in cases that only one vertical goalpost is visible by our agent. The orientation of the Horizontal goalpost can be used in order our agent to distinguish between left and right goalpost. In figure~\ref{posts}, we illustrate the results of the goalpost detection, in three different situations.
 
-
 \subsection{Ellipse Detection}
 The field of the RoboCup Soccer STL league has a circle in the middle with a diameter of 120cm. This is an important feature for the Nao's self-localization as this is the only unique feature on the field. In computer vision, most commonly performed ellipse detection is carried out on binary images from an edge detector. However, in general, ellipse detection does not adress the problem of false positives and false negetives well, especially for partially visible ellipses.
 
@@ -313,36 +312,37 @@ For this project, we chose to implement an ellipse detector based on P{\u{a}}tr{
 \item Region chaining: These detected regions are chained together if they roughly follow some conditions that define ellipses.
 \end{itemize}
 
-To tackle the problem of false positives, \emph{a contrario} validation is employed to reject or validate candidate ellipses. The \emph{a contrario} theory employs the non-accidentalness principle (which says that ``we see nothing in noise''). Therefore, candidate ellipses that have a higher chance to be observed in noise are discarded. % how is that done? 
+To tackle the problem of false positives, \emph{a contrario} validation is employed to reject or validate candidate ellipses. The \emph{a contrario} theory employs the non-accidentalness principle (which says that ``we see nothing in noise''). Therefore, as described in \cite{ED}, candidate ellipses that have a higher chance to be observed in noise are discarded. % P: Possible comment I see from Theo/Arnoud is "how is that done?"
+However, as can be seen in figure \ref{fig ED}, even after this step, we still find a number of false positives because small features like penalty X crossings, and resedue background noise often gets classified as small arcs by the ellipse detector. This problem can easily be tackled by filtering the candidate ellipses on their arc lengths and putting a minimum threshold on it.
 
-\begin{figure}[t!]
-\caption{ellipse whatever}
-\label{ellipse1}
-\centering    
-\includegraphics[width=0.3\textwidth]{figures/ellipseDetection.png}
+\begin{figure}
+\includegraphics[width = 265]{figures/ellipseDetection.png}
+\caption{Left to right: RGB image obtained from NAO's lower camera, binary images of white lines and background removed, Possible ellipses detected (and lines, not considered) }
+\label{fig ED}
 \end{figure}
+
+The ellipse detection step can also ensure lesser false positives (and faster computation) during the line feature detections stage if it ellipse detection performed first: If we know with confidence the area that the circumference of the ellipse is covering, we know that line crossings do not exist on it and hence we can mask this area for the line feature detection step.
 
 \subsection{Inverse Perspective Mapping}
-Transformation from one projective plane to another can be utilized for generating views of objects different from the camera position. Inverse perspective mapping (IPM) makes use of this. It projects an image on a known plane and gets rid of the perspective effect on objects that are on that plane and produces a distorted view for all others\cite{IPM2}.
+Transformation from one projective plane to another can be utilized for generating views of objects different from the camera position. Inverse perspective mapping (IPM) makes use of this. It projects an image on a known plane and gets rid of the perspective eﬀect on objects that are on that plane and produces a distorted view for all others~\cite{IPM2}.
 
-Information like the angle of view (under the horizon) and the distance of objects from camera associate a different information content with each pixel of an image. In fact, the perspective effect must be considered during the processing of images so as to weigh each pixel wit respect to its information content. As a counter to this issue, Inverse Perspective Mapping lets us remove the perspective effect and remap the image to a 2-D domain, so that the information content is evenly spreadout among all pixels\cite{IPMWeb}. 
+Information like the angle of view (under the horizon) and the distance of objects from camera associate a different information content with each pixel of an image. In fact, the perspective effect must be considered during the processing of images so as to weigh each pixel with respect to its information content. As a counter to this issue, IPM lets us remove the perspective effect and remap the image to a 2D domain, so that the information content is evenly spreadout among all pixels~\cite{IPMWeb}. 
 
-It must be noted that the applying the IPM transform requires some camera conditions to be known. These are the camera's height about ground level, its aperture, its tilt with respect to the vertical axis and its resolution. Since this information can be fairly accurately computed by the Nao from reverse kinemetics, the IPM transformation can be used by it. Thus, assuming that the field in front of the camera is planer, a bird's eye view of the playing field can be obtained.
+It must be noted that applying the IPM transform requires some camera conditions to be known. These are the camera's height above ground level, its aperture, its tilt with respect to the vertical axis and its resolution. Since this information can be %fairly accurately -- P: not so sure how accurate that is ;)
+computed fairly accurately by the Nao through inverse kinemetics, the IPM transformation can be used by it. Thus, assuming that the field in front of the camera is planar, a bird's eye view of the playing field can be obtained.
 
-In the domain of robosoccer, the advantages of IPM transformation are several. Estimation of distance and bearing to a feature point on the field is simplified because now we have a bird's eye view of the field in front of us. Preprocessing steps like background removal is also much easier than on regual camera images because of the fact that always the lower part of the image contains the field. Moreover, IPM also overcomes the problem of the Nao's head can tilt along various axes because this transformantion is robust to such viewpoint changes. Lastly, the feature extraction step can itself be made more robust and computationally inexpensive. This is because when viewing the field from a top perspective, all lines on the field appear to intersect orthogonally and circles retain their shapes. However, one of the main problems we faced while using inverse perspective mapping for feature extraction was that feature points far from the camera appear to get distorted due to the transformation. This causes the many false negetives while extracting features. One ad-hoc solution to this problem was transforming the binary images of the lines in the field instead of the complete RGB image. Another problem with using IPM was the difficulty in measuring projected objects such as goal posts on the field. The transformation always streches the goal posts such that their top portions are no longer visible/detectable. Thus, goal post detected continues to rely on frong-facing camera images.
+In the domain of robot soccer, the use of IPM transformation can possibly have many advantages. % P: can we make such a strong statement? do we have the results to claim this? or is it safer to say something like "the advantages can be great, given accurate sensor data"?
+Estimation of distance and bearing to a feature point on the field is simplified because now we have a bird's eye view of the field in front of us. Preprocessing steps like background removal is also much easier than on regual camera images because of the fact that always the lower part of the image contains the field. Moreover, IPM also overcomes the problem that the Nao's head can tilt along various axes because this transformation is robust to such viewpoint changes. Lastly, the feature extraction step can itself be made more robust and computationally inexpensive. This is because when viewing the field from a top perspective, all intersecting lines on the field appear to intersect orthogonally and circles retain their shapes. However, one of the main problems we faced while using IPM for feature extraction was that feature points far from the camera appear to get distorted due to the transformation. This causes many false negatives while extracting features. One ad-hoc solution to this problem was transforming only the binary images of the lines in the field, as described above, instead of the full image. Another problem with using IPM was the difficulty in measuring projected objects such as goal posts on the field. The transformation always streches the goal posts such that their top portions are no longer visible/detectable. Thus, goal post detected continues to rely on frong-facing camera images.
 
-We now briefly explain this transformation\cite{IPM} while not going into the details of its mathematics. In inverse perspective mapping, for a point in the image plane, we trace a ray from this point through the center of projection and towards the horizontal plane, where it results in an intersection. In this way, we find the corrosponding image point.
+We now briefly explain this transformation\cite{IPM} while not going into the details of its mathematics. In IPM, for a point in the image plane, we trace a ray from this point through the center of projection and towards the horizontal plane, where it results in an intersection. In this way, we find the corrosponding image point.
 
-We first create matrices that contain the x and y locations in the world frame, where the pixels in the bottom portion of the camera image (where we assume we see the field based on the camera's viewing angle, height and aperture) are mapped by using the inverse perspective transformation equations. Next, we find the weights needed to create an inverse-perspectbive-mapped image with evenly spaced pixels by linearly interpolating between intensity/color values in the original image. Finally, we apply the inverse-perspective interpolation mapping to an RBG camera image to get an inverse-perspective-mapped image\cite{IPMCode}.
+We first create matrices that contain the $x$ and $y$ locations in the world frame, where the pixels in the bottom portion of the camera image (where we assume we see the field based on the camera's viewing angle, height and aperture) are mapped by using the inverse perspective transformation equations (see figure \ref{fig IPM}, center). Next, we find the weights needed to create an inverse-perspective-mapped image with evenly spaced pixels by linearly interpolating between intensity/color values in the original image. Finally, we apply the inverse-perspective interpolation mapping to an RBG camera image to get an inverse-perspective-mapped image\cite{IPMCode} (see figure \ref{fig IPM}, right).
 
-
-\begin{figure}[t!]
-\caption{ellipse whatever}
-\label{ellipse2}
-\centering    
-\includegraphics[width=0.3\textwidth]{figures/imagePixelsMapped.png}
+\begin{figure}
+\includegraphics[width = 265]{{figures/imagePixelsMapped.png}}
+\caption{Left to right: front facing RGB image obtained from NAO's lower camera, map of image pixels to the world frame, bird's eye view obtained after IPM}
+\label{fig IPM}
 \end{figure}
-
 
 \section{Localization}
 \label{sec:Localization}
