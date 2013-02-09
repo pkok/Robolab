@@ -18,6 +18,8 @@ goal_detection.h
 goal_detection.cpp
 feature_extraction.h
 feature_extraction.cpp
+dis_ang_translation.h
+dis_ang_translation.cpp
 main.cpp)
 
 target_link_libraries(main ${OpenCV_LIBS})

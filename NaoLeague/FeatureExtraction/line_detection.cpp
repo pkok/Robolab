@@ -379,7 +379,4 @@ void line_extraction(Mat image, vector<Vec4i> &produced_lines, int hor_step, int
 		}
 		produced_lines.push_back(Vec4i(point1.x, point1.y, point2.x, point2.y));
 	}
-
-
-	imwrite("points.png", ee);
 }

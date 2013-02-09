@@ -5,6 +5,15 @@
 
 using namespace cv;
 
+double radians(double d)
+{
+	return d * CV_PI / 180;
+}
+
+double degrees(double r)
+{
+	return r * 180/ CV_PI;
+}
 
 bool line_equality(Vec4i line1, Vec4i line2)
 {

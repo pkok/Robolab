@@ -558,7 +558,6 @@ void goalPostDetection(Mat image, vector<Point> goalRoots, double* hor_hist, int
 			}
 		}
 		post_final(image, roi.x, goalPosts, goalRoots);
-
 		return;
 	}
 }

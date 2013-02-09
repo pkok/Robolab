@@ -39,4 +39,8 @@ Point closest_point(Point* inters, Vec4i line);
 
 double line_length(Vec4i line);
 
+double radians(double d);
+
+double degrees(double r);
+
 #endif
