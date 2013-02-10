@@ -18,7 +18,7 @@ using namespace std;
 int main(int argc, char** argv)
 {
 	Mat img_rgb;
-	if( argc != 2 || !(img_rgb=imread(argv[1], 1)).data)
+	if(!(img_rgb=imread("../source_code/dataset_QVGA_BGR/img_000001.jpg", 1)).data)
 		return -1;
 	vector<field_point> result_intersections;
 	vector<goalposts> goalPosts;
