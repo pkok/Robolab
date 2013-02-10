@@ -561,20 +561,3 @@ void goalPostDetection(Mat image, vector<Point> goalRoots, double* hor_hist, int
 		return;
 	}
 }
-
-
-
-// we see two vertical posts and one horizontal the whole goal...
-// for (int i = 0; i < best_candidate_lines.size(); ++i)
-// {
-// 	line( cropped, Point(line_hor_pass[1], line_hor_pass[0] - (floor(temp.width/2))),
-// 	      Point(line_hor_pass[3],line_hor_pass[2] - (floor(temp.width/2))), Scalar(255,0,0), 2, 8 );
-// 		line( cropped, Point(line_hor_pass[1], line_hor_pass[0] + (floor(temp.width/2))),
-// 	      Point(line_hor_pass[3],line_hor_pass[2] + (floor(temp.width/2))), Scalar(255,0,0), 2, 8 );
-// 	int width = 10;
-// 	line( cropped, Point(best_candidate_lines[i].line[1]-(floor(width/2)), best_candidate_lines[i].line[0]),
-// 	      Point(best_candidate_lines[i].line[3]-(ceil(width/2)),best_candidate_lines[i].line[2]), Scalar(0,0,255), 2, 8 );
-// 	line( cropped, Point(best_candidate_lines[i].line[1]+(ceil(width/2)), best_candidate_lines[i].line[0]),
-// 	      Point(best_candidate_lines[i].line[3]+(ceil(width/2)),best_candidate_lines[i].line[2]), Scalar(0,0,255), 2, 8 );
-// }
-//imshow("post_cropped", result);
