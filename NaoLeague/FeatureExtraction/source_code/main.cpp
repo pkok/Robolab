@@ -18,11 +18,19 @@ using namespace std;
 int main(int argc, char** argv)
 {
 	Mat img_rgb;
-	if(!(img_rgb=imread("../source_code/dataset_QVGA_BGR/img_000001.jpg", 1)).data)
+	if( argc != 2 || !(img_rgb=imread(argv[1], 1)).data)
 		return -1;
 	vector<field_point> result_intersections;
 	vector<goalposts> goalPosts;
 	extract_features(img_rgb, result_intersections, goalPosts);
+
+	for (int i = 0; i < goalPosts.size(); ++i)
+	{
+		if(goalPosts[i].type !=3){
+			circle(img_rgb, Point(goalPosts[i].root_position.y, goalPosts[i].root_position.x), 2, Scalar(0,0,255), 2, 8, 0);
+		}
+	}
+	imshow("va",img_rgb);
 	waitKey(0);
 	return 0;
 }

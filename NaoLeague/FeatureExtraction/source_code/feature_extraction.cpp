@@ -40,10 +40,13 @@ void extract_features(Mat img_rgb, vector<field_point> &result_intersections,
 
 	for (int i = 0; i < goalPosts.size(); ++i)
 	{
-		cout << goalPosts[i].root_position << endl;
-		
+		if(goalPosts[i].type !=3){
+			cout << "pixel " << normalizePixelPosition(img_hsv, goalPosts[i].root_position) << endl;
+			dis_bear test = pixel2dis_bear(normalizePixelPosition(img_hsv, goalPosts[i].root_position));
+			cout << "distance " << test.distance << endl;
+			cout << "angle " << test.bearing << endl;
+			cout << "--------------" << endl;
+		}
 	}
-	imshow("va",img_posts_binary);
-
 	return;
 }

@@ -429,19 +429,6 @@ void goalPostDetection(Mat image, vector<Point> goalRoots, double* hor_hist, int
 
 	Mat root;
 	image.copyTo(root);
-	
-	// for( int i = 0; i < goalRoots.size(); i++ )
-	// {
-	// 	hor_hist[goalRoots[i].y] *= ROOT_GAIN;
-		
-	// }
-
-	for( int i = 0; i < temp.cols; i++ )
-	{
-		//circle(temp, Point(i, temp.rows - 1 - floor(hor_hist[i]*temp.rows)), 2, Scalar(0,0,255), 1, 8, 0);
-	}
-	//simshow("possible",temp);
-
 
 	// find local maxima in the histogram...
 	for( int i = 0; i < image.cols; i++ )
@@ -493,13 +480,6 @@ void goalPostDetection(Mat image, vector<Point> goalRoots, double* hor_hist, int
 		// find lines sampling the images only for vertical lines..
 		vector<Vec4i> lines_ver;
 		line_extraction(cropped, lines_ver, SAMPLING_VER, 0);
-		for (int i = 0; i < lines_ver.size(); ++i)
-		{
-			line( temp, Point(lines_ver[i][1], lines_ver[i][0]),
-	     Point(lines_ver[i][3],lines_ver[i][2]), Scalar(0,0,255), 1, 8 );
-		}
-		imshow("possible",temp);
-
 		// find lines from the produced which present goalposts
 		// near local maxima positions...
 		if(lines_ver.size() != 0)

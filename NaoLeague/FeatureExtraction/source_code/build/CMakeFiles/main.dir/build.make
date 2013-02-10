@@ -35,10 +35,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction
+CMAKE_SOURCE_DIR = /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/build
+CMAKE_BINARY_DIR = /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/main.dir/depend.make
@@ -51,17 +51,17 @@ include CMakeFiles/main.dir/flags.make
 
 CMakeFiles/main.dir/line_detection.cpp.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/line_detection.cpp.o: ../line_detection.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/build/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/build/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/main.dir/line_detection.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/line_detection.cpp.o -c /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/line_detection.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/line_detection.cpp.o -c /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/line_detection.cpp
 
 CMakeFiles/main.dir/line_detection.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/main.dir/line_detection.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/line_detection.cpp > CMakeFiles/main.dir/line_detection.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/line_detection.cpp > CMakeFiles/main.dir/line_detection.cpp.i
 
 CMakeFiles/main.dir/line_detection.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/line_detection.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/line_detection.cpp -o CMakeFiles/main.dir/line_detection.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/line_detection.cpp -o CMakeFiles/main.dir/line_detection.cpp.s
 
 CMakeFiles/main.dir/line_detection.cpp.o.requires:
 .PHONY : CMakeFiles/main.dir/line_detection.cpp.o.requires
@@ -74,17 +74,17 @@ CMakeFiles/main.dir/line_detection.cpp.o.provides.build: CMakeFiles/main.dir/lin
 
 CMakeFiles/main.dir/hough_line_detection.cpp.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/hough_line_detection.cpp.o: ../hough_line_detection.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/build/CMakeFiles $(CMAKE_PROGRESS_2)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/build/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/main.dir/hough_line_detection.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/hough_line_detection.cpp.o -c /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/hough_line_detection.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/hough_line_detection.cpp.o -c /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/hough_line_detection.cpp
 
 CMakeFiles/main.dir/hough_line_detection.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/main.dir/hough_line_detection.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/hough_line_detection.cpp > CMakeFiles/main.dir/hough_line_detection.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/hough_line_detection.cpp > CMakeFiles/main.dir/hough_line_detection.cpp.i
 
 CMakeFiles/main.dir/hough_line_detection.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/hough_line_detection.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/hough_line_detection.cpp -o CMakeFiles/main.dir/hough_line_detection.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/hough_line_detection.cpp -o CMakeFiles/main.dir/hough_line_detection.cpp.s
 
 CMakeFiles/main.dir/hough_line_detection.cpp.o.requires:
 .PHONY : CMakeFiles/main.dir/hough_line_detection.cpp.o.requires
@@ -97,17 +97,17 @@ CMakeFiles/main.dir/hough_line_detection.cpp.o.provides.build: CMakeFiles/main.d
 
 CMakeFiles/main.dir/img_processing.cpp.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/img_processing.cpp.o: ../img_processing.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/build/CMakeFiles $(CMAKE_PROGRESS_3)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/build/CMakeFiles $(CMAKE_PROGRESS_3)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/main.dir/img_processing.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/img_processing.cpp.o -c /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/img_processing.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/img_processing.cpp.o -c /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/img_processing.cpp
 
 CMakeFiles/main.dir/img_processing.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/main.dir/img_processing.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/img_processing.cpp > CMakeFiles/main.dir/img_processing.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/img_processing.cpp > CMakeFiles/main.dir/img_processing.cpp.i
 
 CMakeFiles/main.dir/img_processing.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/img_processing.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/img_processing.cpp -o CMakeFiles/main.dir/img_processing.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/img_processing.cpp -o CMakeFiles/main.dir/img_processing.cpp.s
 
 CMakeFiles/main.dir/img_processing.cpp.o.requires:
 .PHONY : CMakeFiles/main.dir/img_processing.cpp.o.requires
@@ -120,17 +120,17 @@ CMakeFiles/main.dir/img_processing.cpp.o.provides.build: CMakeFiles/main.dir/img
 
 CMakeFiles/main.dir/geometry_utils.cpp.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/geometry_utils.cpp.o: ../geometry_utils.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/build/CMakeFiles $(CMAKE_PROGRESS_4)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/build/CMakeFiles $(CMAKE_PROGRESS_4)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/main.dir/geometry_utils.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/geometry_utils.cpp.o -c /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/geometry_utils.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/geometry_utils.cpp.o -c /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/geometry_utils.cpp
 
 CMakeFiles/main.dir/geometry_utils.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/main.dir/geometry_utils.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/geometry_utils.cpp > CMakeFiles/main.dir/geometry_utils.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/geometry_utils.cpp > CMakeFiles/main.dir/geometry_utils.cpp.i
 
 CMakeFiles/main.dir/geometry_utils.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/geometry_utils.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/geometry_utils.cpp -o CMakeFiles/main.dir/geometry_utils.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/geometry_utils.cpp -o CMakeFiles/main.dir/geometry_utils.cpp.s
 
 CMakeFiles/main.dir/geometry_utils.cpp.o.requires:
 .PHONY : CMakeFiles/main.dir/geometry_utils.cpp.o.requires
@@ -143,17 +143,17 @@ CMakeFiles/main.dir/geometry_utils.cpp.o.provides.build: CMakeFiles/main.dir/geo
 
 CMakeFiles/main.dir/line_feature_detection.cpp.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/line_feature_detection.cpp.o: ../line_feature_detection.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/build/CMakeFiles $(CMAKE_PROGRESS_5)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/build/CMakeFiles $(CMAKE_PROGRESS_5)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/main.dir/line_feature_detection.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/line_feature_detection.cpp.o -c /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/line_feature_detection.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/line_feature_detection.cpp.o -c /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/line_feature_detection.cpp
 
 CMakeFiles/main.dir/line_feature_detection.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/main.dir/line_feature_detection.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/line_feature_detection.cpp > CMakeFiles/main.dir/line_feature_detection.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/line_feature_detection.cpp > CMakeFiles/main.dir/line_feature_detection.cpp.i
 
 CMakeFiles/main.dir/line_feature_detection.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/line_feature_detection.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/line_feature_detection.cpp -o CMakeFiles/main.dir/line_feature_detection.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/line_feature_detection.cpp -o CMakeFiles/main.dir/line_feature_detection.cpp.s
 
 CMakeFiles/main.dir/line_feature_detection.cpp.o.requires:
 .PHONY : CMakeFiles/main.dir/line_feature_detection.cpp.o.requires
@@ -166,17 +166,17 @@ CMakeFiles/main.dir/line_feature_detection.cpp.o.provides.build: CMakeFiles/main
 
 CMakeFiles/main.dir/ellipse_detector.cpp.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/ellipse_detector.cpp.o: ../ellipse_detector.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/build/CMakeFiles $(CMAKE_PROGRESS_6)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/build/CMakeFiles $(CMAKE_PROGRESS_6)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/main.dir/ellipse_detector.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/ellipse_detector.cpp.o -c /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/ellipse_detector.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/ellipse_detector.cpp.o -c /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/ellipse_detector.cpp
 
 CMakeFiles/main.dir/ellipse_detector.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/main.dir/ellipse_detector.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/ellipse_detector.cpp > CMakeFiles/main.dir/ellipse_detector.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/ellipse_detector.cpp > CMakeFiles/main.dir/ellipse_detector.cpp.i
 
 CMakeFiles/main.dir/ellipse_detector.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/ellipse_detector.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/ellipse_detector.cpp -o CMakeFiles/main.dir/ellipse_detector.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/ellipse_detector.cpp -o CMakeFiles/main.dir/ellipse_detector.cpp.s
 
 CMakeFiles/main.dir/ellipse_detector.cpp.o.requires:
 .PHONY : CMakeFiles/main.dir/ellipse_detector.cpp.o.requires
@@ -189,17 +189,17 @@ CMakeFiles/main.dir/ellipse_detector.cpp.o.provides.build: CMakeFiles/main.dir/e
 
 CMakeFiles/main.dir/goal_detection.cpp.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/goal_detection.cpp.o: ../goal_detection.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/build/CMakeFiles $(CMAKE_PROGRESS_7)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/build/CMakeFiles $(CMAKE_PROGRESS_7)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/main.dir/goal_detection.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/goal_detection.cpp.o -c /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/goal_detection.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/goal_detection.cpp.o -c /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/goal_detection.cpp
 
 CMakeFiles/main.dir/goal_detection.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/main.dir/goal_detection.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/goal_detection.cpp > CMakeFiles/main.dir/goal_detection.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/goal_detection.cpp > CMakeFiles/main.dir/goal_detection.cpp.i
 
 CMakeFiles/main.dir/goal_detection.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/goal_detection.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/goal_detection.cpp -o CMakeFiles/main.dir/goal_detection.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/goal_detection.cpp -o CMakeFiles/main.dir/goal_detection.cpp.s
 
 CMakeFiles/main.dir/goal_detection.cpp.o.requires:
 .PHONY : CMakeFiles/main.dir/goal_detection.cpp.o.requires
@@ -212,17 +212,17 @@ CMakeFiles/main.dir/goal_detection.cpp.o.provides.build: CMakeFiles/main.dir/goa
 
 CMakeFiles/main.dir/feature_extraction.cpp.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/feature_extraction.cpp.o: ../feature_extraction.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/build/CMakeFiles $(CMAKE_PROGRESS_8)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/build/CMakeFiles $(CMAKE_PROGRESS_8)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/main.dir/feature_extraction.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/feature_extraction.cpp.o -c /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/feature_extraction.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/feature_extraction.cpp.o -c /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/feature_extraction.cpp
 
 CMakeFiles/main.dir/feature_extraction.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/main.dir/feature_extraction.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/feature_extraction.cpp > CMakeFiles/main.dir/feature_extraction.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/feature_extraction.cpp > CMakeFiles/main.dir/feature_extraction.cpp.i
 
 CMakeFiles/main.dir/feature_extraction.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/feature_extraction.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/feature_extraction.cpp -o CMakeFiles/main.dir/feature_extraction.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/feature_extraction.cpp -o CMakeFiles/main.dir/feature_extraction.cpp.s
 
 CMakeFiles/main.dir/feature_extraction.cpp.o.requires:
 .PHONY : CMakeFiles/main.dir/feature_extraction.cpp.o.requires
@@ -235,17 +235,17 @@ CMakeFiles/main.dir/feature_extraction.cpp.o.provides.build: CMakeFiles/main.dir
 
 CMakeFiles/main.dir/dis_ang_translation.cpp.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/dis_ang_translation.cpp.o: ../dis_ang_translation.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/build/CMakeFiles $(CMAKE_PROGRESS_9)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/build/CMakeFiles $(CMAKE_PROGRESS_9)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/main.dir/dis_ang_translation.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/dis_ang_translation.cpp.o -c /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/dis_ang_translation.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/dis_ang_translation.cpp.o -c /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/dis_ang_translation.cpp
 
 CMakeFiles/main.dir/dis_ang_translation.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/main.dir/dis_ang_translation.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/dis_ang_translation.cpp > CMakeFiles/main.dir/dis_ang_translation.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/dis_ang_translation.cpp > CMakeFiles/main.dir/dis_ang_translation.cpp.i
 
 CMakeFiles/main.dir/dis_ang_translation.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/dis_ang_translation.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/dis_ang_translation.cpp -o CMakeFiles/main.dir/dis_ang_translation.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/dis_ang_translation.cpp -o CMakeFiles/main.dir/dis_ang_translation.cpp.s
 
 CMakeFiles/main.dir/dis_ang_translation.cpp.o.requires:
 .PHONY : CMakeFiles/main.dir/dis_ang_translation.cpp.o.requires
@@ -258,17 +258,17 @@ CMakeFiles/main.dir/dis_ang_translation.cpp.o.provides.build: CMakeFiles/main.di
 
 CMakeFiles/main.dir/main.cpp.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/main.cpp.o: ../main.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/build/CMakeFiles $(CMAKE_PROGRESS_10)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/build/CMakeFiles $(CMAKE_PROGRESS_10)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/main.dir/main.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/main.cpp.o -c /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/main.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/main.cpp.o -c /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/main.cpp
 
 CMakeFiles/main.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/main.dir/main.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/main.cpp > CMakeFiles/main.dir/main.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/main.cpp > CMakeFiles/main.dir/main.cpp.i
 
 CMakeFiles/main.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/main.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/main.cpp -o CMakeFiles/main.dir/main.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/main.cpp -o CMakeFiles/main.dir/main.cpp.s
 
 CMakeFiles/main.dir/main.cpp.o.requires:
 .PHONY : CMakeFiles/main.dir/main.cpp.o.requires
@@ -348,6 +348,6 @@ CMakeFiles/main.dir/clean:
 .PHONY : CMakeFiles/main.dir/clean
 
 CMakeFiles/main.dir/depend:
-	cd /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/build /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/build /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/build/CMakeFiles/main.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/build /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/build /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/build/CMakeFiles/main.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/main.dir/depend
 

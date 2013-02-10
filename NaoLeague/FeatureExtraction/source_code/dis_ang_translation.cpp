@@ -41,7 +41,7 @@ dis_bear pixel2dis_bear(Point2f pixel)
 	double angleOffset = abs(global_hor_angle - head_pitch_angle);
 
 	// Assuming that points are only in the 2D field space
-	double elevation = global_ver_angle + angleOffset;
+	double elevation = global_ver_angle;
 
 	double y = CAMERA_HEIGHT / tan(radians(-elevation));
 	double x = y * tan(radians(-global_hor_angle));
