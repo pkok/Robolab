@@ -9,7 +9,9 @@
 
 #define HOR_CAMERA_FIELD 61.0
 #define VER_CAMERA_FIELD 47.0
-#define CAMERA_HEIGHT 0.55
+#define CAMERA_HEIGHT 0.6
+
+using namespace cv;
 
 /*
 For every image taken from nao's camera, we have these 4 angles
@@ -27,6 +29,8 @@ struct dis_bear{
 	double bearing;
 };
 
-dis_bear pixel2dis_bear(double row, double col);
+dis_bear pixel2dis_bear(Point2f pixel);
+
+Point2f normalizePixelPosition(Mat image, Point pixel);
 
 #endif

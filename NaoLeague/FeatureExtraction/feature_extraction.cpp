@@ -35,11 +35,17 @@ void extract_features(Mat img_rgb, vector<field_point> &result_intersections, ve
 
 	goalPostDetection(img_posts_binary, goalRoots, hor_hist, ver_hist, goalPosts);
 
-	dis_bear result;
-	result = pixel2dis_bear(0.5, 0.5);
-	cout << result.distance << endl;
-	cout << result.bearing << endl;
-
-
+	for (int i = 0; i < goalPosts.size(); ++i)
+	{
+		circle(img_rgb, Point(goalPosts[i].root_position.y, goalPosts[i].root_position.x), 2, Scalar(0,0,255), 2, 8, 0);
+		cout << goalPosts[i].type << endl;
+		Point2f norm_pix = normalizePixelPosition(img_rgb, goalPosts[i].root_position);
+		cout << norm_pix << endl;
+		dis_bear test;
+		test = pixel2dis_bear(norm_pix);
+		cout << test.distance << endl;
+		cout << test.bearing << endl;
+	}
+	imshow("vabrea", img_rgb);
 	return;
 }
