@@ -122,7 +122,7 @@ void vertical_posts(Mat image, int x_offset, vector<Vec4i> lines_ver, vector<int
 			middle_point = line_middle_point(lines_ver[j]);
 			position_measure = pow(abs(middle_point.y + x_offset - candidate_cols[i]),2);
 			length_measure = (1 - line_length(lines_ver[j]) / image.rows);
-			temp_match_measure = length_measure * (angle_measure + position_measure);
+			temp_match_measure = length_measure * (angle_measure + position_measure/2);
 			if (temp_match_measure < match_measure)
 			{
 				match_measure = temp_match_measure;
@@ -425,20 +425,31 @@ void goalPostDetection(Mat image, vector<Point> goalRoots, double* hor_hist, int
 	Mat result = Mat::zeros(image.rows, image.cols, CV_8UC3);
 	Mat hist = Mat::zeros(image.rows, image.cols, CV_8UC3);
 
+	Mat temp = Mat::zeros(image.rows, image.cols, CV_8UC3);
+
 	Mat root;
 	image.copyTo(root);
 	
-	for( int i = 0; i < goalRoots.size(); i++ )
-	{
-		hor_hist[goalRoots[i].y] *= ROOT_GAIN;
+	// for( int i = 0; i < goalRoots.size(); i++ )
+	// {
+	// 	hor_hist[goalRoots[i].y] *= ROOT_GAIN;
 		
+	// }
+
+	for( int i = 0; i < temp.cols; i++ )
+	{
+		//circle(temp, Point(i, temp.rows - 1 - floor(hor_hist[i]*temp.rows)), 2, Scalar(0,0,255), 1, 8, 0);
 	}
+	//simshow("possible",temp);
+
 
 	// find local maxima in the histogram...
 	for( int i = 0; i < image.cols; i++ )
 	{
 		if(inTransition)
 		{
+			if(i == image.cols - 1)
+				candidate_cols.push_back(last_candidate);
 			if( hor_hist[i] > last_maximum )
 			{
 				inTransition = true;
@@ -482,6 +493,12 @@ void goalPostDetection(Mat image, vector<Point> goalRoots, double* hor_hist, int
 		// find lines sampling the images only for vertical lines..
 		vector<Vec4i> lines_ver;
 		line_extraction(cropped, lines_ver, SAMPLING_VER, 0);
+		for (int i = 0; i < lines_ver.size(); ++i)
+		{
+			line( temp, Point(lines_ver[i][1], lines_ver[i][0]),
+	     Point(lines_ver[i][3],lines_ver[i][2]), Scalar(0,0,255), 1, 8 );
+		}
+		imshow("possible",temp);
 
 		// find lines from the produced which present goalposts
 		// near local maxima positions...

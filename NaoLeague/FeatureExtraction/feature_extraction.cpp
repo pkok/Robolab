@@ -40,7 +40,7 @@ void extract_features(Mat img_rgb, vector<field_point> &result_intersections,
 
 	for (int i = 0; i < goalPosts.size(); ++i)
 	{
-		if(goalPosts[i].type == 0 || goalPosts[i].type == 1){
+		if(goalPosts[i].type == 0 || goalPosts[i].type == 1 || goalPosts[i].type == 2){
 			line( img_posts_binary, Point(goalPosts[i].root_position.y,goalPosts[i].root_position.x) ,
 	     	Point(goalPosts[i].top_position.y,goalPosts[i].top_position.x), Scalar(0,0,255), goalPosts[i].width, 8 );
 		}

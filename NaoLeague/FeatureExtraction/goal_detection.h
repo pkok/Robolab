@@ -12,7 +12,7 @@
 #define V_POST 2
 #define O_POST 3
 
-#define HIST_THRESHOLD 0.3
+#define HIST_THRESHOLD 0.1
 #define ROOT_GAIN 1.5
 #define CONTROL_MAX 0.2
 #define CROP_THRESHOLD 5
