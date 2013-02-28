@@ -11,6 +11,7 @@
 #include "goal_detection.h"
 #include "feature_extraction.h"
 #include "geometry_utils.h"
+#include "dis_ang_translation.h"
 
 using namespace cv;
 using namespace std;
@@ -28,6 +29,12 @@ int main(int argc, char** argv)
 	{
 		if(goalPosts[i].type !=3){
 			circle(img_rgb, Point(goalPosts[i].root_position.y, goalPosts[i].root_position.x), 2, Scalar(0,0,255), 2, 8, 0);
+			cout << "GoalPost type: " << goalPosts[i].type << endl;
+			cout << "pixel " << normalizePixelPosition(img_rgb, goalPosts[i].root_position) << endl;
+			dis_bear test = pixel2dis_bear(normalizePixelPosition(img_rgb, goalPosts[i].root_position));
+			cout << "distance " << test.distance << endl;
+			cout << "angle " << test.bearing << endl;
+			cout << "--------------" << endl;
 		}
 	}
 	imshow("va",img_rgb);

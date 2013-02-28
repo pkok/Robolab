@@ -118,7 +118,6 @@ void find_candidate_points(vector<Point> points, Point start, Point previous, ve
 
 void find_best_candidate(Mat image, vector<point_dis> candidates, vector<Point> line,  Point start, Point previous, Point &best_candidate, double &best_score)
 {
-
 	best_score = DBL_MAX;
 	double white;
 	double distance;
@@ -183,15 +182,11 @@ void store_line(Mat image, vector< vector<Point> > &lines, vector<Point> line)
 			}
 		}
 		double current_line_angle = points_angle(current[0], current[1]);
-
 		double best_match_error = DBL_MAX;
 		double temp_match_error;
 		int best_match_line;
-
 		for(int i=0; i < lines.size(); i++)
 		{
-
-
 			Point stored[2];
 			double temp_distance_stored;
 			double max_distance_stored = 0;
@@ -210,10 +205,8 @@ void store_line(Mat image, vector< vector<Point> > &lines, vector<Point> line)
 			}
 
 			double stored_line_angle = points_angle(stored[0], stored[1]);
-
 			if(abs(current_line_angle - stored_line_angle) < 10)
 			{
-
 				Point start_new;
 				Point end_new;
 				Point close_stored;
@@ -246,7 +239,6 @@ void store_line(Mat image, vector< vector<Point> > &lines, vector<Point> line)
 				{
 					temp_match_error += 2000;
 				}
-
 			}
 			else
 			{
@@ -291,7 +283,6 @@ void line_extraction(Mat image, vector<Vec4i> &produced_lines, int hor_step, int
 			line.push_back(previous);
 			vector<point_dis> candidates;
 			find_candidate_points(points, start,  previous, line, candidates);
-
 			// find best candidate to connect
 			Point best_candidate;
 			double error;
@@ -333,12 +324,9 @@ void line_extraction(Mat image, vector<Vec4i> &produced_lines, int hor_step, int
 			delete_point(previous, points);
 		}
 		while(!end);
-
 		store_line(image, lines, line);
 		line.clear();
-
 	}
-
 	//lines construction and export...
 	for(int i = 0; i < lines.size(); i++)
 	{

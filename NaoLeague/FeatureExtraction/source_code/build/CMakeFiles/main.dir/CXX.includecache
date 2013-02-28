@@ -6,19 +6,15 @@
 
 #IncludeRegexTransform: 
 
-/home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/dis_ang_translation.h
-iostream
--
+/home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/geometry_utils.h
 math.h
--
-time.h
 -
 cv.h
 -
 highgui.h
 -
 
-/home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/ellipse_detector.h
+/home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/goal_detection.cpp
 iostream
 -
 math.h
@@ -29,30 +25,14 @@ cv.h
 -
 highgui.h
 -
-
-/home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/feature_extraction.cpp
-iostream
--
-math.h
--
-time.h
--
-cv.h
--
-highgui.h
--
-img_processing.h
-/home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/img_processing.h
-line_detection.h
-/home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/line_detection.h
-line_feature_detection.h
-/home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/line_feature_detection.h
-ellipse_detector.h
-/home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/ellipse_detector.h
+geometry_utils.h
+/home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/geometry_utils.h
 goal_detection.h
 /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/goal_detection.h
-dis_ang_translation.h
-/home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/dis_ang_translation.h
+line_detection.h
+/home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/line_detection.h
+hough_line_detection.h
+/home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/hough_line_detection.h
 
 /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/goal_detection.h
 iostream
@@ -66,7 +46,7 @@ cv.h
 highgui.h
 -
 
-/home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/img_processing.h
+/home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/hough_line_detection.h
 iostream
 -
 math.h
@@ -81,14 +61,6 @@ highgui.h
 /home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/line_detection.h
 iostream
 -
-math.h
--
-cv.h
--
-highgui.h
--
-
-/home/methe/Workspace/Robolab/NaoLeague/FeatureExtraction/source_code/line_feature_detection.h
 math.h
 -
 cv.h

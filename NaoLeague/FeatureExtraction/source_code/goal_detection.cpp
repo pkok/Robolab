@@ -11,7 +11,6 @@
 using namespace std;
 using namespace cv;
 
-
 double unifRand()
 {
 	return rand() / double(RAND_MAX);
@@ -74,7 +73,6 @@ int horizontal_post(Mat image, vector<Vec4i> lines_hor, vector<posts_lines> best
 						crossing_measure += points_distance(Point(best_candidate_lines[j].line[2],
 						                                    best_candidate_lines[j].line[3]), Point(intersect->x, intersect->y));
 						position_measure += abs(middle_point.x - best_candidate_lines[j].line[2]);
-
 					}
 				}
 				else
@@ -89,16 +87,9 @@ int horizontal_post(Mat image, vector<Vec4i> lines_hor, vector<posts_lines> best
 				best_hor_match = i;
 			}
 		}
-		if (best_measure < 150)
-		{
-			result = lines_hor[best_hor_match];
-			return 1;
-		}
-		else
-		{
-			result = lines_hor[best_hor_match];
-			return -1;
-		}
+		result = lines_hor[best_hor_match];
+		if (best_measure < 150) return 1;
+		return -1;
 	}
 }
 
@@ -218,7 +209,6 @@ Rect crop_region_interest(Mat image, double* hor_hist, int* ver_hist, vector<int
 			break;
 		}
 	}
-
 	// vertical area of interest...
 	int counter = 0;
 	int candidate = 0;
@@ -319,7 +309,6 @@ double average_sampling_width(Mat image, Vec4i line)
 	Point middle_point = line_middle_point(line);
 	Point bottom = (line[0] > line[2]) ? Point(line[0], line[1]): Point(line[2], line[3]);
 	double angle_mid_bottom = points_angle_360(middle_point, bottom);
-
 	int sum_width = 0;
 	for (int j = 0; j < 20; ++j)
 	{
@@ -339,7 +328,6 @@ double average_sampling_height(Mat image, Vec4i line)
 	             Point(line[0], line[1]):
 	             Point(line[2], line[3]);
 	double angle_mid_bottom = points_angle_360(middle_point, left);
-
 	int sum_width = 0;
 	for (int j = 0; j < 20; ++j)
 	{
@@ -370,12 +358,11 @@ void post_final(Mat image, int x_offset, vector<goalposts> &goalPosts, vector<Po
 			confidence /= (double)counter + 0.1;
 			goalPosts[i].root_confidence = confidence;
 		}
-
 		if (goalPosts[i].type == V_POST)
 		{
 			for (int k = 0; k < goalPosts.size(); ++k)
 			{
-				if (goalPosts[k].type == O_POST)
+				if (goalPosts[k].type == H_POST)
 				{
 					Point top = (goalPosts[i].line[0] > goalPosts[i].line[2]) ?
 				            Point(goalPosts[i].line[2], goalPosts[i].line[3]):
@@ -393,14 +380,8 @@ void post_final(Mat image, int x_offset, vector<goalposts> &goalPosts, vector<Po
 				    	close = goalPosts[k].top_position;
 				    }
 				    double angle = points_angle_360(close, far);
-				    if (angle > 90 && angle < 270)
-				    {
-				    	goalPosts[i].type = R_POST;
-				    }
-				    else
-				    {
-				    	goalPosts[i].type = L_POST;
-				    }
+
+				    goalPosts[i].type = (angle > 90 && angle < 270) ? R_POST:L_POST;  
 				}
 			}
 		}
@@ -424,12 +405,7 @@ void goalPostDetection(Mat image, vector<Point> goalRoots, double* hor_hist, int
 	int last_candidate = 0;
 	Mat result = Mat::zeros(image.rows, image.cols, CV_8UC3);
 	Mat hist = Mat::zeros(image.rows, image.cols, CV_8UC3);
-
 	Mat temp = Mat::zeros(image.rows, image.cols, CV_8UC3);
-
-	Mat root;
-	image.copyTo(root);
-
 	// find local maxima in the histogram...
 	for( int i = 0; i < image.cols; i++ )
 	{
@@ -461,9 +437,7 @@ void goalPostDetection(Mat image, vector<Point> goalRoots, double* hor_hist, int
 				last_candidate = i;
 			}
 		}
-
 	}
-
 	if(candidate_cols.size() > 2 ) return;
 
 	Mat cropped;
@@ -471,7 +445,6 @@ void goalPostDetection(Mat image, vector<Point> goalRoots, double* hor_hist, int
 	vector<posts_lines> best_candidate_lines;
 
 	// crop the image leaving only the interesting part of it...
-
 	Rect roi = crop_region_interest(image, hor_hist, ver_hist, candidate_cols);
 	cropped = cropped(roi);
 
@@ -483,9 +456,7 @@ void goalPostDetection(Mat image, vector<Point> goalRoots, double* hor_hist, int
 		// find lines from the produced which present goalposts
 		// near local maxima positions...
 		if(lines_ver.size() != 0)
-		{
 			vertical_posts(image, roi.x, lines_ver, candidate_cols, best_candidate_lines);
-		}
 
 		// extend these lines until to find black...
 		bool isBothVisible = false;
@@ -502,13 +473,10 @@ void goalPostDetection(Mat image, vector<Point> goalRoots, double* hor_hist, int
 			            Point(best_candidate_lines[i].line[0], best_candidate_lines[i].line[1]);
 
 			goalposts temp;
+			temp.type = V_POST;
 			if(isBothVisible)
 			{
 				temp.type = (i == 0) ? L_POST : R_POST;
-			}
-			else
-			{
-				temp.type = V_POST;
 			}
 			temp.line = best_candidate_lines[i].line;
 			temp.root_position = bottom;
@@ -535,7 +503,7 @@ void goalPostDetection(Mat image, vector<Point> goalRoots, double* hor_hist, int
 			{
 				extend_line(cropped, line_hor_pass);
 				goalposts temp;
-				temp.type = O_POST;
+				temp.type = H_POST;
 				temp.line = line_hor_pass;
 
 				Point left = (line_hor_pass[1] < line_hor_pass[3]) ?
@@ -551,7 +519,6 @@ void goalPostDetection(Mat image, vector<Point> goalRoots, double* hor_hist, int
 				temp.top_position = right;
 				temp.width = average_sampling_height(cropped, line_hor_pass);
 				goalPosts.push_back(temp);
-
 			}
 		}
 		post_final(image, roi.x, goalPosts, goalRoots);

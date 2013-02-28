@@ -25,13 +25,11 @@ dis_bear pixel2dis_bear(Point2f pixel)
 	double ver_angle_camera;
 	// these are the angles in respect to the camera
 	hor_angle_camera = (pixel.y - 0.5) * HOR_CAMERA_FIELD;
-	ver_angle_camera = (pixel.x - 0.5) * VER_CAMERA_FIELD;
-
-	cout << hor_angle_camera << endl;
+	ver_angle_camera = - (pixel.x - 0.5) * VER_CAMERA_FIELD;
 
 	// yaw and pitch angles, these values will be taken 
 	// from nao normally.
-	double head_yaw_angle = 8.0;
+	double head_yaw_angle = -20.0;
 	double head_pitch_angle = 0.0;
 
 	// global angles in respect to the body

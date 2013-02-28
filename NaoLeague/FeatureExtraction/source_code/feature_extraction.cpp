@@ -8,7 +8,6 @@
 #include "line_feature_detection.h"
 #include "ellipse_detector.h"
 #include "goal_detection.h"
-#include "dis_ang_translation.h"
 
 using namespace cv;
 using namespace std;
@@ -38,15 +37,5 @@ void extract_features(Mat img_rgb, vector<field_point> &result_intersections,
 	goalPostDetection(img_posts_binary, goalRoots, hor_hist, ver_hist,
 			goalPosts);
 
-	for (int i = 0; i < goalPosts.size(); ++i)
-	{
-		if(goalPosts[i].type !=3){
-			cout << "pixel " << normalizePixelPosition(img_hsv, goalPosts[i].root_position) << endl;
-			dis_bear test = pixel2dis_bear(normalizePixelPosition(img_hsv, goalPosts[i].root_position));
-			cout << "distance " << test.distance << endl;
-			cout << "angle " << test.bearing << endl;
-			cout << "--------------" << endl;
-		}
-	}
 	return;
 }

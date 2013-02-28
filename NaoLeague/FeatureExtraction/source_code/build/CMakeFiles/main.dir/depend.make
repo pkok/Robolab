@@ -112,7 +112,6 @@ CMakeFiles/main.dir/ellipse_detector.cpp.o: /usr/local/include/opencv2/legacy/co
 CMakeFiles/main.dir/ellipse_detector.cpp.o: /usr/local/include/opencv2/objdetect/objdetect.hpp
 CMakeFiles/main.dir/ellipse_detector.cpp.o: /usr/local/include/opencv2/video/tracking.hpp
 
-CMakeFiles/main.dir/feature_extraction.cpp.o: ../dis_ang_translation.h
 CMakeFiles/main.dir/feature_extraction.cpp.o: ../ellipse_detector.h
 CMakeFiles/main.dir/feature_extraction.cpp.o: ../feature_extraction.cpp
 CMakeFiles/main.dir/feature_extraction.cpp.o: ../goal_detection.h
@@ -508,6 +507,7 @@ CMakeFiles/main.dir/line_feature_detection.cpp.o: /usr/local/include/opencv2/leg
 CMakeFiles/main.dir/line_feature_detection.cpp.o: /usr/local/include/opencv2/objdetect/objdetect.hpp
 CMakeFiles/main.dir/line_feature_detection.cpp.o: /usr/local/include/opencv2/video/tracking.hpp
 
+CMakeFiles/main.dir/main.cpp.o: ../dis_ang_translation.h
 CMakeFiles/main.dir/main.cpp.o: ../ellipse_detector.h
 CMakeFiles/main.dir/main.cpp.o: ../feature_extraction.h
 CMakeFiles/main.dir/main.cpp.o: ../geometry_utils.h

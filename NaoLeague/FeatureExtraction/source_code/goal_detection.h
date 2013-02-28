@@ -10,7 +10,7 @@
 #define R_POST 0
 #define L_POST 1
 #define V_POST 2
-#define O_POST 3
+#define H_POST 3
 
 #define HIST_THRESHOLD 0.1
 #define ROOT_GAIN 1.5
